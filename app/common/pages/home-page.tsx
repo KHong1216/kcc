@@ -1,6 +1,4 @@
 import type { MetaFunction } from "react-router"
-import { HomeHero } from "../components/home-hero";
-import { HomeCard } from "../components/home-card";
 import { HeroSection } from "../components/hero-section";
 
 export const meta: MetaFunction = () => {
@@ -12,7 +10,7 @@ export const meta: MetaFunction = () => {
 
 export default function HomePage() {
     return (
-        <div>
+        <div className="min-h-screen lg:h-screen lg:overflow-hidden">
             <HeroSection/>
         </div>
     )
