@@ -48,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <div className="h-screen w-full overflow-hidden">
+    <div className="h-screen w-full">
       <Navigation />
       <Outlet />
     </div>

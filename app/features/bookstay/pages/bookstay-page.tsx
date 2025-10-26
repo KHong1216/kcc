@@ -3,99 +3,122 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "북스테이 - 에세이캠프 - KOI Creative Lab" },
-        { name: "description", content: "북스테이 에세이캠프 - 글쓰기를 통한 성장" }
+        { title: "북스테이._ 머뭄 - KOI Creative Lab" },
+        { name: "description", content: "느슨하고 유쾌한 독서 소모임 - 책을 좋아하지만 습관이 안 잡힌 사람들을 위한 공간" }
     ];
 }
 
 export default function BookstayPage() {
+    // 추천 도서 데이터
+    const recommendedBooks = [
+        {
+            title: "책 제목 1",
+            author: "작가명",
+            cover: "/5.jpg", // 로고 이미지 사용
+            description: "이 책의 간단한 소개"
+        },
+        {
+            title: "책 제목 2", 
+            author: "작가명",
+            cover: "/5.jpg",
+            description: "이 책의 간단한 소개"
+        },
+        {
+            title: "책 제목 3",
+            author: "작가명", 
+            cover: "/5.jpg",
+            description: "이 책의 간단한 소개"
+        },
+        {
+            title: "책 제목 4",
+            author: "작가명",
+            cover: "/5.jpg", 
+            description: "이 책의 간단한 소개"
+        }
+    ];
+
     return (
-        <div className="px-20 py-20 space-y-20">
-            <div className="text-center">
-                <h1 className="text-4xl font-bold mb-4">북스테이 - 에세이캠프</h1>
-                <p className="text-gray-600">글쓰기를 통한 자기 발견과 성장의 여정</p>
-            </div>
-            
-            <div className="max-w-6xl mx-auto space-y-16">
-                {/* 메인 소개 */}
-                <Card className="p-8">
-                    <CardHeader className="text-center">
-                        <CardTitle className="text-3xl mb-4">북스테이의 의미</CardTitle>
-                        <CardDescription className="text-lg">
-                            책과 함께 머물며, 글쓰기를 통해 자신을 발견하는 시간
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                        <p className="text-gray-600 leading-relaxed max-w-4xl mx-auto">
-                            북스테이 에세이캠프는 청년들이 책을 읽고, 글을 쓰며, 
-                            자신의 내면을 탐구하는 집중적인 프로그램입니다. 
-                            좋은 책들과 함께하며 에세이 쓰기 기법을 배우고, 
-                            자신만의 이야기를 세상에 전하는 방법을 찾아갑니다.
-                        </p>
-                    </CardContent>
-                </Card>
-
-                {/* 프로그램 구성 */}
-                <div className="grid md:grid-cols-2 gap-8">
-                    <Card className="p-6">
-                        <CardHeader>
-                            <CardTitle className="text-xl">독서 워크샵</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-gray-600 mb-4">
-                                선별된 도서들을 함께 읽고 토론하며, 
-                                작가의 관점과 자신의 경험을 연결해봅니다.
-                            </p>
-                            <ul className="space-y-2 text-sm text-gray-600">
-                                <li>• 매주 1권씩 선정 도서 읽기</li>
-                                <li>• 독서 토론 및 감상 나누기</li>
-                                <li>• 작가의 글쓰기 기법 분석</li>
-                            </ul>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="p-6">
-                        <CardHeader>
-                            <CardTitle className="text-xl">에세이 쓰기</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-gray-600 mb-4">
-                                개인의 경험과 생각을 바탕으로 
-                                진정성 있는 에세이를 써나가는 과정입니다.
-                            </p>
-                            <ul className="space-y-2 text-sm text-gray-600">
-                                <li>• 개인 에세이 기초 기법</li>
-                                <li>• 주제 발굴 및 구성 방법</li>
-                                <li>• 피드백 및 수정 과정</li>
-                            </ul>
-                        </CardContent>
-                    </Card>
+        <div className="min-h-screen w-full">
+            <div className="container mx-auto px-4 py-8 pt-24 space-y-12">
+                {/* 로고 섹션 */}
+                <div className="text-center">
+                    <img src="/5.jpg" alt="북스테이 로고" className="w-40 h-40 mx-auto mb-6 rounded-lg object-contain" />
+                    <h1 className="text-4xl font-bold mb-4">북스테이._ 머뭄</h1>
+                    <p className="text-gray-600 text-lg">느슨하고 유쾌한 독서 소모임</p>
                 </div>
+                
+                <div className="max-w-6xl mx-auto space-y-12">
+                    {/* 메인 소개 */}
+                    <Card className="p-6 md:p-8">
+                        <CardHeader className="text-center">
+                            <CardTitle className="text-3xl mb-4">이런 당신을 위해 준비했어요 🙌</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-center">
+                            <div className="space-y-4 text-lg">
+                                <p className="text-gray-700">📍책, 혼자 읽기 어려운 사람?</p>
+                                <p className="text-gray-700">📍책장 넘기는 게 늘 작심삼일인 사람?</p>
+                                <p className="text-gray-700">📍즐겁게, 함께, 가볍지만 제대로 읽고 싶은 사람?</p>
+                            </div>
+                            <div className="mt-8 p-6 bg-blue-50 rounded-lg">
+                                <p className="text-gray-600 leading-relaxed">
+                                    <span className="font-semibold">'북스테이._ 머뭄'</span>은<br/>
+                                    📚 책을 좋아하지만 습관이 안 잡힌 사람,<br/>
+                                    ☕ 책을 핑계로 이야기 나누고 싶은 사람,<br/>
+                                    🫶 그리고 책을 조금 더 잘 읽고 싶은 사람들의<br/>
+                                    <span className="font-bold text-blue-600">느슨하고 유쾌한 독서 소모임</span>입니다!
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
 
-                {/* 캠프 특징 */}
-                <div className="bg-green-50 p-8 rounded-lg">
-                    <h2 className="text-2xl font-bold mb-6 text-center">캠프 특징</h2>
-                    <div className="grid md:grid-cols-3 gap-6">
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">📚</span>
-                            </div>
-                            <h3 className="font-semibold mb-2">집중 독서</h3>
-                            <p className="text-sm text-gray-600">3일간의 집중적인 독서와 글쓰기 환경</p>
+                    {/* 추천 도서 그리드 */}
+                    <div>
+                        <h2 className="text-3xl font-bold text-center mb-8">이번 달 추천 도서</h2>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                            {recommendedBooks.map((book, index) => (
+                                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
+                                    <div className="aspect-[3/4] relative">
+                                        <img 
+                                            src={book.cover} 
+                                            alt={book.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                    <CardContent className="p-3 md:p-4">
+                                        <h3 className="font-semibold text-sm mb-1 line-clamp-2">{book.title}</h3>
+                                        <p className="text-xs text-gray-500 mb-2">{book.author}</p>
+                                        <p className="text-xs text-gray-600 line-clamp-2">{book.description}</p>
+                                    </CardContent>
+                                </Card>
+                            ))}
                         </div>
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">✍️</span>
+                    </div>
+
+                    {/* 소모임 특징 */}
+                    <div className="bg-green-50 p-6 md:p-8 rounded-lg">
+                        <h2 className="text-2xl font-bold mb-6 text-center">북스테이._ 머뭄의 특징</h2>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span className="text-2xl">📚</span>
+                                </div>
+                                <h3 className="font-semibold mb-2">느슨한 독서</h3>
+                                <p className="text-sm text-gray-600">부담 없이 함께 읽는 즐거운 독서</p>
                             </div>
-                            <h3 className="font-semibold mb-2">개인별 지도</h3>
-                            <p className="text-sm text-gray-600">전문 작가와의 1:1 멘토링</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">📖</span>
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span className="text-2xl">☕</span>
+                                </div>
+                                <h3 className="font-semibold mb-2">유쾌한 소통</h3>
+                                <p className="text-sm text-gray-600">책을 핑계로 나누는 따뜻한 이야기</p>
                             </div>
-                            <h3 className="font-semibold mb-2">작품 완성</h3>
-                            <p className="text-sm text-gray-600">완성된 에세이를 매거진에 게재</p>
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span className="text-2xl">🫶</span>
+                                </div>
+                                <h3 className="font-semibold mb-2">함께 성장</h3>
+                                <p className="text-sm text-gray-600">서로를 응원하며 함께 성장하는 공간</p>
+                            </div>
                         </div>
                     </div>
                 </div>

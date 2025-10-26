@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => {
 
 export default function HomePage() {
     return (
-        <div className="min-h-screen lg:h-screen lg:overflow-hidden">
+        <div className="min-h-screen w-full">
             <HeroSection/>
         </div>
     )

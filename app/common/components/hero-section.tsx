@@ -31,7 +31,7 @@ const activities = [
 
 export function HeroSection() {
   return (
-    <section className="relative h-screen lg:h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 px-4 sm:px-6 lg:px-8 pt-16 sm:pt-18 lg:pt-20">
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28">
       {/* 메인 타이틀 */}
       <motion.div 
         className="text-center z-10 mb-4 sm:mb-6 lg:mb-8"
@@ -227,9 +227,9 @@ export function HeroSection() {
         ))}
       </motion.div>
 
-      {/* 하단 인디케이터 - 모바일에서만 표시 */}
+      {/* 하단 인디케이터 - 모든 화면에서 표시
       <motion.div 
-        className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-1/2 transform -translate-x-1/2 lg:hidden"
+        className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 11, duration: 0.8 }}
@@ -237,11 +237,11 @@ export function HeroSection() {
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="text-gray-400 text-xs sm:text-sm"
+          className="text-gray-400 text-xs sm:text-sm text-center"
         >
-          ↓ 스크롤하여 더 알아보기
+          💫 관심 있는 활동을 클릭해보세요
         </motion.div>
-      </motion.div>
+      </motion.div> */}
     </section>
   );
 }

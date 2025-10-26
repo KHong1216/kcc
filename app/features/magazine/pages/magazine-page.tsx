@@ -4,98 +4,166 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 export const meta: MetaFunction = () => {
     return [
         { title: "무색무취 매거진 - KOI Creative Lab" },
-        { name: "description", content: "무색무취 매거진 - 청년들의 이야기" }
+        { name: "description", content: "패션 매거진 - 겉으로만 꾸미는 사람들에게 내적으로도 꾸밀 수 있는 기회" }
     ];
 }
 
 export default function MagazinePage() {
+    // 매거진 사진 데이터
+    const magazinePhotos = [
+        {
+            id: 1,
+            title: "스타일링 1",
+            image: "/4.jpg",
+            description: "자연스러운 일상 스타일"
+        },
+        {
+            id: 2,
+            title: "스타일링 2", 
+            image: "/4.jpg",
+            description: "모던한 오피스 룩"
+        },
+        {
+            id: 3,
+            title: "스타일링 3",
+            image: "/4.jpg", 
+            description: "캐주얼한 주말 스타일"
+        },
+        {
+            id: 4,
+            title: "스타일링 4",
+            image: "/4.jpg",
+            description: "세련된 이브닝 룩"
+        },
+        {
+            id: 5,
+            title: "스타일링 5",
+            image: "/4.jpg",
+            description: "트렌디한 스트리트 패션"
+        },
+        {
+            id: 6,
+            title: "스타일링 6",
+            image: "/4.jpg",
+            description: "미니멀한 베이직 룩"
+        }
+    ];
+
     return (
-        <div className="px-20 py-20 space-y-20">
-            <div className="text-center">
-                <h1 className="text-4xl font-bold mb-4">무색무취 매거진</h1>
-                <p className="text-gray-600">청년들의 진솔한 이야기를 담은 매거진</p>
-            </div>
-            
-            <div className="max-w-6xl mx-auto space-y-16">
-                {/* 메인 소개 */}
-                <Card className="p-8">
-                    <CardHeader className="text-center">
-                        <CardTitle className="text-3xl mb-4">무색무취의 의미</CardTitle>
-                        <CardDescription className="text-lg">
-                            색깔도 냄새도 없는, 가장 순수한 청년들의 목소리
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                        <p className="text-gray-600 leading-relaxed max-w-4xl mx-auto">
-                            무색무취 매거진은 청년들이 자신의 이야기를 편견 없이, 
-                            가식 없이 솔직하게 나눌 수 있는 공간입니다. 
-                            우리는 각자의 색깔과 향기를 가진 청년들의 이야기를 
-                            가장 순수한 형태로 담아냅니다.
-                        </p>
-                    </CardContent>
-                </Card>
-
-                {/* 매거진 특징 */}
-                <div className="grid md:grid-cols-2 gap-8">
-                    <Card className="p-6">
-                        <CardHeader>
-                            <CardTitle className="text-xl">에세이 섹션</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-gray-600 mb-4">
-                                청년들이 직접 쓴 에세이를 통해 그들의 일상, 고민, 
-                                꿈과 현실 사이의 갈등을 생생하게 전달합니다.
-                            </p>
-                            <ul className="space-y-2 text-sm text-gray-600">
-                                <li>• 개인 성장 스토리</li>
-                                <li>• 사회적 이슈에 대한 관점</li>
-                                <li>• 일상 속 깨달음과 통찰</li>
-                            </ul>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="p-6">
-                        <CardHeader>
-                            <CardTitle className="text-xl">인터뷰 섹션</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-gray-600 mb-4">
-                                다양한 분야에서 활동하는 청년들을 인터뷰하여 
-                                그들의 경험과 조언을 공유합니다.
-                            </p>
-                            <ul className="space-y-2 text-sm text-gray-600">
-                                <li>• 창업가들의 이야기</li>
-                                <li>• 예술가들의 창작 과정</li>
-                                <li>• 사회 활동가들의 경험</li>
-                            </ul>
-                        </CardContent>
-                    </Card>
+        <div className="min-h-screen w-full">
+            <div className="container mx-auto px-4 py-8 pt-24 space-y-12">
+                {/* 로고 섹션 */}
+                <div className="text-center">
+                    <img src="/4.jpg" alt="무색무취 매거진 로고" className="w-40 h-40 mx-auto mb-6 rounded-lg object-contain" />
+                    <h1 className="text-4xl font-bold mb-4">무색무취 매거진</h1>
+                    <p className="text-gray-600 text-lg">패션 매거진 - 내적으로도 꾸밀 수 있는 기회</p>
                 </div>
+                
+                <div className="max-w-6xl mx-auto space-y-12">
+                    {/* 메인 소개 */}
+                    <Card className="p-6 md:p-8">
+                        <CardHeader className="text-center">
+                            <CardTitle className="text-3xl mb-4">겉으로만 꾸미는 사람들을 위해</CardTitle>
+                            <CardDescription className="text-lg">
+                                내적으로도 꾸밀 수 있는 기회를 제공하는 패션 매거진
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="text-center">
+                            <p className="text-gray-600 leading-relaxed max-w-4xl mx-auto">
+                                무색무취 매거진은 단순히 옷을 입는 것을 넘어서, 
+                                자신의 내면을 발견하고 표현하는 방법을 제시합니다. 
+                                겉모습만이 아닌 진정한 아름다움을 찾아가는 
+                                패션과 마음의 여정을 함께합니다.
+                            </p>
+                        </CardContent>
+                    </Card>
 
-                {/* 발행 정보 */}
-                <div className="bg-gray-50 p-8 rounded-lg">
-                    <h2 className="text-2xl font-bold mb-6 text-center">발행 정보</h2>
-                    <div className="grid md:grid-cols-3 gap-6">
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">📅</span>
-                            </div>
-                            <h3 className="font-semibold mb-2">발행 주기</h3>
-                            <p className="text-sm text-gray-600">분기별 발행 (3개월마다)</p>
+                    {/* 매거진 사진 그리드 */}
+                    <div>
+                        <h2 className="text-3xl font-bold text-center mb-8">매거진 스타일링</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {magazinePhotos.map((photo) => (
+                                <Card key={photo.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                                    <div className="aspect-[4/5] relative">
+                                        <img 
+                                            src={photo.image} 
+                                            alt={photo.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                            <div className="opacity-0 hover:opacity-100 transition-opacity duration-300 text-white text-center p-4">
+                                                <h3 className="font-semibold mb-2">{photo.title}</h3>
+                                                <p className="text-sm">{photo.description}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Card>
+                            ))}
                         </div>
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">📖</span>
+                    </div>
+
+                    {/* 매거진 특징 */}
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <Card className="p-6">
+                            <CardHeader>
+                                <CardTitle className="text-xl">패션 스타일링</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-gray-600 mb-4">
+                                    개인의 성격과 상황에 맞는 스타일링을 통해 
+                                    자신만의 매력을 발견하고 표현합니다.
+                                </p>
+                                <ul className="space-y-2 text-sm text-gray-600">
+                                    <li>• 개인별 맞춤 스타일링</li>
+                                    <li>• 상황별 의상 코디네이션</li>
+                                    <li>• 트렌드와 개성의 조화</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="p-6">
+                            <CardHeader>
+                                <CardTitle className="text-xl">내면의 아름다움</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-gray-600 mb-4">
+                                    외적인 스타일링과 함께 내면의 성장과 
+                                    자기 표현에 대한 이야기를 나눕니다.
+                                </p>
+                                <ul className="space-y-2 text-sm text-gray-600">
+                                    <li>• 자신감과 자아 표현</li>
+                                    <li>• 개성과 정체성 찾기</li>
+                                    <li>• 아름다움에 대한 새로운 관점</li>
+                                </ul>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* 매거진 철학 */}
+                    <div className="bg-pink-50 p-6 md:p-8 rounded-lg">
+                        <h2 className="text-2xl font-bold mb-6 text-center">무색무취의 철학</h2>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span className="text-2xl">👗</span>
+                                </div>
+                                <h3 className="font-semibold mb-2">스타일링</h3>
+                                <p className="text-sm text-gray-600">개인에게 맞는 스타일 발견</p>
                             </div>
-                            <h3 className="font-semibold mb-2">발행 형태</h3>
-                            <p className="text-sm text-gray-600">온라인 매거진 + 인쇄본</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">✍️</span>
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span className="text-2xl">💭</span>
+                                </div>
+                                <h3 className="font-semibold mb-2">내면 탐구</h3>
+                                <p className="text-sm text-gray-600">진정한 아름다움 찾기</p>
                             </div>
-                            <h3 className="font-semibold mb-2">기고 방식</h3>
-                            <p className="text-sm text-gray-600">공개 모집 + 직접 섭외</p>
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span className="text-2xl">✨</span>
+                                </div>
+                                <h3 className="font-semibold mb-2">자기 표현</h3>
+                                <p className="text-sm text-gray-600">개성 있는 표현 방법</p>
+                            </div>
                         </div>
                     </div>
                 </div>
