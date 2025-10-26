@@ -1,31 +1,46 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router";
 import { TypewriterText } from "./typer-write-text";
+import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 
 const activities = [
   {
     title: "연애",
-    description: "진정한 사랑을 찾아가는 여정을 함께합니다",
+    description: "연애를 잘하기 위하여선 나부터 알아야 건강한 연애가 가능하다",
     icon: "💕",
     color: "from-pink-400 to-red-400",
     to: "/love",
-    target: "연애에 대한 고민이 있는 청년들"
+    target: "건강한 연애를 원하는 청년들",
+    badge: "HOT",
+    badgeColor: "bg-pink-500",
+    buttonText: "신청하기",
+    gradient: "from-pink-50 via-rose-50 to-red-50"
   },
   {
-    title: "무색무취 매거진",
-    description: "청년들의 진솔한 이야기를 담은 매거진",
-    icon: "📖",
+    title: "사진",
+    description: "사진을 통한 내외면의 아름다움을 가꿔가는 시간",
+    icon: "📸",
     color: "from-blue-400 to-purple-400",
-    to: "/magazine",
-    target: "글쓰기와 스토리텔링에 관심 있는 청년들"
+    to: "/photo",
+    target: "자신의 아름다움을 발견하고 싶은 청년들",
+    badge: "BEST",
+    badgeColor: "bg-blue-500",
+    buttonText: "참여하기",
+    gradient: "from-blue-50 via-indigo-50 to-purple-50"
   },
   {
-    title: "북스테이 - 에세이캠프",
-    description: "글쓰기를 통한 자기 발견과 성장의 여정",
+    title: "에세이",
+    description: "글을 통해서 나를 발견하고 찾아가는 시간",
     icon: "✍️",
     color: "from-green-400 to-teal-400",
-    to: "/bookstay",
-    target: "독서와 글쓰기를 통해 성장하고 싶은 청년들"
+    to: "/essay",
+    target: "글쓰기를 통해 성장하고 싶은 청년들",
+    badge: "NEW",
+    badgeColor: "bg-green-500",
+    buttonText: "시작하기",
+    gradient: "from-green-50 via-emerald-50 to-teal-50"
   }
 ];
 
@@ -40,7 +55,7 @@ export function HeroSection() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <TypewriterText 
-          text="Koi Creative Center" 
+          text="작은 물결이 큰 도약이 되는 창작소" 
           className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-4 text-gray-900 leading-tight"
           delay={0.2}
         />
@@ -51,7 +66,7 @@ export function HeroSection() {
           transition={{ delay: 0.8, duration: 0.5 }}
         >
           <TypewriterText 
-            text="코이 창작소"
+            text="코이창작소"
             className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4 lg:mb-6 text-blue-600"
             delay={1.0}
           />
@@ -71,7 +86,7 @@ export function HeroSection() {
           transition={{ delay: 3.3, duration: 0.5 }}
         >
           <TypewriterText 
-            text="왜 '코이'인가요?"
+            text="탈광주 청년을 막기 위한 청년문화 공간을 만들기 위한 상담 스타트업"
             className="text-sm sm:text-base md:text-lg font-semibold mb-2 sm:mb-3 text-gray-800"
             delay={3.5}
           />
@@ -83,7 +98,7 @@ export function HeroSection() {
           transition={{ delay: 5.0, duration: 0.5 }}
         >
           <TypewriterText 
-            text="코이는 일본어로 '사랑'을 의미합니다. 우리는 청년들이 자신을 사랑하고, 타인을 사랑하며, 세상을 사랑할 수 있도록 돕고자 합니다."
+            text="코이 = 사랑"
             className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed mb-2 sm:mb-3 lg:mb-4"
             delay={5.2}
           />
@@ -95,8 +110,8 @@ export function HeroSection() {
           transition={{ delay: 7.5, duration: 0.5 }}
         >
           <TypewriterText 
-            text="우리의 방향성"
-            className="text-sm sm:text-base md:text-lg font-semibold mb-2 sm:mb-3 text-gray-800"
+            text="코이 물고기는 환경에 따라 성장크기가 달라지는 특징을 가지고 있습니다"
+            className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed mb-2 sm:mb-3 lg:mb-4"
             delay={7.7}
           />
         </motion.div>
@@ -107,16 +122,16 @@ export function HeroSection() {
           transition={{ delay: 8.0, duration: 0.5 }}
         >
           <TypewriterText 
-            text="진정한 성장은 혼자서는 불가능합니다. 우리는 청년들이 서로를 이해하고, 소통하며, 함께 성장할 수 있는 공간을 만들어갑니다."
+            text="청년들이 각자의 가능성을 발견하고 성장해 나가는 과정을 담았습니다"
             className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed"
             delay={8.2}
           />
         </motion.div>
       </motion.div>
 
-      {/* 활동 카드들 */}
+      {/* 코이 프로젝트 카드들 - 높이 통일 */}
       <motion.div 
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-xs sm:max-w-2xl lg:max-w-6xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 lg:mb-16"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-xs sm:max-w-2xl lg:max-w-6xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 lg:mb-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 10.0, duration: 0.5 }}
@@ -132,67 +147,67 @@ export function HeroSection() {
               ease: "easeOut"
             }}
             whileHover={{ 
-              scale: 1.05,
-              rotateY: 5,
+              scale: 1.02,
               transition: { duration: 0.2 }
             }}
-            whileTap={{ scale: 0.95 }}
-            className="group cursor-pointer"
+            className="group cursor-pointer h-full"
           >
-            <Link to={activity.to} className="block">
-              <motion.div 
-                className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 h-32 sm:h-40 lg:h-44 flex flex-col items-center justify-center text-center group-hover:shadow-2xl transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-gray-50"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div 
-                  className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-r ${activity.color} flex items-center justify-center mb-2 sm:mb-3`}
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <motion.span 
-                    className="text-xs sm:text-sm lg:text-base"
-                    animate={{ 
-                      rotate: [0, 10, -10, 0],
-                      scale: [1, 1.1, 1]
-                    }}
-                    transition={{ 
-                      duration: 1.5,
-                      repeat: Infinity,
-                      delay: index * 0.3
-                    }}
-                  >
-                    {activity.icon}
-                  </motion.span>
-                </motion.div>
-                
-                <motion.h3 
-                  className="text-xs sm:text-sm lg:text-base font-bold mb-1 sm:mb-2 group-hover:text-blue-600 transition-colors"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 10.5 + index * 0.1 }}
-                >
-                  {activity.title}
-                </motion.h3>
-                
-                <motion.p 
-                  className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-1 sm:mb-2"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 10.7 + index * 0.1 }}
-                >
-                  {activity.description}
-                </motion.p>
-
-                <motion.div 
-                  className="text-xs sm:text-sm text-blue-500 font-medium"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 10.9 + index * 0.1 }}
-                >
-                  👥 {activity.target}
-                </motion.div>
-              </motion.div>
+            <Link to={activity.to} className="block h-full">
+              <Card className={`overflow-hidden hover:shadow-xl transition-all duration-300 group h-full bg-gradient-to-br ${activity.gradient} border-0 flex flex-col`}>
+                <div className="relative">
+                  {/* 더 예쁜 배경 디자인 */}
+                  <div className={`w-full h-48 bg-gradient-to-br ${activity.gradient} relative overflow-hidden`}>
+                    {/* 배경 패턴 */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="absolute top-4 left-4 w-20 h-20 rounded-full bg-white/20"></div>
+                      <div className="absolute top-8 right-8 w-16 h-16 rounded-full bg-white/15"></div>
+                      <div className="absolute bottom-6 left-8 w-12 h-12 rounded-full bg-white/10"></div>
+                      <div className="absolute bottom-4 right-4 w-24 h-24 rounded-full bg-white/20"></div>
+                    </div>
+                    
+                    {/* 아이콘 */}
+                    <div className="relative z-10 w-full h-full flex items-center justify-center">
+                      <motion.div 
+                        className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r ${activity.color} flex items-center justify-center shadow-lg`}
+                        whileHover={{ rotate: 360, scale: 1.1 }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        <motion.span 
+                          className="text-3xl sm:text-4xl"
+                          animate={{ 
+                            rotate: [0, 10, -10, 0],
+                            scale: [1, 1.1, 1]
+                          }}
+                          transition={{ 
+                            duration: 1.5,
+                            repeat: Infinity,
+                            delay: index * 0.3
+                          }}
+                        >
+                          {activity.icon}
+                        </motion.span>
+                      </motion.div>
+                    </div>
+                  </div>
+                  <Badge className={`absolute top-4 left-4 ${activity.badgeColor} shadow-md`}>
+                    {activity.badge}
+                  </Badge>
+                </div>
+                <CardContent className="p-6 flex flex-col flex-grow">
+                  <CardTitle className="text-xl mb-2 text-gray-800">{activity.title}</CardTitle>
+                  <CardDescription className="mb-4 text-sm text-gray-600 leading-relaxed flex-grow">
+                    {activity.description}
+                  </CardDescription>
+                  <div className="flex justify-between items-center mt-auto">
+                    <span className="text-sm text-gray-500 font-medium">
+                      👥 {activity.target}
+                    </span>
+                    <Button size="sm" className={`bg-gradient-to-r ${activity.color} hover:opacity-90 text-white border-0`}>
+                      {activity.buttonText}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </Link>
           </motion.div>
         ))}
@@ -227,7 +242,7 @@ export function HeroSection() {
         ))}
       </motion.div>
 
-      {/* 하단 인디케이터 - 모든 화면에서 표시 */}
+      {/* 하단 인디케이터 */}
       <motion.div 
         className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         initial={{ opacity: 0, y: 20 }}
