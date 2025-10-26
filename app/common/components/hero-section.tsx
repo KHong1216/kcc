@@ -37,23 +37,23 @@ export function HeroSection() {
         className="text-center z-10 mb-4 sm:mb-6 lg:mb-8"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <TypewriterText 
           text="Koi Creative Center" 
           className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-4 text-gray-900 leading-tight"
-          delay={0.5}
+          delay={0.2}
         />
         
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 0.8 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
         >
           <TypewriterText 
             text="코이 창작소"
             className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4 lg:mb-6 text-blue-600"
-            delay={2.5}
+            delay={1.0}
           />
         </motion.div>
       </motion.div>
@@ -63,36 +63,36 @@ export function HeroSection() {
         className="text-center max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mb-4 sm:mb-6 lg:mb-8 px-4 sm:px-6"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3.5, duration: 0.8 }}
+        transition={{ delay: 2.0, duration: 0.5 }}
       >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 4, duration: 0.8 }}
+          transition={{ delay: 2.3, duration: 0.5 }}
         >
           <TypewriterText 
             text="왜 '코이'인가요?"
             className="text-sm sm:text-base md:text-lg font-semibold mb-2 sm:mb-3 text-gray-800"
-            delay={4.2}
+            delay={2.5}
           />
         </motion.div>
         
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 5, duration: 0.8 }}
+          transition={{ delay: 4.0, duration: 0.5 }}
         >
           <TypewriterText 
             text="코이는 일본어로 '사랑'을 의미합니다. 우리는 청년들이 자신을 사랑하고, 타인을 사랑하며, 세상을 사랑할 수 있도록 돕고자 합니다."
             className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed mb-2 sm:mb-3 lg:mb-4"
-            delay={5.2}
+            delay={4.2}
           />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 6.5, duration: 0.8 }}
+          transition={{ delay: 6.5, duration: 0.5 }}
         >
           <TypewriterText 
             text="우리의 방향성"
@@ -104,12 +104,12 @@ export function HeroSection() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 7.5, duration: 0.8 }}
+          transition={{ delay: 7.0, duration: 0.5 }}
         >
           <TypewriterText 
             text="진정한 성장은 혼자서는 불가능합니다. 우리는 청년들이 서로를 이해하고, 소통하며, 함께 성장할 수 있는 공간을 만들어갑니다."
             className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed"
-            delay={7.7}
+            delay={7.2}
           />
         </motion.div>
       </motion.div>
@@ -119,7 +119,7 @@ export function HeroSection() {
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-xs sm:max-w-2xl lg:max-w-6xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 lg:mb-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 8.5, duration: 0.8 }}
+        transition={{ delay: 9.0, duration: 0.5 }}
       >
         {activities.map((activity, index) => (
           <motion.div
@@ -127,14 +127,14 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 50, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ 
-              duration: 0.6, 
-              delay: 9 + index * 0.3,
+              duration: 0.4, 
+              delay: 9.3 + index * 0.1,
               ease: "easeOut"
             }}
             whileHover={{ 
               scale: 1.05,
               rotateY: 5,
-              transition: { duration: 0.3 }
+              transition: { duration: 0.2 }
             }}
             whileTap={{ scale: 0.95 }}
             className="group cursor-pointer"
@@ -143,12 +143,12 @@ export function HeroSection() {
               <motion.div 
                 className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 h-32 sm:h-40 lg:h-44 flex flex-col items-center justify-center text-center group-hover:shadow-2xl transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-gray-50"
                 whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.2 }}
               >
                 <motion.div 
                   className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-r ${activity.color} flex items-center justify-center mb-2 sm:mb-3`}
                   whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
+                  transition={{ duration: 0.4 }}
                 >
                   <motion.span 
                     className="text-xs sm:text-sm lg:text-base"
@@ -157,9 +157,9 @@ export function HeroSection() {
                       scale: [1, 1.1, 1]
                     }}
                     transition={{ 
-                      duration: 2,
+                      duration: 1.5,
                       repeat: Infinity,
-                      delay: index * 0.5
+                      delay: index * 0.3
                     }}
                   >
                     {activity.icon}
@@ -170,7 +170,7 @@ export function HeroSection() {
                   className="text-xs sm:text-sm lg:text-base font-bold mb-1 sm:mb-2 group-hover:text-blue-600 transition-colors"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 9.3 + index * 0.3 }}
+                  transition={{ delay: 9.5 + index * 0.1 }}
                 >
                   {activity.title}
                 </motion.h3>
@@ -179,7 +179,7 @@ export function HeroSection() {
                   className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-1 sm:mb-2"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 9.5 + index * 0.3 }}
+                  transition={{ delay: 9.7 + index * 0.1 }}
                 >
                   {activity.description}
                 </motion.p>
@@ -188,7 +188,7 @@ export function HeroSection() {
                   className="text-xs sm:text-sm text-blue-500 font-medium"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 9.7 + index * 0.3 }}
+                  transition={{ delay: 9.9 + index * 0.1 }}
                 >
                   👥 {activity.target}
                 </motion.div>
@@ -203,7 +203,7 @@ export function HeroSection() {
         className="absolute inset-0 pointer-events-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 2 }}
+        transition={{ delay: 0.5, duration: 1 }}
       >
         {[...Array(12)].map((_, i) => (
           <motion.div
@@ -219,29 +219,29 @@ export function HeroSection() {
               scale: [1, 1.2, 1],
             }}
             transition={{
-              duration: 4 + Math.random() * 2,
+              duration: 3 + Math.random() * 1,
               repeat: Infinity,
-              delay: Math.random() * 3,
+              delay: Math.random() * 2,
             }}
           />
         ))}
       </motion.div>
 
-      {/* 하단 인디케이터 - 모든 화면에서 표시
+      {/* 하단 인디케이터 - 모든 화면에서 표시 */}
       <motion.div 
         className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 11, duration: 0.8 }}
+        transition={{ delay: 11.0, duration: 0.5 }}
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          transition={{ duration: 1.5, repeat: Infinity }}
           className="text-gray-400 text-xs sm:text-sm text-center"
         >
-          💫 관심 있는 활동을 클릭해보세요
+          ↓ 아래로 스크롤하여 소개 보기
         </motion.div>
-      </motion.div> */}
+      </motion.div>
     </section>
   );
 }
