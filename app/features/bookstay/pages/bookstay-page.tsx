@@ -44,7 +44,7 @@ export default function BookstayPage() {
                     
                     <div className="grid md:grid-cols-2 gap-8 items-center">
                         <div>
-                            <img src="/essay-concept.jpg" alt="에세이 개념" className="w-full h-64 object-cover rounded-lg shadow-lg" />
+                            <img src="/2.JPG" alt="에세이 개념" className="w-full h-64 object-cover rounded-lg shadow-lg" />
                         </div>
                         <div className="space-y-6">
                             <div>
@@ -96,7 +96,7 @@ export default function BookstayPage() {
                             </div>
                         </div>
                         <div>
-                            <img src="/essay-camp.jpg" alt="에세이 캠프" className="w-full h-64 object-cover rounded-lg shadow-lg" />
+                            <img src="/2.JPG" alt="에세이 캠프" className="w-full h-64 object-cover rounded-lg shadow-lg" />
                         </div>
                     </div>
                 </div>
