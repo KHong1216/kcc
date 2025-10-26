@@ -13,7 +13,7 @@ import {
 const menus = [
     {
         name: "소개",
-        to: "/about",
+        to: "/about/representative",
         items: [
             {
                 name: "대표자 소개",
@@ -29,22 +29,22 @@ const menus = [
     },
     {
         name: "프로젝트",
-        to: "/projects",
+        to: "/camps/love",
         items: [
             {
                 name: "연애",
                 description: "건강한 연애를 위한 프로젝트",
-                to: "/love",
+                to: "/camps/love",
             },
             {
-                name: "매거진",
-                description: "무색무취 매거진 프로젝트",
-                to: "/magazine",
+                name: "사진",
+                description: "사진 프로젝트",
+                to: "/camps/photo",
             },
             {
                 name: "에세이",
                 description: "에세이 캠프 프로젝트",
-                to: "/bookstay",
+                to: "/camps/essay",
             }
         ]
     }

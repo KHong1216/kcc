@@ -229,7 +229,7 @@ export default function AboutRepresentativePage() {
                         <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
                             상담 예약하기
                         </Button>
-                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+                        <Button size="lg" variant="secondary" className="border-white text-blue-600 hover:bg-gray-100">
                             프로그램 둘러보기
                         </Button>
                     </div>
