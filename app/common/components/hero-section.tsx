@@ -63,53 +63,53 @@ export function HeroSection() {
         className="text-center max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mb-4 sm:mb-6 lg:mb-8 px-4 sm:px-6"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2.0, duration: 0.5 }}
+        transition={{ delay: 3.0, duration: 0.5 }}
       >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.3, duration: 0.5 }}
+          transition={{ delay: 3.3, duration: 0.5 }}
         >
           <TypewriterText 
             text="왜 '코이'인가요?"
             className="text-sm sm:text-base md:text-lg font-semibold mb-2 sm:mb-3 text-gray-800"
-            delay={2.5}
+            delay={3.5}
           />
         </motion.div>
         
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 4.0, duration: 0.5 }}
+          transition={{ delay: 5.0, duration: 0.5 }}
         >
           <TypewriterText 
             text="코이는 일본어로 '사랑'을 의미합니다. 우리는 청년들이 자신을 사랑하고, 타인을 사랑하며, 세상을 사랑할 수 있도록 돕고자 합니다."
             className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed mb-2 sm:mb-3 lg:mb-4"
-            delay={4.2}
+            delay={5.2}
           />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 6.5, duration: 0.5 }}
+          transition={{ delay: 7.5, duration: 0.5 }}
         >
           <TypewriterText 
             text="우리의 방향성"
             className="text-sm sm:text-base md:text-lg font-semibold mb-2 sm:mb-3 text-gray-800"
-            delay={6.7}
+            delay={7.7}
           />
         </motion.div>
         
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 7.0, duration: 0.5 }}
+          transition={{ delay: 8.0, duration: 0.5 }}
         >
           <TypewriterText 
             text="진정한 성장은 혼자서는 불가능합니다. 우리는 청년들이 서로를 이해하고, 소통하며, 함께 성장할 수 있는 공간을 만들어갑니다."
             className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed"
-            delay={7.2}
+            delay={8.2}
           />
         </motion.div>
       </motion.div>
@@ -119,7 +119,7 @@ export function HeroSection() {
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-xs sm:max-w-2xl lg:max-w-6xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 lg:mb-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 9.0, duration: 0.5 }}
+        transition={{ delay: 10.0, duration: 0.5 }}
       >
         {activities.map((activity, index) => (
           <motion.div
@@ -128,7 +128,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ 
               duration: 0.4, 
-              delay: 9.3 + index * 0.1,
+              delay: 10.3 + index * 0.1,
               ease: "easeOut"
             }}
             whileHover={{ 
@@ -170,7 +170,7 @@ export function HeroSection() {
                   className="text-xs sm:text-sm lg:text-base font-bold mb-1 sm:mb-2 group-hover:text-blue-600 transition-colors"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 9.5 + index * 0.1 }}
+                  transition={{ delay: 10.5 + index * 0.1 }}
                 >
                   {activity.title}
                 </motion.h3>
@@ -179,7 +179,7 @@ export function HeroSection() {
                   className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-1 sm:mb-2"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 9.7 + index * 0.1 }}
+                  transition={{ delay: 10.7 + index * 0.1 }}
                 >
                   {activity.description}
                 </motion.p>
@@ -188,7 +188,7 @@ export function HeroSection() {
                   className="text-xs sm:text-sm text-blue-500 font-medium"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 9.9 + index * 0.1 }}
+                  transition={{ delay: 10.9 + index * 0.1 }}
                 >
                   👥 {activity.target}
                 </motion.div>
@@ -232,14 +232,14 @@ export function HeroSection() {
         className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 11.0, duration: 0.5 }}
+        transition={{ delay: 2.0, duration: 0.5 }}
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
           className="text-gray-400 text-xs sm:text-sm text-center"
         >
-          ↓ 아래로 스크롤하여 소개 보기
+          ↓ 아래로 스크롤하여 더 보기
         </motion.div>
       </motion.div>
     </section>
