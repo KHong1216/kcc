@@ -11,4 +11,13 @@ export default [
         route("/photo", "features/magazine/pages/magazine-page.tsx"),
         route("/essay", "features/bookstay/pages/bookstay-page.tsx"),
     ]),
+    ...prefix("reservation", [
+        index("features/reservation/pages/reservation-page.tsx")
+    ]),
+    ...prefix("community", [
+        route("/notice","features/community/pages/notice-page.tsx"),
+        route("/review","features/community/pages/review-page.tsx"),
+        route("/free","features/community/pages/free-page.tsx")
+    ])
+    
 ] satisfies RouteConfig

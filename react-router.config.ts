@@ -1,3 +1,4 @@
 export default {
-  ssr: false,
+  ssr: true,
+  spaMode: false,
 };

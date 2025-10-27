@@ -2,11 +2,12 @@ import type { MetaFunction } from "react-router"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/common/components/ui/card";
 import { Badge } from "~/common/components/ui/badge";
 import { Button } from "~/common/components/ui/button";
+import { Heart, Coffee, BookOpen, Users, MessageCircle, Star } from "lucide-react";
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "대표자 소개 - 코이창작소" },
-        { name: "description", content: "작은 물결이 큰 도약이 되는 창작소, 코이창작소의 대표자를 소개합니다." }
+        { title: "안녕하세요, 김코이입니다 | 코이창작소" },
+        { name: "description", content: "코이창작소를 시작하게 된 이야기와 함께 성장하고 싶은 마음을 나눕니다." }
     ];
 }
 
@@ -14,76 +15,76 @@ export default function AboutRepresentativePage() {
     return (
         <div className="min-h-screen w-full pt-16 sm:pt-20">
             {/* 히어로 섹션 */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6 text-gray-900">
-                        대표자 소개
+                    <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+                        안녕하세요, 김코이입니다
                     </h1>
-                    <p className="text-xl text-gray-600 mb-8">
-                        작은 물결이 큰 도약이 되는 창작소를 이끌어가는 대표를 소개합니다
+                    <p className="text-lg text-gray-600 mb-6">
+                        코이창작소를 시작하게 된 이야기를 들려드릴게요
                     </p>
                 </div>
             </section>
 
             {/* 대표자 프로필 섹션 */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
+            <section className="py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                    <div className="grid lg:grid-cols-2 gap-8 items-center">
                         {/* 프로필 이미지 */}
                         <div className="relative">
-                            <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+                            <div className="relative h-80 lg:h-96 rounded-2xl overflow-hidden shadow-lg">
                                 <img
                                     src="/1.JPG"
-                                    alt="대표자 김코이"
+                                    alt="김코이"
                                     className="w-full h-full object-cover"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                             </div>
                             {/* 플로팅 배지 */}
-                            <div className="absolute -bottom-6 -right-6">
-                                <Badge className="bg-blue-600 text-white text-lg px-6 py-3 rounded-full shadow-lg">
+                            <div className="absolute -bottom-4 -right-4">
+                                <Badge className="bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-lg">
                                     코이창작소 대표
                                 </Badge>
                             </div>
                         </div>
 
                         {/* 프로필 정보 */}
-                        <div className="space-y-8">
+                        <div className="space-y-6">
                             <div>
-                                <h2 className="text-4xl font-bold mb-4 text-gray-900">김코이</h2>
-                                <p className="text-xl text-blue-600 font-semibold mb-6">코이창작소 대표</p>
-                                <p className="text-lg text-gray-600 leading-relaxed">
-                                    "청년들이 자신의 길을 찾고, 더 넓은 세상 속에서 가능성을 발견할 수 있도록 돕는 것이 저의 꿈입니다. 
-                                    코이창작소를 통해 많은 청년들이 성장하고 꿈을 이뤄나가길 바랍니다."
-                                </p>
+                                <h2 className="text-3xl font-bold mb-2 text-gray-900">김코이</h2>
+                                <p className="text-lg text-blue-600 font-medium mb-4">코이창작소 대표</p>
+                                <div className="bg-blue-50 rounded-lg p-4">
+                                    <p className="text-gray-700 leading-relaxed">
+                                        "안녕하세요! 저는 김코이입니다. 코이창작소를 시작하게 된 이유는 간단해요. 
+                                        제가 청년 시절 겪었던 고민들과 답답함을 다른 청년들도 똑같이 겪고 있다는 걸 알게 되었거든요. 
+                                        혼자서는 어려운 길을 함께 걸어가면 어떨까 싶어서 시작했어요."
+                                    </p>
+                                </div>
                             </div>
 
-                            {/* 전문 분야 */}
-                            <div>
-                                <h3 className="text-xl font-semibold mb-4 text-gray-800">전문 분야</h3>
-                                <div className="flex flex-wrap gap-3">
-                                    <Badge variant="secondary" className="text-sm px-4 py-2 bg-blue-100 text-blue-800">
-                                        청년 진로 상담
-                                    </Badge>
-                                    <Badge variant="secondary" className="text-sm px-4 py-2 bg-green-100 text-green-800">
-                                        창업 멘토링
-                                    </Badge>
-                                    <Badge variant="secondary" className="text-sm px-4 py-2 bg-purple-100 text-purple-800">
-                                        심리 상담
-                                    </Badge>
-                                    <Badge variant="secondary" className="text-sm px-4 py-2 bg-orange-100 text-orange-800">
-                                        리더십 개발
-                                    </Badge>
+                            {/* 간단한 소개 */}
+                            <div className="space-y-3">
+                                <div className="flex items-center space-x-2">
+                                    <Coffee className="w-5 h-5 text-blue-600" />
+                                    <span className="text-gray-700">커피를 좋아하고, 사람들과 이야기하는 걸 즐겨요</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <BookOpen className="w-5 h-5 text-green-600" />
+                                    <span className="text-gray-700">심리학을 전공했고, 상담을 통해 사람들을 돕고 있어요</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Heart className="w-5 h-5 text-pink-600" />
+                                    <span className="text-gray-700">청년들이 자신만의 길을 찾는 걸 도와드리고 싶어요</span>
                                 </div>
                             </div>
 
                             {/* 연락처 */}
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex flex-col sm:flex-row gap-3">
                                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                                    상담 예약하기
+                                    <MessageCircle className="w-4 h-4 mr-2" />
+                                    이야기 나누기
                                 </Button>
                                 <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                                    문의하기
+                                    상담 예약하기
                                 </Button>
                             </div>
                         </div>
@@ -91,83 +92,107 @@ export default function AboutRepresentativePage() {
                 </div>
             </section>
 
-            {/* 경력 및 학력 섹션 */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-                <div className="max-w-6xl mx-auto">
-                    <div className="grid md:grid-cols-2 gap-12">
-                        {/* 주요 경력 */}
-                        <Card className="p-8">
-                            <CardHeader>
-                                <CardTitle className="text-2xl text-gray-800">주요 경력</CardTitle>
+            {/* 시작하게 된 이야기 */}
+            <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+                <div className="max-w-4xl mx-auto">
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-bold mb-4 text-gray-900">코이창작소를 시작하게 된 이야기</h2>
+                    </div>
+                    
+                    <Card className="p-6">
+                        <CardContent className="space-y-6">
+                            <div className="bg-white rounded-lg p-6">
+                                <h3 className="text-lg font-semibold mb-3 text-gray-900">💭 왜 시작했을까요?</h3>
+                                <p className="text-gray-700 leading-relaxed">
+                                    대학 시절, 저도 많은 고민을 했어요. "내가 뭘 하고 싶지?", "어떤 일이 나한테 맞을까?" 
+                                    이런 고민들을 혼자서만 하다 보니 답답하고 외로웠거든요. 그때 누군가와 함께 이야기 나누고 
+                                    고민을 풀어갈 수 있었다면 얼마나 좋았을까 하는 생각이 들었어요.
+                                </p>
+                            </div>
+                            
+                            <div className="bg-blue-50 rounded-lg p-6">
+                                <h3 className="text-lg font-semibold mb-3 text-gray-900">🌟 어떤 사람들을 만나고 싶나요?</h3>
+                                <p className="text-gray-700 leading-relaxed">
+                                    저는 여러분이 '완벽한 사람'이 되기를 바라지 않아요. 대신 '진짜 나'를 찾아가는 과정을 
+                                    함께하고 싶어요. 때로는 힘들고, 때로는 재미있고, 때로는 의미 있는 그런 여정을 
+                                    함께 걸어가고 싶어요.
+                                </p>
+                            </div>
+                            
+                            <div className="bg-green-50 rounded-lg p-6">
+                                <h3 className="text-lg font-semibold mb-3 text-gray-900">🤝 함께 성장하고 싶어요</h3>
+                                <p className="text-gray-700 leading-relaxed">
+                                    코이창작소는 제가 여러분을 가르치는 곳이 아니에요. 함께 고민하고, 함께 발견하고, 
+                                    함께 성장하는 곳이에요. 여러분의 이야기를 들려주세요. 저도 제 이야기를 들려드릴게요.
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </section>
+
+            {/* 간단한 이력 */}
+            <section className="py-12 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto">
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-bold mb-4 text-gray-900">간단한 이력</h2>
+                        <p className="text-gray-600">자세한 건 만나서 이야기해요!</p>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <Card className="p-6">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-lg text-gray-800">학력 & 자격</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div className="flex items-start space-x-4">
-                                    <div className="w-3 h-3 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                            <CardContent className="space-y-3">
+                                <div className="flex items-center space-x-3">
+                                    <Star className="w-4 h-4 text-yellow-500" />
                                     <div>
-                                        <h4 className="font-semibold text-lg">코이창작소 대표</h4>
-                                        <p className="text-gray-600">2020년 ~ 현재</p>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            청년들을 위한 상담 및 창업 지원 플랫폼 설립 및 운영
-                                        </p>
+                                        <p className="font-medium">서울대학교 심리학과</p>
+                                        <p className="text-sm text-gray-500">상담심리학 전공</p>
                                     </div>
                                 </div>
-                                <div className="flex items-start space-x-4">
-                                    <div className="w-3 h-3 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-center space-x-3">
+                                    <Star className="w-4 h-4 text-yellow-500" />
                                     <div>
-                                        <h4 className="font-semibold text-lg">청년 창업 멘토</h4>
-                                        <p className="text-gray-600">2018년 ~ 2020년</p>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            다양한 기관에서 청년 창업가들을 위한 멘토링 활동
-                                        </p>
+                                        <p className="font-medium">상담심리사 1급</p>
+                                        <p className="text-sm text-gray-500">한국상담심리학회</p>
                                     </div>
                                 </div>
-                                <div className="flex items-start space-x-4">
-                                    <div className="w-3 h-3 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-center space-x-3">
+                                    <Star className="w-4 h-4 text-yellow-500" />
                                     <div>
-                                        <h4 className="font-semibold text-lg">진로 상담 전문가</h4>
-                                        <p className="text-gray-600">2015년 ~ 현재</p>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            대학생 및 청년들을 위한 진로 상담 및 심리 상담 제공
-                                        </p>
+                                        <p className="font-medium">청소년상담사 2급</p>
+                                        <p className="text-sm text-gray-500">여성가족부</p>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
 
-                        {/* 학력 및 자격증 */}
-                        <Card className="p-8">
-                            <CardHeader>
-                                <CardTitle className="text-2xl text-gray-800">학력 및 자격증</CardTitle>
+                        <Card className="p-6">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-lg text-gray-800">경험</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div className="flex items-start space-x-4">
-                                    <div className="w-3 h-3 bg-orange-600 rounded-full mt-2 flex-shrink-0"></div>
+                            <CardContent className="space-y-3">
+                                <div className="flex items-center space-x-3">
+                                    <Users className="w-4 h-4 text-blue-500" />
                                     <div>
-                                        <h4 className="font-semibold text-lg">서울대학교 심리학과</h4>
-                                        <p className="text-gray-600">2012년 졸업</p>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            상담심리학 전공, 학점 4.2/4.5
-                                        </p>
+                                        <p className="font-medium">코이창작소 대표</p>
+                                        <p className="text-sm text-gray-500">2020년 ~ 현재</p>
                                     </div>
                                 </div>
-                                <div className="flex items-start space-x-4">
-                                    <div className="w-3 h-3 bg-red-600 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-center space-x-3">
+                                    <Users className="w-4 h-4 text-blue-500" />
                                     <div>
-                                        <h4 className="font-semibold text-lg">청소년상담사 2급</h4>
-                                        <p className="text-gray-600">2015년 취득</p>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            여성가족부 발행 국가공인자격증
-                                        </p>
+                                        <p className="font-medium">청년 창업 멘토</p>
+                                        <p className="text-sm text-gray-500">2018년 ~ 2020년</p>
                                     </div>
                                 </div>
-                                <div className="flex items-start space-x-4">
-                                    <div className="w-3 h-3 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+                                <div className="flex items-center space-x-3">
+                                    <Users className="w-4 h-4 text-blue-500" />
                                     <div>
-                                        <h4 className="font-semibold text-lg">상담심리사 1급</h4>
-                                        <p className="text-gray-600">2017년 취득</p>
-                                        <p className="text-sm text-gray-500 mt-1">
-                                            한국상담심리학회 발행 전문자격증
-                                        </p>
+                                        <p className="font-medium">진로 상담 전문가</p>
+                                        <p className="text-sm text-gray-500">2015년 ~ 현재</p>
                                     </div>
                                 </div>
                             </CardContent>
@@ -176,39 +201,41 @@ export default function AboutRepresentativePage() {
                 </div>
             </section>
 
-            {/* 비전 및 철학 섹션 */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-3xl font-bold mb-8 text-gray-900">대표의 비전과 철학</h2>
-                    <div className="grid md:grid-cols-3 gap-8">
+            {/* 함께하고 싶은 것들 */}
+            <section className="py-12 px-4 sm:px-6 lg:px-8 bg-blue-50">
+                <div className="max-w-4xl mx-auto">
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-bold mb-4 text-gray-900">함께하고 싶은 것들</h2>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-3 gap-6">
                         <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">💡</span>
+                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Heart className="w-6 h-6 text-blue-600" />
                             </div>
-                            <h3 className="text-xl font-semibold mb-3">창의적 사고</h3>
-                            <p className="text-gray-600">
-                                청년들이 기존의 틀에 얽매이지 않고 자신만의 독창적인 아이디어를 
-                                발굴할 수 있도록 돕습니다.
+                            <h3 className="text-lg font-semibold mb-3">마음 나누기</h3>
+                            <p className="text-gray-600 text-sm">
+                                고민과 기쁨을 함께 나누고, 서로의 이야기를 들어주는 시간
                             </p>
                         </Card>
+                        
                         <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">🌱</span>
+                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <BookOpen className="w-6 h-6 text-green-600" />
                             </div>
-                            <h3 className="text-xl font-semibold mb-3">지속적 성장</h3>
-                            <p className="text-gray-600">
-                                한 번의 성공이 아닌 지속적인 성장과 발전을 통해 
-                                진정한 자신의 가치를 발견하도록 이끕니다.
+                            <h3 className="text-lg font-semibold mb-3">함께 배우기</h3>
+                            <p className="text-gray-600 text-sm">
+                                새로운 것을 배우고, 함께 성장해가는 과정
                             </p>
                         </Card>
+                        
                         <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-2xl">🤝</span>
+                            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Users className="w-6 h-6 text-purple-600" />
                             </div>
-                            <h3 className="text-xl font-semibold mb-3">공동체 의식</h3>
-                            <p className="text-gray-600">
-                                혼자만의 성장이 아닌 함께 성장하는 공동체를 만들어 
-                                더 큰 변화를 이끌어냅니다.
+                            <h3 className="text-lg font-semibold mb-3">꿈 찾기</h3>
+                            <p className="text-gray-600 text-sm">
+                                자신만의 길을 찾고, 꿈을 향해 나아가는 여정
                             </p>
                         </Card>
                     </div>
@@ -216,20 +243,20 @@ export default function AboutRepresentativePage() {
             </section>
 
             {/* CTA 섹션 */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                        함께 성장해요
+                    <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                        함께 이야기해요
                     </h2>
-                    <p className="text-xl mb-8 opacity-90">
-                        코이창작소와 함께 새로운 도전을 시작하고, 
-                        당신만의 가능성을 발견해보세요
+                    <p className="text-lg mb-6 opacity-90">
+                        혼자 고민하지 마세요. 함께 나누면 더 좋은 답을 찾을 수 있어요
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
-                            상담 예약하기
+                            <MessageCircle className="w-5 h-5 mr-2" />
+                            이야기 나누기
                         </Button>
-                        <Button size="lg" variant="secondary" className="border-white text-blue-600 hover:bg-gray-100">
+                        <Button size="lg" variant="secondary" className="border-white text-black hover:bg-white hover:text-gray-900">
                             프로그램 둘러보기
                         </Button>
                     </div>
