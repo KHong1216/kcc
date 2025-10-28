@@ -1,5 +1,5 @@
 import { useNavigate, type MetaFunction } from "react-router"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
 
@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => {
     ];
 }
 
-export default function BookstayPage() {
+export default function EssayPage() {
     const navigate = useNavigate();
     
     return (

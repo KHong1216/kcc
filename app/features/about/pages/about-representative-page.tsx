@@ -1,8 +1,7 @@
 import type { MetaFunction } from "react-router"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/common/components/ui/card";
 import { Badge } from "~/common/components/ui/badge";
-import { Button } from "~/common/components/ui/button";
-import { Heart, Coffee, BookOpen, Users, MessageCircle, Star, GraduationCap } from "lucide-react";
+import { Heart, BookOpen, Users, Star } from "lucide-react";
 import type { Route } from "./+types/about-representative-page";
 import { getRepresentativeFromManagers } from "../queries";
 

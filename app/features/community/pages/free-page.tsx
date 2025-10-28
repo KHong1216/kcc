@@ -2,7 +2,7 @@ import type { MetaFunction } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
-import { Brain, Clock, Users, ArrowRight } from "lucide-react";
+import { Brain, Clock, ArrowRight } from "lucide-react";
 
 export const meta: MetaFunction = () => {
   return [

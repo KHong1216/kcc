@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { redirect, useNavigate, type MetaFunction } from "react-router";
+import { useNavigate, type MetaFunction } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
-import { Calendar } from "../../../common/components/ui/calendar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../common/components/ui/select";
-import { ChevronLeft, ChevronRight, Clock, Users, MapPin } from "lucide-react";
+import { Clock, Users } from "lucide-react";
 import { getPrograms } from "../queries";
 import type { Route } from "./+types/reservation-page";
 

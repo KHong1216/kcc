@@ -2,7 +2,7 @@ import type { MetaFunction } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
-import { Star, Calendar, User, Heart } from "lucide-react";
+import { Star, Calendar, Heart } from "lucide-react";
 import { getReviews } from "../queries";
 import type { Route } from "./+types/review-page";
 

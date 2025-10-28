@@ -1,6 +1,5 @@
 import type { MetaFunction } from "react-router"
-import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card"
-import { Button } from "../../../common/components/ui/button"
+import { Card, CardContent } from "../../../common/components/ui/card"
 import { Badge } from "../../../common/components/ui/badge"
 import { Camera, Clock, Construction } from "lucide-react"
 
@@ -11,7 +10,7 @@ export const meta: MetaFunction = () => {
     ];
 }
 
-export default function MagazinePage() {
+export default function PhotoPage() {
     return (
         <div className="min-h-screen w-full pt-16 sm:pt-20">
             {/* 히어로 섹션 */}

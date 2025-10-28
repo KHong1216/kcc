@@ -1,10 +1,9 @@
 import type { MetaFunction } from "react-router"
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
-import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
 import { Input } from "../../../common/components/ui/input";
-import { GraduationCap, Award, Briefcase, Heart, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import {Briefcase, Heart, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { getManagers } from "../queries";
 import type { Route } from "./+types/about-counselors-page";
 

@@ -8,8 +8,8 @@ export default [
     ]),
     ...prefix("camps", [
         route("/love", "features/love/pages/love-page.tsx"),
-        route("/photo", "features/magazine/pages/magazine-page.tsx"),
-        route("/essay", "features/bookstay/pages/bookstay-page.tsx"),
+        route("/photo", "features/photo/pages/photo-page.tsx"),
+        route("/essay", "features/essay/pages/essay-page.tsx"),
     ]),
     ...prefix("reservation", [
         index("features/reservation/pages/reservation-page.tsx"),
