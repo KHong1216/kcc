@@ -5,10 +5,14 @@ import { Camera, Clock, Construction } from "lucide-react"
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "사진 캠프 준비중 | 코이창작소" },
-        { name: "description", content: "사진 캠프 프로그램이 준비중입니다. 곧 만나보실 수 있습니다." }
+      { title: "포토 캠프 - 나만의 포트폴리오 만들기 | 코이창작소" },
+      { name: "description", content: "전문 사진가와 함께하는 포토 캠프. 나만의 포트폴리오를 제작하고 사진 기술을 배워보세요." },
+      { name: "keywords", content: "포토캠프, 사진촬영, 포트폴리오제작, 사진상담, 코이창작소" },
+      { property: "og:title", content: "포토 캠프 - 나만의 포트폴리오 만들기" },
+      { property: "og:description", content: "전문 사진가와 함께하는 포토 캠프. 나만의 포트폴리오를 제작하고 사진 기술을 배워보세요." },
+      { property: "og:image", content: "https://www.koicreativelab.com/og-photo.jpg" },
     ];
-}
+  };
 
 export default function PhotoPage() {
     return (

@@ -6,7 +6,11 @@ import { Heart, Clock, Construction } from "lucide-react"
 export const meta: MetaFunction = () => {
     return [
         { title: "연애 캠프 준비중 | 코이창작소" },
-        { name: "description", content: "연애 캠프 프로그램이 준비중입니다. 곧 만나보실 수 있습니다." }
+        { name: "description", content: "연애 캠프 프로그램이 준비중입니다. 건강한 연애와 관계에 대해 배우고 성장하는 특별한 프로그램을 곧 만나보실 수 있습니다." },
+        { name: "keywords", content: "연애캠프, 연애상담, 관계상담, 연애프로그램, 코이창작소" },
+        { property: "og:title", content: "연애 캠프 준비중 | 코이창작소" },
+        { property: "og:description", content: "연애 캠프 프로그램이 준비중입니다. 건강한 연애와 관계에 대해 배우고 성장하는 특별한 프로그램을 곧 만나보실 수 있습니다." },
+        { property: "og:image", content: "https://www.koicreativelab.com/og-love.jpg" },
     ];
 }
 

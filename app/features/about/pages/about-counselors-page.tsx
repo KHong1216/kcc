@@ -1,6 +1,6 @@
 import type { MetaFunction } from "react-router"
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
+import { Card, CardContent } from "../../../common/components/ui/card";
 import { Button } from "../../../common/components/ui/button";
 import { Input } from "../../../common/components/ui/input";
 import {Briefcase, Heart, Search, ChevronLeft, ChevronRight } from "lucide-react";
@@ -10,7 +10,11 @@ import type { Route } from "./+types/about-counselors-page";
 export const meta: MetaFunction = () => {
     return [
         { title: "코이매니저 소개 | 코이창작소" },
-        { name: "description", content: "코이창작소의 전문 매니저들을 소개합니다. 함께 성장하는 여정을 시작해보세요." }
+        { name: "description", content: "코이창작소의 전문 매니저들을 소개합니다. 함께 성장하는 여정을 시작해보세요." },
+        { name: "keywords", content: "코이매니저, 상담사소개, 청년상담, 전문상담사, 코이창작소" },
+        { property: "og:title", content: "코이매니저 소개 | 코이창작소" },
+        { property: "og:description", content: "코이창작소의 전문 매니저들을 소개합니다. 함께 성장하는 여정을 시작해보세요." },
+        { property: "og:image", content: "https://www.koicreativelab.com/og-counselors.jpg" },
     ];
 }
 

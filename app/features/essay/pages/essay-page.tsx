@@ -5,10 +5,14 @@ import { Button } from "../../../common/components/ui/button";
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "에세이 캠프 - 대화로 쓰는 에세이 | 코이창작소" },
-        { name: "description", content: "글 대신 대화로 쓰는 에세이. 당신의 이야기를 상담사와 나누고, 하나의 감성 에세이로 완성해보세요." }
+      { title: "에세이 캠프 - 대화로 쓰는 에세이 | 코이창작소" },
+      { name: "description", content: "글 대신 대화로 쓰는 에세이. 당신의 이야기를 상담사와 나누고, 하나의 감성 에세이로 완성해보세요." },
+      { name: "keywords", content: "에세이쓰기, 글쓰기캠프, 에세이집제작, 글쓰기상담, 코이창작소" },
+      { property: "og:title", content: "에세이 캠프 - 대화로 쓰는 에세이" },
+      { property: "og:description", content: "글 대신 대화로 쓰는 에세이. 당신의 이야기를 상담사와 나누고, 하나의 감성 에세이로 완성해보세요." },
+      { property: "og:image", content: "https://www.koicreativelab.com/og-essay.jpg" },
     ];
-}
+  };
 
 export default function EssayPage() {
     const navigate = useNavigate();

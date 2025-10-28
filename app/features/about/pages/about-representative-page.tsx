@@ -7,10 +7,14 @@ import { getRepresentativeFromManagers } from "../queries";
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "안녕하세요, 대표소개 | 코이창작소" },
-        { name: "description", content: "코이창작소 대표 소개." }
+      { title: "대표 소개 | 코이창작소" },
+      { name: "description", content: "코이창작소 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
+      { name: "keywords", content: "코이창작소대표, 청년상담사, 대표소개, 코이창작소" },
+      { property: "og:title", content: "대표 소개 | 코이창작소" },
+      { property: "og:description", content: "코이창작소 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
+      { property: "og:image", content: "https://www.koicreativelab.com/og-representative.jpg" },
     ];
-}
+  };
 
 export async function loader({ request }: Route.LoaderArgs) {
     const representative = await getRepresentativeFromManagers();
