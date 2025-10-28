@@ -2,36 +2,41 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router";
 
 const heroImages = [
   {
     id: 1,
-    src: "/1.JPG", // 실제 이미지 경로로 변경
+    src: "/1.JPG",
     alt: "코이창작소 메인 이미지 1",
     title: "작은 물결이 큰 도약이 되는 창작소",
     subtitle: "코이창작소",
-    description: "탈광주 청년을 막기 위한 청년문화 공간"
+    description: "탈광주 청년을 막기 위한 청년문화 공간",
+    link: "/about/representative"
   },
   {
     id: 2,
-    src: "/2.JPG", // 실제 이미지 경로로 변경
+    src: "/2.JPG",
     alt: "코이창작소 메인 이미지 2",
     title: "청년들의 성장을 돕는 공간",
     subtitle: "상담을 통한 '나'를 찾는 과정",
-    description: "다양한 청년들의 의견을 듣고 모집해서 청년 이해 관계 센터 설립"
+    description: "다양한 청년들의 의견을 듣고 모집해서 청년 이해 관계 센터 설립",
+    link: "/camps/photo"
   },
   {
     id: 3,
-    src: "/3.JPG", // 실제 이미지 경로로 변경
+    src: "/3.JPG",
     alt: "코이창작소 메인 이미지 3",
     title: "코이 = 사랑",
     subtitle: "환경에 따라 성장하는 코이 물고기",
-    description: "청년들이 각자의 가능성을 발견하고 성장해 나가는 과정"
+    description: "청년들이 각자의 가능성을 발견하고 성장해 나가는 과정",
+    link: "/camps/essay"
   }
 ];
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % heroImages.length);
@@ -45,6 +50,11 @@ export function HeroSection() {
     setCurrentSlide(index);
   };
 
+  function handleLearnMore() {
+    const target = heroImages[currentSlide]?.link;
+    if (target) navigate(target);
+  }
+
   return (
     <section className="relative min-h-screen w-full overflow-hidden">
       {/* 캐러셀 컨테이너 */}
@@ -52,11 +62,10 @@ export function HeroSection() {
         {heroImages.map((image, index) => (
           <motion.div
             key={image.id}
-            className={`absolute inset-0 w-full h-full ${
-              index === currentSlide ? 'z-10' : 'z-0'
-            }`}
+            className={`absolute inset-0 w-full h-full ${index === currentSlide ? 'z-10' : 'z-0'
+              }`}
             initial={{ opacity: 0 }}
-            animate={{ 
+            animate={{
               opacity: index === currentSlide ? 1 : 0,
               scale: index === currentSlide ? 1 : 1.1
             }}
@@ -84,7 +93,7 @@ export function HeroSection() {
                 >
                   {image.title}
                 </motion.h1>
-                
+
                 <motion.h2
                   className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-blue-300"
                   initial={{ opacity: 0, y: 20 }}
@@ -108,9 +117,10 @@ export function HeroSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.2, duration: 0.6 }}
                 >
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                    onClick={handleLearnMore}
                   >
                     자세히 보기
                   </Button>
@@ -143,11 +153,10 @@ export function HeroSection() {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide 
-                  ? 'bg-white scale-125' 
-                  : 'bg-white/50 hover:bg-white/70'
-              }`}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide
+                ? 'bg-white scale-125'
+                : 'bg-white/50 hover:bg-white/70'
+                }`}
               aria-label={`${index + 1}번째 이미지로 이동`}
             />
           ))}

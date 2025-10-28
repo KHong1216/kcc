@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { MetaFunction } from "react-router";
+import { redirect, useNavigate, type MetaFunction } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
@@ -22,12 +22,14 @@ export const loader = async () => {
 };
 
 const timeSlots = [
-    "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"
+    "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"
 ];
 
 export default function ReservationPage({ loaderData }: Route.ComponentProps) {
     const { programs } = loaderData;
+    const navigate = useNavigate();
 
+    console.log("programs", programs);
     const [selectedProgram, setSelectedProgram] = useState<string>("");
     const [selectedTimeSlots, setSelectedTimeSlots] = useState<{ [key: string]: string[] }>({});
     const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -101,11 +103,18 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
 
         const program = programs.find(p => p.id === selectedProgram);
         const allTimes = getAllSelectedTimes();
-        const timeSlotsText = allTimes.map(item =>
-            `${item.date} ${item.times.join(", ")}`
-        ).join("\n");
 
-        alert(`${program?.title} 프로그램 예약 신청이 완료되었습니다!\n\n선택한 시간:\n${timeSlotsText}\n\n상담사가 연락드려 최종 일정을 확인해드립니다.`);
+        // 선택한 정보를 apply 페이지로 전달
+        navigate("/reservation/apply", {
+            state: {
+                programId: selectedProgram,
+                programTitle: program?.title,
+                selectedTimeSlots, // 원본 데이터
+                selectedTimesSummary: allTimes.map(item =>
+                    `${item.date} ${item.times.join(", ")}`
+                ).join("\n") // 사용자에게 보여줄 요약 텍스트
+            }
+        });
     };
 
     return (
@@ -147,8 +156,8 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
                                 <Card
                                     key={program.id}
                                     className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${selectedProgram === program.id
-                                            ? 'ring-2 ring-blue-500 shadow-lg'
-                                            : 'hover:shadow-md'
+                                        ? 'ring-2 ring-blue-500 shadow-lg'
+                                        : 'hover:shadow-md'
                                         }`}
                                     onClick={() => setSelectedProgram(program.id)}
                                 >
@@ -234,12 +243,12 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
                                                     <Button
                                                         variant="outline"
                                                         className={`h-16 w-full flex flex-col items-center justify-center ${isToday
-                                                                ? 'bg-green-50 border-green-300 text-green-800'
-                                                                : hasSelectedTimes
-                                                                    ? 'bg-blue-50 border-blue-300'
-                                                                    : isPast
-                                                                        ? 'bg-gray-100 border-gray-200 text-gray-400'
-                                                                        : 'hover:bg-blue-50'
+                                                            ? 'bg-green-50 border-green-300 text-green-800'
+                                                            : hasSelectedTimes
+                                                                ? 'bg-blue-50 border-blue-300'
+                                                                : isPast
+                                                                    ? 'bg-gray-100 border-gray-200 text-gray-400'
+                                                                    : 'hover:bg-blue-50'
                                                             }`}
                                                         disabled={isPast}
                                                     >
@@ -253,14 +262,14 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
                                                     {/* 각 날짜별 시간 선택 */}
                                                     {!isPast && (
                                                         <div className="grid grid-cols-1 gap-1">
-                                                            {timeSlots.slice(0, 4).map((time) => (
+                                                            {timeSlots.map((time) => (
                                                                 <Button
                                                                     key={time}
                                                                     size="sm"
                                                                     variant={selectedTimeSlots[dateKey]?.includes(time) ? "default" : "outline"}
                                                                     className={`text-xs py-1 h-6 ${selectedTimeSlots[dateKey]?.includes(time)
-                                                                            ? 'bg-blue-600 text-white'
-                                                                            : 'hover:bg-blue-50'
+                                                                        ? 'bg-blue-600 text-white'
+                                                                        : 'hover:bg-blue-50'
                                                                         }`}
                                                                     onClick={() => handleTimeSlotToggle(date, time)}
                                                                 >

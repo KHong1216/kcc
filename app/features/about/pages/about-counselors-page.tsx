@@ -5,6 +5,8 @@ import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
 import { Input } from "../../../common/components/ui/input";
 import { GraduationCap, Award, Briefcase, Heart, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { getManagers } from "../queries";
+import type { Route } from "./+types/about-counselors-page";
 
 export const meta: MetaFunction = () => {
     return [
@@ -13,125 +15,19 @@ export const meta: MetaFunction = () => {
     ];
 }
 
-// 여러 매니저 데이터
-const managers = [
-    {
-        id: 1,
-        name: "양시근",
-        image: "/yang-sigeun.jpg",
-        introduction: "청년들의 마음을 이해하고 함께 성장하는 매니저",
-        graduation: "○○대학교 상담심리학과 졸업",
-        qualifications: [
-            "상담심리사 2급",
-            "청소년상담사 3급"
-        ],
-        career: [
-            "코이창작소 매니저 (2023~현재)",
-            "○○청소년센터 상담사 (2021~2023)",
-            "○○복지관 실습상담사 (2020~2021)"
-        ],
-        specialty: "개인상담, 그룹상담, 연애상담",
-        description: "어려운 시기를 겪고 있는 청년들에게 따뜻한 마음으로 다가가 함께 해결책을 찾아가는 것을 좋아합니다."
-    },
-    {
-        id: 2,
-        name: "김코이",
-        image: "/kim-koi.jpg",
-        introduction: "창작과 심리를 연결하는 전문 매니저",
-        graduation: "○○대학교 심리학과 졸업",
-        qualifications: [
-            "상담심리사 1급",
-            "미술심리상담사 2급"
-        ],
-        career: [
-            "코이창작소 창작 매니저 (2022~현재)",
-            "○○문화센터 상담사 (2020~2022)",
-            "○○대학교 상담센터 인턴 (2018~2020)"
-        ],
-        specialty: "창작상담, 미술치료, 자기표현",
-        description: "창작을 통해 자신을 발견하고 표현하는 과정을 함께하는 것을 좋아합니다."
-    },
-    {
-        id: 3,
-        name: "이창작",
-        image: "/lee-changjak.jpg",
-        introduction: "글쓰기와 마음치료의 전문가",
-        graduation: "○○대학교 문학과 졸업",
-        qualifications: [
-            "상담심리사 2급",
-            "문학치료사 1급"
-        ],
-        career: [
-            "코이창작소 글쓰기 매니저 (2021~현재)",
-            "○○작가협회 상담사 (2019~2021)",
-            "○○출판사 편집자 (2017~2019)"
-        ],
-        specialty: "글쓰기상담, 문학치료, 자기탐색",
-        description: "글쓰기를 통해 마음의 이야기를 풀어내는 과정을 함께합니다."
-    },
-    {
-        id: 4,
-        name: "박소통",
-        image: "/park-sotong.jpg",
-        introduction: "관계와 소통의 전문 매니저",
-        graduation: "○○대학교 사회학과 졸업",
-        qualifications: [
-            "상담심리사 2급",
-            "가족상담사 2급"
-        ],
-        career: [
-            "코이창작소 관계 매니저 (2023~현재)",
-            "○○가족상담센터 상담사 (2021~2023)",
-            "○○청소년센터 상담사 (2019~2021)"
-        ],
-        specialty: "관계상담, 가족상담, 소통기술",
-        description: "건강한 관계를 만들어가는 과정을 함께하는 것을 좋아합니다."
-    },
-    {
-        id: 5,
-        name: "정마음",
-        image: "/jung-maeum.jpg",
-        introduction: "마음의 치유와 성장을 돕는 매니저",
-        graduation: "○○대학교 임상심리학과 졸업",
-        qualifications: [
-            "임상심리사 2급",
-            "트라우마치료사 1급"
-        ],
-        career: [
-            "코이창작소 치유 매니저 (2022~현재)",
-            "○○심리상담센터 상담사 (2020~2022)",
-            "○○병원 정신건강의학과 인턴 (2018~2020)"
-        ],
-        specialty: "트라우마치료, 우울상담, 마음치유",
-        description: "상처받은 마음을 치유하고 다시 성장할 수 있도록 돕습니다."
-    },
-    {
-        id: 6,
-        name: "최성장",
-        image: "/choi-seongjang.jpg",
-        introduction: "성장과 변화를 이끄는 전문 매니저",
-        graduation: "○○대학교 교육학과 졸업",
-        qualifications: [
-            "상담심리사 2급",
-            "청소년지도사 2급"
-        ],
-        career: [
-            "코이창작소 성장 매니저 (2021~현재)",
-            "○○청소년수련원 상담사 (2019~2021)",
-            "○○교육청 학생상담사 (2017~2019)"
-        ],
-        specialty: "성장상담, 진로상담, 자기계발",
-        description: "청년들의 성장과 변화를 함께하는 여정을 좋아합니다."
-    }
-];
+export async function loader({ request }: Route.LoaderArgs) {
+    const managers = await getManagers();
+    return { managers };
+}
 
-export default function AboutCounselorsPage() {
+export default function AboutCounselorsPage({loaderData}: Route.ComponentProps) {
+    const { managers } = loaderData;
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const managersPerPage = 3; // 데스크톱에서 3명, 모바일에서 2명으로 조정 가능
 
     // 검색 필터링
-    const filteredManagers = managers.filter(manager => 
+    const filteredManagers = managers.filter(manager =>
         manager.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         manager.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
         manager.introduction.toLowerCase().includes(searchTerm.toLowerCase())
@@ -166,7 +62,7 @@ export default function AboutCounselorsPage() {
                     <p className="text-lg text-gray-600 mb-6">
                         함께 성장하는 여정을 시작해보세요
                     </p>
-                    
+
                     {/* 검색 바 */}
                     <div className="max-w-md mx-auto relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -200,13 +96,13 @@ export default function AboutCounselorsPage() {
                         {currentManagers.map((manager) => (
                             <Card key={manager.id} className="overflow-hidden hover:shadow-lg transition-shadow group">
                                 <div className="relative">
-                                    <img 
-                                        src={manager.image} 
-                                        alt={manager.name} 
-                                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform" 
+                                    <img
+                                        src={manager.image}
+                                        alt={manager.name}
+                                        className="w-full h-100 object-cover transition-transform"
                                     />
                                 </div>
-                                
+
                                 <CardContent className="p-6">
                                     <div className="mb-4">
                                         <h2 className="text-xl font-bold mb-2 text-gray-900">{manager.name}</h2>
@@ -217,16 +113,16 @@ export default function AboutCounselorsPage() {
                                     {/* 정보 그리드 */}
                                     <div className="space-y-4">
                                         {/* 졸업 */}
-                                        <div className="space-y-2">
+                                        {/* <div className="space-y-2">
                                             <div className="flex items-center space-x-2">
                                                 <GraduationCap className="w-4 h-4 text-blue-600" />
                                                 <h3 className="text-sm font-semibold text-gray-900">졸업</h3>
                                             </div>
                                             <p className="text-gray-600 text-xs">{manager.graduation}</p>
-                                        </div>
+                                        </div> */}
 
                                         {/* 자격증 */}
-                                        <div className="space-y-2">
+                                        {/* <div className="space-y-2">
                                             <div className="flex items-center space-x-2">
                                                 <Award className="w-4 h-4 text-blue-600" />
                                                 <h3 className="text-sm font-semibold text-gray-900">자격증</h3>
@@ -238,7 +134,7 @@ export default function AboutCounselorsPage() {
                                                     </Badge>
                                                 ))}
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                         {/* 전문 분야 */}
                                         <div className="space-y-2">
@@ -334,14 +230,14 @@ export default function AboutCounselorsPage() {
                     <p className="text-gray-600 mb-6">
                         어려운 일이 있거나 누군가와 이야기하고 싶을 때 언제든 연락주세요
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3">
                             상담 예약하기
                         </Button>
                         <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3">
                             문의하기
                         </Button>
-                    </div>
+                    </div> */}
                 </div>
             </section>
         </div>

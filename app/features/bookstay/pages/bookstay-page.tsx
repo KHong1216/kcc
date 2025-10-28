@@ -1,4 +1,4 @@
-import type { MetaFunction } from "react-router"
+import { Navigate, useNavigate, type MetaFunction } from "react-router"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
@@ -11,6 +11,7 @@ export const meta: MetaFunction = () => {
 }
 
 export default function BookstayPage() {
+    const navigate = useNavigate();
     return (
         <div className="min-h-screen w-full">
             {/* 히어로 섹션 */}
@@ -230,12 +231,11 @@ export default function BookstayPage() {
                         에세이 캠프와 함께해보는 건 어떨까요?
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button size="lg" variant="secondary" className="bg-white text-green-600 hover:bg-gray-100">
+                        <Button size="lg" variant="secondary" className="bg-white text-green-600 hover:bg-gray-100"
+                        onClick={() => navigate("/reservation")}>
                             에세이 캠프 신청하기
                         </Button>
-                        <Button size="lg" variant="secondary" className="bg-white text-green-600 hover:bg-gray-100">
-                            문의하기
-                        </Button>
+                        
                     </div>
                 </div>
             </section>

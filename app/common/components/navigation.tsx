@@ -12,15 +12,15 @@ import {
 
 const menus = [
     {
-        name: "소개",
+        name: "About",
         to: "/about/representative",
     },
     {
-        name: "코이매니저소개",
+        name: "Manager",
         to: "/about/counselors",
     },
     {
-        name: "프로젝트",
+        name: "Project",
         to: "/camps/love",
         items: [
             {
@@ -41,11 +41,11 @@ const menus = [
         ]
     },
     {
-        name: "예약",
+        name: "Reservation",
         to: "/reservation",
     },
     {
-        name: "커뮤니티",
+        name: "Community",
         to: "/community/notice",
         items: [
             {

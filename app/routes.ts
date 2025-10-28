@@ -12,7 +12,8 @@ export default [
         route("/essay", "features/bookstay/pages/bookstay-page.tsx"),
     ]),
     ...prefix("reservation", [
-        index("features/reservation/pages/reservation-page.tsx")
+        index("features/reservation/pages/reservation-page.tsx"),
+        route("/apply", "features/reservation/pages/reservation-apply-page.tsx")
     ]),
     ...prefix("community", [
         route("/notice","features/community/pages/notice-page.tsx"),

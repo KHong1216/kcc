@@ -1,3 +1,4 @@
+import type { NumberUnitLength } from "luxon";
 import client from "../../lib/supa-client";
 
 export interface Program {
@@ -18,6 +19,8 @@ export interface Program {
 export interface Reservation {
   id: string;
   user_name: string;
+  user_age: number;
+  user_job: string;
   user_phone: string;
   user_email?: string;
   program_id: 'love' | 'photo' | 'essay';
