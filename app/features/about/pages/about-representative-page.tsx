@@ -39,7 +39,7 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
             <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
                 <div className="max-w-4xl mx-auto text-center">
                     <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-                        안녕하세요, {representative.name}입니다
+                        안녕하세요, 코이창작소입니다
                     </h1>
                     <p className="text-lg text-gray-600 mb-6">
                         코이창작소를 시작하게 된 이야기를 들려드릴게요
