@@ -50,11 +50,11 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
                     <div className="grid lg:grid-cols-2 gap-8 items-center">
                         {/* 프로필 이미지 */}
                         <div className="relative">
-                            <div className="relative h-80 lg:h-96 rounded-2xl overflow-hidden shadow-lg">
+                            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-lg">
                                 <img
                                     src={representative.image}
                                     alt={representative.name}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover object-center"
                                 />
                             </div>
                             {/* 플로팅 배지 */}
@@ -79,12 +79,12 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
 
                             {/* 간단한 소개 */}
                             <div className="space-y-3">
-                                {representative.personalInfo.map((info, index) => (
-                                    <div key={index} className="flex items-center space-x-2">
-                                        <GraduationCap className="w-5 h-5 text-blue-600" />
-                                        <span className="text-gray-700">{info}</span>
+                                {representative.graduation && (
+                                    <div className="flex items-center space-x-2">
+                                        <BookOpen className="w-5 h-5 text-green-600" />
+                                        <span className="text-gray-700">{representative.graduation}</span>
                                     </div>
-                                ))}
+                                )}
                             </div>
                         </div>
                     </div>
@@ -105,18 +105,10 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
                                 <CardTitle className="text-lg text-gray-800">학력 & 자격</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
-                                <div className="flex items-center space-x-3">
-                                    <Star className="w-4 h-4 text-yellow-500" />
-                                    <div>
-                                        <p className="font-medium">{representative.graduation}</p>
-                                    </div>
-                                </div>
-                                {representative.qualifications.map((qual, index) => (
-                                    <div key={index} className="flex items-center space-x-3">
+                                {(representative.qualifications || []).map((q, i) => (
+                                    <div key={i} className="flex items-center space-x-3">
                                         <Star className="w-4 h-4 text-yellow-500" />
-                                        <div>
-                                            <p className="font-medium">{qual}</p>
-                                        </div>
+                                        <div><p className="font-medium">{q}</p></div>
                                     </div>
                                 ))}
                             </CardContent>
@@ -127,12 +119,10 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
                                 <CardTitle className="text-lg text-gray-800">경험</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
-                                {representative.career.map((exp, index) => (
-                                    <div key={index} className="flex items-center space-x-3">
+                                {(representative.career || []).map((c, i) => (
+                                    <div key={i} className="flex items-center space-x-3">
                                         <Users className="w-4 h-4 text-blue-500" />
-                                        <div>
-                                            <p className="font-medium">{exp}</p>
-                                        </div>
+                                        <div><p className="font-medium">{c}</p></div>
                                     </div>
                                 ))}
                             </CardContent>

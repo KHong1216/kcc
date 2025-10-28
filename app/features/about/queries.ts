@@ -28,8 +28,19 @@ export async function getManagers(): Promise<Manager[]> {
       console.error("Error fetching managers:", error);
       return [];
     }
-    return data || [];
-  }
+    
+    if (!data) return [];
+    
+    // 매니저들도 이미지 URL 생성
+    return data.map(manager => ({
+      ...manager,
+      qualifications: Array.isArray(manager.qualifications) ? manager.qualifications : [],
+      career: Array.isArray(manager.career) ? manager.career : [],
+      image: manager.image 
+        ? `${client.supabaseUrl}/storage/v1/object/public/manager-images/${manager.image}`
+        : '/placeholder.jpg'
+    }));
+}
 
   export async function searchManagers(searchTerm: string): Promise<Manager[]> {
     const { data, error } = await client
@@ -57,13 +68,26 @@ export async function getRepresentativeFromManagers(): Promise<Manager | null> {
 		.select("*")
 		.eq("is_active", true)
 		.eq("is_representative", true)
-		.order("id", { ascending: true })
 		.limit(1)
 		.maybeSingle();
 
 	if (error) {
-		console.error("Error fetching representative:", error);
+		console.error("[getRepresentativeFromManagers] supabase error:", error);
 		return null;
 	}
-	return data ?? null;
+	
+	if (!data) return null;
+	
+	// 실제 버킷명으로 변경 (예: 'images', 'profiles', 'manager-images' 등)
+	const imageUrl = data.image 
+  ? `${client.supabaseUrl}/storage/v1/object/public/manager-images/${data.image}`
+  : '/placeholder.jpg';
+	
+	return {
+		...data,
+		qualifications: Array.isArray(data.qualifications) ? data.qualifications : [],
+		career: Array.isArray(data.career) ? data.career : [],
+		image: imageUrl
+	};
 }
+
