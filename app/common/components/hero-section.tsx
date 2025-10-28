@@ -18,7 +18,7 @@ const heroImages = [
     id: 2,
     src: "/2.png",
     alt: "코이창작소 메인 이미지 2",
-    title: "청년들의 성장을 돕는 공간",
+    title: "청년들의 성장을 돕는 창작 공간",
     subtitle: "상담을 통한 '나'를 찾는 과정",
     description: "다양한 청년들의 의견을 듣고 모집해서 청년 이해 관계 센터 설립",
     link: "/camps/photo"
@@ -85,20 +85,22 @@ export function HeroSection() {
             {/* 텍스트 콘텐츠 */}
             <div className="absolute inset-0 flex items-center justify-center z-20">
               <div className="text-center text-white px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-                <motion.h1
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+              <motion.h1
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight break-keep"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.6 }}
+                  style={{ textWrap: "balance" }}
                 >
                   {image.title}
                 </motion.h1>
 
                 <motion.h2
-                  className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-blue-300"
+                  className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-blue-300 break-keep"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.6 }}
+                  style={{ textWrap: "balance" }}
                 >
                   {image.subtitle}
                 </motion.h2>
