@@ -21,8 +21,13 @@ const menus = [
     },
     {
         name: "Project",
-        to: "/camps/love",
+        to: "/camps/essay",
         items: [
+            {
+                name: "에세이",
+                description: "에세이 캠프 프로젝트",
+                to: "/camps/essay",
+            },
             {
                 name: "연애",
                 description: "건강한 연애를 위한 프로젝트",
@@ -33,11 +38,7 @@ const menus = [
                 description: "사진 프로젝트",
                 to: "/camps/photo",
             },
-            {
-                name: "에세이",
-                description: "에세이 캠프 프로젝트",
-                to: "/camps/essay",
-            }
+            
         ]
     },
     {

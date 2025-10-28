@@ -7,9 +7,9 @@ export default [
         route("/counselors", "features/about/pages/about-counselors-page.tsx"),
     ]),
     ...prefix("camps", [
+        route("/essay", "features/essay/pages/essay-page.tsx"),
         route("/love", "features/love/pages/love-page.tsx"),
         route("/photo", "features/photo/pages/photo-page.tsx"),
-        route("/essay", "features/essay/pages/essay-page.tsx"),
     ]),
     ...prefix("reservation", [
         index("features/reservation/pages/reservation-page.tsx"),
