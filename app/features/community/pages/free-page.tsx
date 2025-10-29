@@ -1,4 +1,4 @@
-import type { MetaFunction } from "react-router";
+import { useNavigate, type MetaFunction } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
@@ -27,6 +27,8 @@ const tests = [
 ];
 
 export default function FreePage() {
+  const navigate = useNavigate();
+
   const handleStartTest = (testId: string) => {
     if (testId === "mbti") {
       // MBTI 검사 페이지로 이동
@@ -114,7 +116,8 @@ export default function FreePage() {
             <p className="text-gray-600 mb-4">
               코이창작소의 다양한 프로그램을 통해 나를 더 깊이 발견해보세요
             </p>
-            <Button variant="outline" className="bg-white hover:bg-gray-50">
+            <Button variant="outline" className="bg-white hover:bg-gray-50"
+            onClick={() => navigate("/camps/essay")}>
               프로그램 보러가기
             </Button>
           </div>
