@@ -1,19 +1,30 @@
-import type { NumberUnitLength } from "luxon";
 import client from "../../lib/supa-client";
 
 export interface Program {
-  id: 'love' | 'photo' | 'essay';
+  id: number;
   title: string;
-  description: string;
-  duration: string;
-  target_audience?: string;
-  icon?: string;
-  color_gradient?: string;
-  badge?: string;
-  badge_color?: string;
+  description: string | null;
+  duration: string | null;
+  target_audience: string | null;
+  icon: string | null;
+  color_gradient: string | null;
+  badge: string | null;
+  badge_color: string | null;
   is_active: boolean;
-  created_at: string;
-  updated_at: string;
+}
+
+export async function getPrograms(): Promise<Program[]> {
+  const { data, error } = await client
+    .from<Program>("programs")
+    .select("id,title,description,duration,target_audience,icon,color_gradient,badge,badge_color,is_active")
+    .eq("is_active", true)
+    .order("id", { ascending: true });
+
+  if (error) {
+    console.error("[getPrograms] error:", error);
+    return [];
+  }
+  return data ?? [];
 }
 
 export interface Reservation {
@@ -32,22 +43,6 @@ export interface Reservation {
   confirmed_time?: string;
   created_at: string;
   updated_at: string;
-}
-
-// 프로그램 조회
-export async function getPrograms(): Promise<Program[]> {
-  const { data, error } = await client
-    .from('programs')
-    .select('*')
-    .eq('is_active', true)
-    .order('created_at', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching programs:', error);
-    return [];
-  }
-
-  return data || [];
 }
 
 // 예약 생성

@@ -56,7 +56,7 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
       <div className="max-w-6xl mx-auto space-y-6">
         {programs.map(p => (
           <Card key={p.id}>
-            <CardHeader><CardTitle>{p.name}</CardTitle></CardHeader>
+            <CardHeader><CardTitle>{p.title}</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               <form method="post" className="space-y-2">
                 <input type="hidden" name="intent" value="update" />
@@ -67,7 +67,7 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
                 </div>
                 <div>
                   <label className="text-sm font-medium">제목</label>
-                  <Input name="name" defaultValue={p.name || ""} required />
+                  <Input name="name" defaultValue={p.title || ""} required />
                 </div>
                 <div>
                   <label className="text-sm font-medium">설명</label>

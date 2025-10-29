@@ -28,9 +28,11 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
     const navigate = useNavigate();
 
     console.log("programs", programs);
-    const [selectedProgram, setSelectedProgram] = useState<string>("");
+    const [selectedProgram, setSelectedProgram] = useState<number | null>(null);
     const [selectedTimeSlots, setSelectedTimeSlots] = useState<{ [key: string]: string[] }>({});
     const [currentWeek, setCurrentWeek] = useState(new Date());
+
+    const program = programs.find((p: { id: number }) => p.id === selectedProgram);
 
     const getWeekDates = (date: Date) => {
         const weekDates = [];
@@ -114,6 +116,9 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
             }
         });
     };
+
+    const allTimes = getAllSelectedTimes();
+
 
     return (
         <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gray-50">
@@ -294,8 +299,8 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
                                         <h3 className="text-lg font-semibold text-gray-900 mb-4">예약 정보</h3>
                                         <div className="space-y-3 text-sm">
                                             <div className="flex justify-between">
-                                                <span className="text-gray-600">프로그램:</span>
-                                                <span className="font-medium">{programs.find(p => p.id === selectedProgram)?.title}</span>
+                                            <span className="text-gray-600">프로그램:</span>
+                                            <span className="font-medium">{programs.find((p: { id: number }) => p.id === selectedProgram)?.title}</span>
                                             </div>
 
                                             <div className="space-y-2">
