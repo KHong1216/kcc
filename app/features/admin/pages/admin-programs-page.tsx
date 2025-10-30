@@ -92,7 +92,7 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
                 <input type="hidden" name="intent" value="toggle-active" />
                 <input type="hidden" name="id" value={p.id} />
                 <input type="hidden" name="is_active" value={String(p.is_active)} />
-                <Button>{p.is_active ? "비활성화" : "활성화"}</Button>
+                <Button type="submit">{p.is_active ? "비활성화" : "활성화"}</Button>
               </form>
             </CardContent>
           </Card>
