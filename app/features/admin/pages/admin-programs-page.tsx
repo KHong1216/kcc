@@ -6,6 +6,7 @@ import { Input } from "../../../common/components/ui/input";
 import { Textarea } from "../../../common/components/ui/textarea";
 import client from "../../../lib/supa-client";
 import type { Route } from "./+types/admin-programs-page";
+import { listPrograms, toggleProgramActive, updateProgram } from "../queries";
 
 export const meta: MetaFunction = () => [
   { title: "프로젝트 관리 | 코이창작소" },
@@ -18,7 +19,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const { data: profile } = await client.from("profiles").select("role").eq("email", session.user.email).single();
   if (profile?.role !== "admin") return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
 
-  const { data: programs } = await client.from("programs").select("*").order("id");
+  const { data: programs } = await listPrograms();
   return { programs: programs ?? [] };
 }
 
@@ -27,21 +28,21 @@ export async function action({ request }: Route.ActionArgs) {
   const intent = String(form.get("intent") || "");
 
   if (intent === "update") {
-    const id = Number(form.get("id"));
-    await client.from("programs").update({
-      name: String(form.get("name") || ""),
+    await updateProgram({
+      id: Number(form.get("id")),
+      title: String(form.get("name") || ""),
       description: String(form.get("description") || ""),
       content: String(form.get("content") || ""),
       slug: String(form.get("slug") || ""),
       type: String(form.get("type") || "essay"),
-    }).eq("id", id);
+    });
     return { ok: true };
   }
 
   if (intent === "toggle-active") {
     const id = Number(form.get("id"));
     const is_active = String(form.get("is_active")) === "true";
-    await client.from("programs").update({ is_active: !is_active }).eq("id", id);
+    await toggleProgramActive(id, is_active);
     return { ok: true };
   }
 
