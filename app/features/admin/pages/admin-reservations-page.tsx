@@ -17,34 +17,67 @@ export async function loader({ request }: Route.LoaderArgs) {
   const { data: profile } = await client.from("profiles").select("role").eq("email", session.user.email).single();
   if (profile?.role !== "admin") return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
 
-  const { data: reservations } = await client.from("reservations").select("*").order("created_at", { ascending: false });
+  const { data: reservations } = await client
+    .from("reservations")
+    .select("*")
+    .order("created_at", { ascending: false });
+
   return { reservations: reservations ?? [] };
 }
+
 
 export async function action({ request }: Route.ActionArgs) {
   const form = await request.formData();
   const intent = String(form.get("intent") || "");
 
   if (intent === "update-status") {
-    const id = Number(form.get("id"));
-    const status = String(form.get("status"));
-    await client.from("reservations").update({ status }).eq("id", id);
-    return { ok: true };
-  }
+		const id = String(form.get("id") || "");
+		const status = String(form.get("status") || "");
+
+		if (!id || !status) return { ok: false, message: "invalid input" };
+
+		const { error } = await client.from("reservations").update({ status }).eq("id", id);
+		if (error) {
+			console.error("update-status error", error);
+			return { ok: false, message: error.message };
+		}
+		return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
+	}
 
   if (intent === "update-confirm") {
-    const id = Number(form.get("id"));
-    const confirm_date = String(form.get("confirm_date") || null);
-    const confirm_time = String(form.get("confirm_time") || null);
-    await client.from("reservations").update({ confirm_date, confirm_time }).eq("id", id);
-    return { ok: true };
-  }
+		const id = String(form.get("id") || "");
+		const dateRaw = form.get("confirmed_date");
+		const timeRaw = form.get("confirmed_time");
+		if (!id) return { ok: false, message: "invalid id" };
+
+    const confirmed_date = dateRaw ? String(dateRaw) : null; // 빈 값은 null
+		const confirmed_time = timeRaw ? String(timeRaw) : null; // 빈 값은 null
+
+		const { error } = await client.from("reservations").update({ confirmed_date, confirmed_time }).eq("id", id);
+		if (error) {
+			console.error("update-confirmed_date, confirmed_time error", error);
+			return { ok: false, message: error.message };
+		}
+		return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
+	}
 
   return { ok: true };
 }
 
+function getTenMinuteTimes(): string[] {
+	const out: string[] = [];
+	for (let h = 0; h < 24; h++)
+		for (let m = 0; m < 60; m += 10) {
+			const hh = String(h).padStart(2, "0");
+			const mm = String(m).padStart(2, "0");
+			out.push(`${hh}:${mm}`);
+		}
+	return out;
+}
+
 export default function AdminReservationsPage({ loaderData }: Route.ComponentProps) {
   const { reservations } = loaderData as { reservations: any[] };
+  const timeOptions = getTenMinuteTimes();
 
   return (
     <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8">
@@ -68,15 +101,24 @@ export default function AdminReservationsPage({ loaderData }: Route.ComponentPro
                 <tr key={r.id} className="border-t">
                   <td className="p-3">{r.user_name || "-"}</td>
                   <td className="p-3">{r.user_email || "-"}</td>
-                  <td className="p-3">{r.phone || "-"}</td>
-                  <td className="p-3">{r.program_type || r.program_id || "-"}</td>
+                  <td className="p-3">{r.user_phone || "-"}</td>
+                  <td className="p-3">{r.program_id || "-"}</td>
                   <td className="p-3">{r.created_at ? new Date(r.created_at).toLocaleString() : "-"}</td>
                   <td className="p-3">
                     <form method="post" className="flex items-center gap-2">
                       <input type="hidden" name="intent" value="update-confirm" />
                       <input type="hidden" name="id" value={r.id} />
-                      <Input type="date" name="confirm_date" defaultValue={r.confirm_date ?? ""} className="h-8" />
-                      <Input type="time" name="confirm_time" defaultValue={r.confirm_time ?? ""} className="h-8" />
+                      <Input type="date" name="confirmed_date" defaultValue={r.confirmed_date ? String(r.confirmed_date).slice(0, 10) : ""} className="h-8" />
+                      <select
+                        name="confirmed_time"
+                        defaultValue={r.confirmed_time ? String(r.confirmed_time).slice(0, 5) : ""}
+                        className="border rounded px-2 py-1 h-8"
+                      >
+                        <option value="">-- 선택 --</option>
+                        {timeOptions.map(t => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
                       <Button type="submit" variant="outline" className="h-8 px-3">저장</Button>
                     </form>
                   </td>

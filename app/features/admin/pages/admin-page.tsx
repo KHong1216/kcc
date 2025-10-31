@@ -1,10 +1,10 @@
-import { useNavigate, type MetaFunction } from "react-router";
+import { Link, useNavigate, type MetaFunction } from "react-router";
 import type { Route } from "./+types/admin-page";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Button } from "../../../common/components/ui/button";
 import { Badge } from "../../../common/components/ui/badge";
-import { 
-  Users, 
+import {
+  Users,
   Calendar,
   MessageSquare,
   FolderOpen,
@@ -23,7 +23,7 @@ export const meta: MetaFunction = () => [
 export async function loader({ request }: Route.LoaderArgs) {
   // Supabase 세션 확인
   const { data: { session }, error } = await client.auth.getSession();
-  
+
   if (error || !session) {
     return new Response(null, {
       status: 302,
@@ -56,8 +56,8 @@ export async function loader({ request }: Route.LoaderArgs) {
     client.from("community_posts").select("*", { count: "exact", head: true })
   ]);
 
-  return { 
-    admin: session.user, 
+  return {
+    admin: session.user,
     stats: {
       managerCount: managerCount || 0,
       reservationCount: reservationCount || 0,
@@ -68,7 +68,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export async function action({ request }: Route.ActionArgs) {
   const form = await request.formData();
-  
+
   if (form.get("intent") === "logout") {
     await client.auth.signOut();
     return new Response(null, {
@@ -76,14 +76,14 @@ export async function action({ request }: Route.ActionArgs) {
       headers: { Location: "/admin/login" }
     });
   }
-  
+
   return { ok: true };
 }
 
 export default function AdminPage({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
   const { admin, stats } = loaderData;
-  
+
   return (
     <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gray-50">
       {/* 헤더 */}
@@ -171,10 +171,6 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
                   <Plus className="w-4 h-4 mr-1" />
                   매니저 관리
                 </Button>
-                {/* <Button variant="outline" size="sm" className="flex-1">
-                  <Eye className="w-4 h-4 mr-1" />
-                  목록 보기
-                </Button> */}
               </div>
             </CardContent>
           </Card>
@@ -194,12 +190,8 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
               <div className="flex space-x-2">
                 <Button size="sm" className="flex-1" onClick={() => navigate("/admin/programs")}>
                   <Plus className="w-4 h-4 mr-1" />
-                  프로젝트 설정
+                  프로젝트 관리
                 </Button>
-                {/* <Button variant="outline" size="sm" className="flex-1">
-                  <Settings className="w-4 h-4 mr-1" />
-                  설정
-                </Button> */}
               </div>
             </CardContent>
           </Card>

@@ -85,17 +85,29 @@ export function HeroSection() {
             {/* 텍스트 콘텐츠 */}
             <div className="absolute inset-0 flex items-center justify-center z-20">
               <div className="text-center text-white px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-              <motion.h1
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight break-keep"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
-                  style={{ textWrap: "balance" }}
-                >
-                  {image.title}
-                </motion.h1>
+                {index === 0 ? (
+                  <motion.h1
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight break-keep"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                    style={{ textWrap: "balance" }}
+                  >
+                    {image.title}
+                  </motion.h1>
+                ) : (
+                  <motion.h2
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight break-keep"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                    style={{ textWrap: "balance" }}
+                  >
+                    {image.title}
+                  </motion.h2>
+                )}
 
-                <motion.h2
+                <motion.h3
                   className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-blue-300 break-keep"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -103,7 +115,7 @@ export function HeroSection() {
                   style={{ textWrap: "balance" }}
                 >
                   {image.subtitle}
-                </motion.h2>
+                </motion.h3>
 
                 <motion.p
                   className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto"

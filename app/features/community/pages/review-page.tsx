@@ -2,8 +2,11 @@ import type { MetaFunction } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
+import { Input } from "../../../common/components/ui/input";
+import { Textarea } from "../../../common/components/ui/textarea";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../../../common/components/ui/dialog";
 import { Star, Calendar, Heart } from "lucide-react";
-import { getReviews } from "../queries";
+import { getReviews, createReview } from "../queries";
 import type { Route } from "./+types/review-page";
 
 export const meta: MetaFunction = () => {
@@ -13,9 +16,42 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export const loader = async () => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
     const reviews = await getReviews();
     return { reviews };
+}
+
+export async function action({ request }: Route.ActionArgs) {
+    const form = await request.formData();
+    const intent = String(form.get("intent") || "");
+
+    if (intent === "create-review") {
+        const user_name = String(form.get("user_name") || "").trim();
+        const program_id = String(form.get("program_id") || "").trim();
+        const rating = Number(form.get("rating") || 0);
+        const title = String(form.get("title") || "").trim();
+        const content = String(form.get("content") || "").trim();
+
+        if (!user_name || !program_id || !rating || !title || !content)
+            return { ok: false, message: "필수 항목을 입력하세요." };
+
+        await createReview({
+            user_name,
+            program_id: program_id as any,
+            rating,
+            title,
+            content,
+            is_verified: false,
+            updated_at: new Date().toISOString(),
+        } as any);
+
+        return new Response(null, {
+            status: 302,
+            headers: { Location: new URL(request.url).pathname }
+        });
+    }
+
+    return { ok: true };
 }
 
 export default function ReviewPage({ loaderData }: Route.ComponentProps) {
@@ -31,6 +67,60 @@ export default function ReviewPage({ loaderData }: Route.ComponentProps) {
                     <p className="text-lg text-gray-600">
                         코이창작소 프로그램 참여자들의 생생한 후기를 확인하세요
                     </p>
+                    <div className="mt-6">
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button>작성하기</Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>간단 후기 작성</DialogTitle>
+                                    <DialogDescription>아래 항목을 입력하고 등록을 눌러주세요.</DialogDescription>
+                                </DialogHeader>
+                                <form method="post" className="space-y-4">
+                                    <input type="hidden" name="intent" value="create-review" />
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-sm font-medium">이름</label>
+                                            <Input name="user_name" placeholder="홍길동" required />
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium">프로그램</label>
+                                            <select name="program_id" required className="border rounded px-2 py-2 w-full">
+                                                <option value="">선택하세요</option>
+                                                <option value="essay">에세이 캠프</option>
+                                                <option value="photo">포토 캠프</option>
+                                                <option value="love">연애 캠프</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-sm font-medium">평점(1~5)</label>
+                                            <select name="rating" required className="border rounded px-2 py-2 w-full" defaultValue="5">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-medium">제목</label>
+                                            <Input name="title" placeholder="좋은 경험이었어요" required />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium">내용</label>
+                                        <Textarea name="content" rows={4} placeholder="간단한 후기를 남겨주세요." required />
+                                    </div>
+                                    <DialogFooter>
+                                        <Button type="submit">등록</Button>
+                                    </DialogFooter>
+                                </form>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </div>
             </section>
 

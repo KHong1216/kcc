@@ -21,11 +21,11 @@ export default [
         route("/free", "features/community/pages/free-page.tsx")
     ]),
     ...prefix("admin", [
-        route("/", "features/admin/pages/admin-page.tsx"),
-        route("/login", "features/admin/pages/admin-login-page.tsx"),
-        route("/managers", "features/admin/pages/managers-page.tsx"),
-        route("/programs", "features/admin/pages/admin-programs-page.tsx"),
-        route("/reservations", "features/admin/pages/admin-reservations-page.tsx"),
-        route("/community", "features/admin/pages/admin-community-page.tsx"),
+        index("features/admin/pages/admin-page.tsx"),
+        route("login", "features/admin/pages/admin-login-page.tsx"),
+        route("managers", "features/admin/pages/managers-page.tsx"),
+        route("programs", "features/admin/pages/admin-programs-page.tsx"),
+        route("reservations", "features/admin/pages/admin-reservations-page.tsx"),
+        route("community", "features/admin/pages/admin-community-page.tsx"),
     ]),
 ] satisfies RouteConfig
