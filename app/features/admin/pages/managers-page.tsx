@@ -5,11 +5,21 @@ import { Button } from "../../../common/components/ui/button";
 import { Input } from "../../../common/components/ui/input";
 import { Textarea } from "../../../common/components/ui/textarea";
 import { Badge } from "../../../common/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../../../common/components/ui/dialog";
 import { 
   Plus, 
-  Trash2
+  Trash2,
+  Edit
 } from "lucide-react";
 import client from "../../../lib/supa-client";
+import { useState } from "react";
 
 export const meta: MetaFunction = () => [{ title: "매니저 설정 | 코이창작소" }];
 
@@ -67,6 +77,22 @@ export async function action({ request }: Route.ActionArgs) {
     return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
   }
 
+  if (intent === "update") {
+    const id = Number(form.get("id"));
+    const payload = {
+      name: String(form.get("name") || ""),
+      image: String(form.get("image") || ""),
+      introduction: String(form.get("introduction") || ""),
+      graduation: String(form.get("graduation") || ""),
+      qualifications: String(form.get("qualifications") || "").split(",").map(s => s.trim()).filter(Boolean),
+      career: String(form.get("career") || "").split(",").map(s => s.trim()).filter(Boolean),
+      specialty: String(form.get("specialty") || ""),
+      description: String(form.get("description") || ""),
+    };
+    await client.from("managers").update(payload).eq("id", id);
+    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
+  }
+
   if (intent === "delete") {
     const id = Number(form.get("id"));
     await client.from("managers").delete().eq("id", id);
@@ -78,6 +104,13 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function ManagersPage({ loaderData }: Route.ComponentProps) {
   const { managers } = loaderData as { managers: any[] };
+  const [editingManager, setEditingManager] = useState<any | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleEdit = (manager: any) => {
+    setEditingManager(manager);
+    setIsDialogOpen(true);
+  };
 
   return (
     <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
@@ -259,45 +292,59 @@ export default function ManagersPage({ loaderData }: Route.ComponentProps) {
                     </div>
 
                     {/* 액션 버튼 - 항상 하단 고정 */}
-                    <div className="grid grid-cols-3 gap-2 pt-2 border-t mt-auto flex-shrink-0">
-                      <form method="post" className="w-full">
-                        <input type="hidden" name="intent" value="toggle-active" />
-                        <input type="hidden" name="id" value={m.id} />
-                        <input type="hidden" name="is_active" value={String(m.is_active)} />
-                        <Button 
-                          variant={m.is_active ? "destructive" : "default"} 
-                          size="sm" 
-                          type="submit"
+                    <div className="pt-2 border-t mt-auto flex-shrink-0 space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(m)}
                           className="w-full text-xs"
+                          type="button"
                         >
-                          {m.is_active ? "비활성" : "활성"}
+                          <Edit className="w-3 h-3 mr-1" />
+                          수정
                         </Button>
-                      </form>
-                      <form method="post" className="w-full">
-                        <input type="hidden" name="intent" value="toggle-rep" />
-                        <input type="hidden" name="id" value={m.id} />
-                        <input type="hidden" name="is_representative" value={String(m.is_representative)} />
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          type="submit"
-                          className="w-full text-xs"
-                        >
-                          {m.is_representative ? "대표해제" : "대표지정"}
-                        </Button>
-                      </form>
-                      <form method="post" className="w-full">
-                        <input type="hidden" name="intent" value="delete" />
-                        <input type="hidden" name="id" value={m.id} />
-                        <Button 
-                          variant="destructive" 
-                          size="sm" 
-                          type="submit"
-                          className="w-full text-xs"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
-                      </form>
+                        <form method="post" className="w-full">
+                          <input type="hidden" name="intent" value="toggle-rep" />
+                          <input type="hidden" name="id" value={m.id} />
+                          <input type="hidden" name="is_representative" value={String(m.is_representative)} />
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            type="submit"
+                            className="w-full text-xs"
+                          >
+                            {m.is_representative ? "대표해제" : "대표지정"}
+                          </Button>
+                        </form>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <form method="post" className="w-full">
+                          <input type="hidden" name="intent" value="delete" />
+                          <input type="hidden" name="id" value={m.id} />
+                          <Button 
+                            variant="destructive" 
+                            size="sm" 
+                            type="submit"
+                            className="w-full text-xs"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </form>
+                        <form method="post" className="w-full">
+                          <input type="hidden" name="intent" value="toggle-active" />
+                          <input type="hidden" name="id" value={m.id} />
+                          <input type="hidden" name="is_active" value={String(m.is_active)} />
+                          <Button 
+                            variant={m.is_active ? "destructive" : "default"} 
+                            size="sm" 
+                            type="submit"
+                            className="w-full text-xs"
+                          >
+                            {m.is_active ? "비활성" : "활성"}
+                          </Button>
+                        </form>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -306,6 +353,154 @@ export default function ManagersPage({ loaderData }: Route.ComponentProps) {
           )}
         </div>
       </div>
+
+      {/* 수정 모달 */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>매니저 정보 수정</DialogTitle>
+            <DialogDescription>
+              매니저의 정보를 수정할 수 있습니다.
+            </DialogDescription>
+          </DialogHeader>
+          {editingManager && (
+            <form
+              method="post"
+              onSubmit={() => setIsDialogOpen(false)}
+              className="space-y-6"
+            >
+              <input type="hidden" name="intent" value="update" />
+              <input type="hidden" name="id" value={editingManager.id} />
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      이름 <span className="text-red-500">*</span>
+                    </label>
+                    <Input 
+                      name="name" 
+                      placeholder="홍길동" 
+                      required 
+                      className="w-full"
+                      defaultValue={editingManager.name}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      이미지 파일명 <span className="text-red-500">*</span>
+                    </label>
+                    <Input 
+                      name="image" 
+                      placeholder="예: s2.jpg" 
+                      required 
+                      className="w-full"
+                      defaultValue={editingManager.image}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      소개 한 줄
+                    </label>
+                    <Input 
+                      name="introduction" 
+                      placeholder="예: 문학과 글쓰기를 사랑하는 매니저" 
+                      className="w-full"
+                      defaultValue={editingManager.introduction || ""}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      졸업
+                    </label>
+                    <Input 
+                      name="graduation" 
+                      placeholder="예: 서울대학교 문학과" 
+                      className="w-full"
+                      defaultValue={editingManager.graduation || ""}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      자격증 (쉼표 구분)
+                    </label>
+                    <Input 
+                      name="qualifications" 
+                      placeholder="예: 국어교사 자격증, 문학치료사" 
+                      className="w-full"
+                      defaultValue={
+                        Array.isArray(editingManager.qualifications)
+                          ? editingManager.qualifications.join(", ")
+                          : editingManager.qualifications || ""
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      경력 (쉼표 구분)
+                    </label>
+                    <Input 
+                      name="career" 
+                      placeholder="예: 작가, 문학 평론가, 강사" 
+                      className="w-full"
+                      defaultValue={
+                        Array.isArray(editingManager.career)
+                          ? editingManager.career.join(", ")
+                          : editingManager.career || ""
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      전문 분야
+                    </label>
+                    <Input 
+                      name="specialty" 
+                      placeholder="예: 에세이, 시, 소설" 
+                      className="w-full"
+                      defaultValue={editingManager.specialty || ""}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      상세 설명
+                    </label>
+                    <Textarea 
+                      name="description" 
+                      placeholder="매니저에 대한 상세한 설명을 작성하세요." 
+                      rows={3} 
+                      className="w-full"
+                      defaultValue={editingManager.description || ""}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  취소
+                </Button>
+                <Button type="submit">
+                  수정 완료
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
