@@ -104,8 +104,47 @@ export default function EssayPage() {
                 </div>
             </section>
 
-            {/* 분위기는 어때요? */}
+            {/* 읽는 사람만이 제대로 말할 수 있다 */}
             <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">
+                        읽는 사람만이 제대로 말할 수 있다
+                    </h2>
+                    
+                    <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+                        <p>
+                            이번 시즌의 에세이 캠프는<br />
+                            나를 쓰기 이전에 <span className="font-bold">'읽는 사람만이 제대로 말할 수 있다'</span>는 주제로 진행됩니다.
+                        </p>
+
+                        <p>
+                            말하기에서 중요한 건 '무엇을 말할까'보다 '어떻게 말할까'예요.<br />
+                            생각을 깊이 있게 표현하려면 먼저 읽고, 정리하고, 써야 하죠.
+                        </p>
+
+                        <div className="bg-blue-50 p-6 rounded-lg">
+                            <p className="font-semibold text-gray-900 mb-4">
+                                이번 과정은 <span className="text-xl font-bold text-blue-700">읽기 → 생각 → 쓰기</span>로 이어지는 여정을 통해
+                            </p>
+                            <p>
+                                '나를 이해하고, 나답게 말할 수 있는 사람'이 되어가는 시간을 만듭니다.
+                            </p>
+                        </div>
+
+                        <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                            <p className="font-semibold text-gray-900">
+                                본 프로그램은 <span className="text-lg font-bold text-green-700">주 3회, 약 7개월 동안 함께 진행되며</span>,
+                            </p>
+                            <p className="mt-2">
+                                꾸준히 참여할 수 있는 분들을 중심으로 운영됩니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 분위기는 어때요? */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">
                         분위기는 어때요?
