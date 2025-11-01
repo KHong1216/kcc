@@ -6,6 +6,7 @@ import { Button } from "../../../common/components/ui/button";
 import { Clock, Users } from "lucide-react";
 import { getPrograms } from "../queries";
 import type { Route } from "./+types/reservation-page";
+import { cn } from "../../../lib/utils";
 
 export const meta: MetaFunction = () => {
     return [
@@ -27,7 +28,6 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
     const { programs } = loaderData;
     const navigate = useNavigate();
 
-    console.log("programs", programs);
     const [selectedProgram, setSelectedProgram] = useState<number | null>(null);
     const [selectedTimeSlots, setSelectedTimeSlots] = useState<{ [key: string]: string[] }>({});
     const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -123,27 +123,29 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
     return (
         <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gray-50">
             {/* 헤더 섹션 */}
-            <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+            <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
                 <div className="max-w-6xl mx-auto text-center">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-                        지금, 당신의 시간을 창작하세요
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 leading-tight">
+                        지금, 당신의 시간을 맡겨 주세요.
                     </h1>
-                    <div className="text-lg text-gray-600 mb-6 space-y-2">
-                        <p>잠시 멈추어, 나의 일상 속 한 장면을 새롭게 써보세요.</p>
-                        <p>코이창작소의 모든 프로그램은</p>
-                        <p className="font-semibold text-gray-800">'무언가를 배우는 시간'이 아닌 '나를 발견하는 여정'으로 설계되어 있습니다.</p>
-                        <p>당신의 이름으로 남길 새로운 순간,</p>
-                        <p className="font-semibold text-blue-600">지금 이곳에서 예약할 수 있습니다.</p>
+                    <div className="text-lg md:text-xl text-gray-700 mb-8 space-y-3 max-w-3xl mx-auto">
+                        <p>잠깐 멈춰서, 요즘의 나를 위한 시간을 하나 정해볼까요?</p>
+                        <p>당신의 이야기가 한 장면으로 남을 순간,</p>
+                        <p className="font-semibold text-gray-900">지금 이곳에서 시작할 수 있어요.</p>
                     </div>
                 </div>
             </section>
 
-            <section className="py-6 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+            {/* 안내 섹션 */}
+            <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border-t border-white/50">
                 <div className="max-w-6xl mx-auto text-center">
-                    <div className="text-lg text-gray-600 mb-6 space-y-2">
-                        <p>당신의 하루가 머무를 자리를 정하기 위해,</p>
-                        <p>이번 주 가능한 시간을 모두 선택해주세요.</p>
-                        <p className="text-sm text-gray-500">작은 선택이 모여, 당신만의 장면이 완성됩니다.</p>
+                    <div className="text-base md:text-lg text-gray-700 space-y-3 max-w-3xl mx-auto">
+                        <p>당신이 편한 시간에 우리가 맞춰가려고 해요.</p>
+                        <p>이번 주 안에서 가능한 날짜와 시간대를 전부 선택해 주세요.</p>
+                        <p className="text-gray-600">예약서를 보내주시면 코이매니저가 가장 편한 일정으로 연락드립니다.</p>
+                        <p className="text-sm md:text-base text-gray-500 italic pt-2">
+                            (약 30분~1시간 정도, 부담 없는 작은 만남이에요.)
+                        </p>
                     </div>
                 </div>
             </section>
@@ -154,56 +156,75 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
                     <div className="space-y-6">
                         <h2 className="text-2xl font-bold text-gray-900 mb-6">프로그램 선택</h2>
 
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             {programs.map((program) => (
                                 <Card
                                     key={program.id}
-                                    className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${selectedProgram === program.id
-                                        ? 'ring-2 ring-blue-500 shadow-lg'
-                                        : 'hover:shadow-md'
+                                    className={`cursor-pointer transition-all duration-300 overflow-hidden group bg-white h-full flex flex-col ${selectedProgram === program.id
+                                        ? 'ring-2 ring-blue-500 shadow-xl scale-[1.02]'
+                                        : 'hover:shadow-xl hover:scale-[1.01]'
                                         }`}
                                     onClick={() => setSelectedProgram(program.id)}
                                 >
-                                    <CardHeader className="p-6">
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex items-center space-x-4">
-                                                <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${program.color_gradient} flex items-center justify-center text-2xl`}>
-                                                    {program.icon}
+                                    <div className={`h-2 bg-gradient-to-r ${program.color_gradient || 'from-blue-500 to-purple-500'}`} />
+                                    <CardHeader className="p-6 pb-4 flex-shrink-0">
+                                        <div className="relative">
+                                            <div className="absolute top-0 right-0">
+                                                <Badge className={`${program.badge_color || 'bg-blue-500'} text-white px-3 py-1 text-sm font-semibold shadow-md`}>
+                                                    {program.badge || 'NEW'}
+                                                </Badge>
+                                            </div>
+                                            <div className="flex items-start space-x-4 pr-20">
+                                                <div className={`flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br ${program.color_gradient || 'from-blue-500 to-purple-500'} flex items-center justify-center text-3xl shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
+                                                    {program.icon || '✨'}
                                                 </div>
-                                                <div>
-                                                    <CardTitle className="text-xl text-gray-900">{program.title}</CardTitle>
-                                                    <CardDescription className="text-gray-600 mt-1">
+                                                <div className="flex-1 min-w-0 pt-1">
+                                                    <CardTitle className="text-xl text-gray-900 mb-2">{program.title}</CardTitle>
+                                                    <CardDescription className="text-gray-600 text-sm leading-relaxed line-clamp-2 min-h-[2.5rem]">
                                                         {program.description}
                                                     </CardDescription>
                                                 </div>
                                             </div>
-                                            <Badge className={`${program.badge_color} text-white`}>
-                                                {program.badge}
-                                            </Badge>
                                         </div>
                                     </CardHeader>
-                                    <CardContent className="px-6 pb-6">
-                                        <div className="grid grid-cols-2 gap-4 text-sm">
-                                            <div className="flex items-center space-x-2">
-                                                <Clock className="w-4 h-4 text-gray-500" />
-                                                <span className="text-gray-600">{program.duration}</span>
+                                    <CardContent className="px-6 pb-6 flex-1 flex flex-col">
+                                        <div className="grid grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg flex-shrink-0">
+                                            <div className="flex items-center space-x-3">
+                                                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                                    <Clock className="w-5 h-5 text-blue-600" />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-xs text-gray-500">소요 시간</p>
+                                                    <p className="text-sm font-semibold text-gray-900 truncate">{program.duration || '상담 후 결정'}</p>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center space-x-2">
-                                                <Users className="w-4 h-4 text-gray-500" />
-                                                <span className="text-gray-600">{program.target_audience}</span>
+                                            <div className="flex items-center space-x-3">
+                                                <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                                                    <Users className="w-5 h-5 text-purple-600" />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-xs text-gray-500">대상</p>
+                                                    <p className="text-sm font-semibold text-gray-900 line-clamp-2">{program.target_audience || '청년 누구나'}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="mt-4 flex justify-end">
-                                            <Button
-                                                size="sm"
-                                                className={`bg-gradient-to-r ${program.color_gradient} hover:opacity-90 text-white`}
+                                        <div className="flex justify-end mt-auto">
+                                            <button
+                                                type="button"
+                                                className={cn(
+                                                    "px-6 py-3 font-semibold rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-white hover:opacity-90 border-2 border-white/20 backdrop-blur-sm flex-shrink-0",
+                                                    "bg-gradient-to-r",
+                                                    program.color_gradient && program.color_gradient.trim()
+                                                        ? program.color_gradient.trim()
+                                                        : "from-blue-500 to-purple-500"
+                                                )}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setSelectedProgram(program.id);
                                                 }}
                                             >
-                                                선택하기
-                                            </Button>
+                                                {selectedProgram === program.id ? '✓ 선택됨' : '선택하기'}
+                                            </button>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -243,24 +264,29 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
 
                                             return (
                                                 <div key={index} className="space-y-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        className={`h-16 w-full flex flex-col items-center justify-center ${isToday
-                                                            ? 'bg-green-50 border-green-300 text-green-800'
-                                                            : hasSelectedTimes
-                                                                ? 'bg-blue-50 border-blue-300'
-                                                                : isPast
-                                                                    ? 'bg-gray-100 border-gray-200 text-gray-400'
-                                                                    : 'hover:bg-blue-50'
-                                                            }`}
-                                                        disabled={isPast}
+                                                    <div
+                                                        className={`relative h-16 w-full flex flex-col items-center justify-center rounded-lg border-2 transition-all ${
+                                                            isToday
+                                                                ? 'bg-green-50 border-green-400 text-green-900'
+                                                                : hasSelectedTimes
+                                                                    ? 'bg-blue-50 border-blue-300 text-blue-900'
+                                                                    : isPast
+                                                                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                                                                        : 'border-gray-200 hover:bg-blue-50 hover:border-blue-300 cursor-pointer'
+                                                        }`}
                                                     >
-                                                        <span className="text-sm font-medium">{date.getDate()}</span>
-                                                        <span className="text-xs text-gray-500">
-                                                            {date.toLocaleDateString('ko-KR', { weekday: 'short' })}
-                                                        </span>
-                                                        {isToday && <span className="text-xs text-green-600 font-bold">오늘</span>}
-                                                    </Button>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className="text-lg font-bold">{date.getDate()}</span>
+                                                            <span className="text-xs text-gray-500">
+                                                                {date.toLocaleDateString('ko-KR', { weekday: 'short' })}
+                                                            </span>
+                                                        </div>
+                                                        {isToday && (
+                                                            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold shadow-sm">
+                                                                오늘
+                                                            </span>
+                                                        )}
+                                                    </div>
 
                                                     {/* 각 날짜별 시간 선택 */}
                                                     {!isPast && (
@@ -299,8 +325,8 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
                                         <h3 className="text-lg font-semibold text-gray-900 mb-4">예약 정보</h3>
                                         <div className="space-y-3 text-sm">
                                             <div className="flex justify-between">
-                                            <span className="text-gray-600">프로그램:</span>
-                                            <span className="font-medium">{programs.find((p: { id: number }) => p.id === selectedProgram)?.title}</span>
+                                                <span className="text-gray-600">프로그램:</span>
+                                                <span className="font-medium">{programs.find((p: { id: number }) => p.id === selectedProgram)?.title}</span>
                                             </div>
 
                                             <div className="space-y-2">

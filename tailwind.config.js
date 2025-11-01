@@ -57,5 +57,20 @@ export default {
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
+	safelist: [
+		// Dynamic gradient colors
+		'from-green-400', 'to-teal-400',
+		'from-green-500', 'to-teal-500',
+		'from-blue-400', 'to-purple-400',
+		'from-blue-500', 'to-purple-500',
+		'from-pink-400', 'to-purple-400',
+		'from-pink-500', 'to-purple-500',
+		'from-pink-400', 'to-red-400',
+		'from-pink-500', 'to-red-500',
+		// Add more gradient combinations as needed
+		{
+			pattern: /(from|to)-(green|teal|blue|purple|pink|red)-(400|500|600)/,
+		}
+	]
 }
 
