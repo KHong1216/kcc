@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../common/compon
 import { Button } from "../../../common/components/ui/button";
 import { Input } from "../../../common/components/ui/input";
 import { Textarea } from "../../../common/components/ui/textarea";
+import { Badge } from "../../../common/components/ui/badge";
 import client from "../../../lib/supa-client";
 import type { Route } from "./+types/admin-programs-page";
 
@@ -72,61 +73,152 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
     const { programs } = loaderData as { programs: any[] };
 
     return (
-      <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto space-y-6">
-          <h1 className="text-2xl font-bold mb-4">프로젝트 관리</h1>
+      <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-6xl mx-auto py-8">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">프로젝트 관리</h1>
+            <p className="text-gray-600">프로젝트 콘텐츠 및 공개 상태를 관리하세요.</p>
+          </div>
+
           {programs.length === 0 ? (
             <Card>
-              <CardContent className="p-6 text-center text-gray-500">
-                등록된 프로그램이 없습니다.
+              <CardContent className="p-12 text-center">
+                <p className="text-gray-500 text-lg">등록된 프로그램이 없습니다.</p>
               </CardContent>
             </Card>
           ) : (
-            programs.map(p => (
-            <Card key={p.id}>
-              <CardHeader><CardTitle>{p.title}</CardTitle></CardHeader>
-              <CardContent className="space-y-4">
-                <form method="post" className="space-y-2">
-                  <input type="hidden" name="intent" value="update" />
-                  <input type="hidden" name="id" value={p.id} />
-                  <div>
-                    <label className="text-sm font-medium">제목</label>
-                    <Input name="title" defaultValue={p.title || ""} required />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">설명</label>
-                    <Textarea name="description" rows={3} defaultValue={p.description || ""} />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">소요 기간</label>
-                    <Input name="duration" defaultValue={p.duration || ""} />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">대상</label>
-                    <Textarea name="target_audience" rows={3} defaultValue={p.target_audience || ""} />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-sm font-medium">아이콘</label>
-                      <Input name="icon" defaultValue={p.icon || ""} />
+            <div className="space-y-6">
+              {programs.map(p => (
+                <Card key={p.id} className="overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 border-b">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {p.icon && (
+                          <div className="text-3xl">{p.icon}</div>
+                        )}
+                        <div>
+                          <CardTitle className="text-xl">{p.title || "이름 없음"}</CardTitle>
+                          <div className="flex items-center gap-2 mt-1">
+                            {p.badge && (
+                              <Badge variant="outline" className="text-xs">{p.badge}</Badge>
+                            )}
+                            <Badge variant={p.is_active ? "default" : "secondary"} className="text-xs">
+                              {p.is_active ? "활성화" : "비활성화"}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                      <form method="post">
+                        <input type="hidden" name="intent" value="toggle-active" />
+                        <input type="hidden" name="id" value={p.id} />
+                        <input type="hidden" name="is_active" value={String(p.is_active)} />
+                        <Button 
+                          type="submit" 
+                          variant={p.is_active ? "destructive" : "default"}
+                          size="sm"
+                        >
+                          {p.is_active ? "비활성화" : "활성화"}
+                        </Button>
+                      </form>
                     </div>
-                    <div>
-                      <label className="text-sm font-medium">배지</label>
-                      <Input name="badge" defaultValue={p.badge || ""} />
-                    </div>
-                  </div>
-                  <Button type="submit" variant="outline">내용 저장</Button>
-                </form>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <form method="post" className="space-y-6">
+                      <input type="hidden" name="intent" value="update" />
+                      <input type="hidden" name="id" value={p.id} />
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* 왼쪽 컬럼 */}
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              제목
+                            </label>
+                            <Input 
+                              name="title" 
+                              defaultValue={p.title || ""} 
+                              required 
+                              className="w-full"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              설명
+                            </label>
+                            <Textarea 
+                              name="description" 
+                              rows={4} 
+                              defaultValue={p.description || ""} 
+                              className="w-full"
+                            />
+                          </div>
 
-                <form method="post">
-                  <input type="hidden" name="intent" value="toggle-active" />
-                  <input type="hidden" name="id" value={p.id} />
-                  <input type="hidden" name="is_active" value={String(p.is_active)} />
-                  <Button type="submit">{p.is_active ? "비활성화" : "활성화"}</Button>
-                </form>
-              </CardContent>
-            </Card>
-            ))
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              소요 기간
+                            </label>
+                            <Input 
+                              name="duration" 
+                              defaultValue={p.duration || ""} 
+                              placeholder="예: 약 1~2시간"
+                              className="w-full"
+                            />
+                          </div>
+                        </div>
+
+                        {/* 오른쪽 컬럼 */}
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              대상
+                            </label>
+                            <Textarea 
+                              name="target_audience" 
+                              rows={4} 
+                              defaultValue={p.target_audience || ""} 
+                              placeholder="예: 글쓰기를 통해 성장하고 싶은 청년들"
+                              className="w-full"
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                아이콘
+                              </label>
+                              <Input 
+                                name="icon" 
+                                defaultValue={p.icon || ""} 
+                                placeholder="예: ✨"
+                                className="w-full"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                배지
+                              </label>
+                              <Input 
+                                name="badge" 
+                                defaultValue={p.badge || ""} 
+                                placeholder="예: NEW"
+                                className="w-full"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t">
+                        <Button type="submit" variant="default" className="w-full md:w-auto">
+                          내용 저장
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           )}
         </div>
       </div>

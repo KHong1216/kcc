@@ -6,6 +6,7 @@ import { Input } from "../../../common/components/ui/input";
 import { Textarea } from "../../../common/components/ui/textarea";
 import client from "../../../lib/supa-client";
 import { Badge } from "../../../common/components/ui/badge";
+import { Plus, Edit2, Trash2, Star, Heart, Calendar, User } from "lucide-react";
 import type { Route } from "./+types/admin-community-page";
 
 export const meta: MetaFunction = () => [
@@ -79,19 +80,36 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
   const { notices, reviews } = loaderData as { notices: any[]; reviews: any[] };
 
   return (
-    <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <Card>
-          <CardHeader><CardTitle>공지 작성</CardTitle></CardHeader>
-          <CardContent>
-            <form method="post" className="space-y-3">
+    <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto py-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">커뮤니티 관리</h1>
+          <p className="text-gray-600">공지사항과 리뷰를 관리하세요.</p>
+        </div>
+
+        {/* 공지 작성 폼 */}
+        <Card className="mb-8">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b">
+            <div className="flex items-center gap-2">
+              <Plus className="w-5 h-5 text-blue-600" />
+              <CardTitle>새 공지 작성</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
+            <form method="post" className="space-y-4">
               <input type="hidden" name="intent" value="create-notice" />
-              <Input name="title" placeholder="제목" required />
-              <Textarea name="content" placeholder="내용" rows={5} required />
-              <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">제목 <span className="text-red-500">*</span></label>
+                <Input name="title" placeholder="공지 제목을 입력하세요" required className="w-full" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">내용 <span className="text-red-500">*</span></label>
+                <Textarea name="content" placeholder="공지 내용을 입력하세요" rows={5} required className="w-full" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-sm font-medium">카테고리</label>
-                  <select name="category" required className="border rounded px-2 py-2 w-full">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">카테고리</label>
+                  <select name="category" required className="w-full h-10 border rounded-md px-3 bg-white">
                     <option value="일정">일정</option>
                     <option value="프로그램">프로그램</option>
                     <option value="이벤트">이벤트</option>
@@ -99,108 +117,184 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">중요 공지</label>
-                  <select name="is_important" required className="border rounded px-2 py-2 w-full">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">중요도</label>
+                  <select name="is_important" required className="w-full h-10 border rounded-md px-3 bg-white">
                     <option value="false">일반</option>
                     <option value="true">중요</option>
                   </select>
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">작성자</label>
+                  <Input name="author" placeholder="관리자" className="w-full" />
+                </div>
               </div>
-              <Input name="author" placeholder="작성자 (기본값: 관리자)" />
-              <Button type="submit">공지 등록</Button>
+              <div className="pt-2">
+                <Button type="submit" className="w-full md:w-auto">
+                  <Plus className="w-4 h-4 mr-2" />
+                  공지 등록
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
 
+        {/* 공지사항 및 리뷰 목록 */}
         <div className="grid md:grid-cols-2 gap-6">
+          {/* 공지사항 */}
           <Card>
-            <CardHeader><CardTitle>공지사항</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
-              {notices.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">공지사항이 없습니다.</p>
-              ) : (
-                notices.map(n => (
-                  <div key={n.id} className="border rounded p-3 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <strong>{n.title}</strong>
-                        {n.is_important && <Badge variant="destructive">중요</Badge>}
-                        <Badge variant="outline">{n.category}</Badge>
-                      </div>
-                      <Badge variant="secondary">{n.is_published ? "공개" : "비공개"}</Badge>
-                    </div>
-                    <p className="text-sm text-gray-700 whitespace-pre-line">{n.content}</p>
-                    <div className="text-xs text-gray-500">
-                      작성자: {n.author || "관리자"} | {n.created_at ? new Date(n.created_at).toLocaleString("ko-KR") : ""}
-                    </div>
-                    <div className="flex gap-2 pt-2 border-t">
-                      <form method="post" className="flex-1 space-y-2">
-                        <input type="hidden" name="intent" value="update-notice" />
-                        <input type="hidden" name="id" value={n.id} />
-                        <Input name="title" defaultValue={n.title} className="h-8" />
-                        <Textarea name="content" defaultValue={n.content} rows={3} className="text-sm" />
-                        <div className="flex gap-2">
-                          <select name="category" defaultValue={n.category} className="border rounded px-2 py-1 h-8 text-sm">
-                            <option value="일정">일정</option>
-                            <option value="프로그램">프로그램</option>
-                            <option value="이벤트">이벤트</option>
-                            <option value="기타">기타</option>
-                          </select>
-                          <select name="is_important" defaultValue={String(n.is_important)} className="border rounded px-2 py-1 h-8 text-sm">
-                            <option value="false">일반</option>
-                            <option value="true">중요</option>
-                          </select>
-                          <Button type="submit" variant="outline" size="sm">수정</Button>
-                        </div>
-                      </form>
-                      <form method="post">
-                        <input type="hidden" name="intent" value="delete-notice" />
-                        <input type="hidden" name="id" value={n.id} />
-                        <Button type="submit" variant="outline" size="sm">삭제</Button>
-                      </form>
-                    </div>
+            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 border-b">
+              <div className="flex items-center justify-between">
+                <CardTitle>공지사항</CardTitle>
+                <Badge variant="outline">{notices.length}개</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {notices.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">공지사항이 없습니다.</p>
                   </div>
-                ))
-              )}
+                ) : (
+                  notices.map(n => (
+                    <Card key={n.id} className="overflow-hidden">
+                      <CardHeader className="bg-gray-50 pb-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <CardTitle className="text-base mb-2">{n.title}</CardTitle>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {n.is_important && (
+                                <Badge variant="destructive" className="text-xs">중요</Badge>
+                              )}
+                              <Badge variant="outline" className="text-xs">{n.category}</Badge>
+                              <Badge variant="secondary" className="text-xs">
+                                {n.is_published ? "공개" : "비공개"}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="p-4 space-y-3">
+                        <p className="text-sm text-gray-700 whitespace-pre-line line-clamp-3">{n.content}</p>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <User className="w-3 h-3" />
+                          <span>{n.author || "관리자"}</span>
+                          <span>•</span>
+                          <Calendar className="w-3 h-3" />
+                          <span>{n.created_at ? new Date(n.created_at).toLocaleDateString("ko-KR") : ""}</span>
+                        </div>
+                        <div className="pt-3 border-t space-y-2">
+                          <form method="post" className="space-y-2">
+                            <input type="hidden" name="intent" value="update-notice" />
+                            <input type="hidden" name="id" value={n.id} />
+                            <Input name="title" defaultValue={n.title} className="h-9 text-sm" />
+                            <Textarea name="content" defaultValue={n.content} rows={3} className="text-sm" />
+                            <div className="flex gap-2">
+                              <select 
+                                name="category" 
+                                defaultValue={n.category} 
+                                className="flex-1 h-9 text-sm border rounded-md px-2 bg-white"
+                              >
+                                <option value="일정">일정</option>
+                                <option value="프로그램">프로그램</option>
+                                <option value="이벤트">이벤트</option>
+                                <option value="기타">기타</option>
+                              </select>
+                              <select 
+                                name="is_important" 
+                                defaultValue={String(n.is_important)} 
+                                className="flex-1 h-9 text-sm border rounded-md px-2 bg-white"
+                              >
+                                <option value="false">일반</option>
+                                <option value="true">중요</option>
+                              </select>
+                              <Button type="submit" variant="outline" size="sm" className="h-9">
+                                <Edit2 className="w-3 h-3 mr-1" />
+                                수정
+                              </Button>
+                            </div>
+                          </form>
+                          <form method="post">
+                            <input type="hidden" name="intent" value="delete-notice" />
+                            <input type="hidden" name="id" value={n.id} />
+                            <Button type="submit" variant="destructive" size="sm" className="w-full">
+                              <Trash2 className="w-3 h-3 mr-1" />
+                              삭제
+                            </Button>
+                          </form>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
             </CardContent>
           </Card>
 
+          {/* 리뷰 */}
           <Card>
-            <CardHeader><CardTitle>리뷰</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
-              {reviews.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">리뷰가 없습니다.</p>
-              ) : (
-                reviews.map(r => (
-                  <div key={r.id} className="border rounded p-3 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <strong>{r.title}</strong>
-                        <Badge variant="outline">{r.program_id || "리뷰"}</Badge>
-                        {r.is_verified && <Badge variant="secondary">인증</Badge>}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                          <span key={i} className={i < (r.rating || 0) ? "text-yellow-400" : "text-gray-300"}>★</span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span>작성자: {r.user_name || "익명"}</span>
-                      {r.created_at && <span>| {new Date(r.created_at).toLocaleString("ko-KR")}</span>}
-                    </div>
-                    <p className="text-sm text-gray-700 whitespace-pre-line">{r.content}</p>
-                    <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t">
-                      <span>좋아요: {r.likes_count || 0}</span>
-                      <form method="post">
-                        <input type="hidden" name="intent" value="delete-review" />
-                        <input type="hidden" name="id" value={r.id} />
-                        <Button type="submit" variant="outline" size="sm">삭제</Button>
-                      </form>
-                    </div>
+            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 border-b">
+              <div className="flex items-center justify-between">
+                <CardTitle>리뷰</CardTitle>
+                <Badge variant="outline">{reviews.length}개</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {reviews.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">리뷰가 없습니다.</p>
                   </div>
-                ))
-              )}
+                ) : (
+                  reviews.map(r => (
+                    <Card key={r.id} className="overflow-hidden">
+                      <CardHeader className="bg-gray-50 pb-3">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <CardTitle className="text-base mb-2">{r.title}</CardTitle>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Badge variant="outline" className="text-xs">{r.program_id || "리뷰"}</Badge>
+                              {r.is_verified && (
+                                <Badge variant="secondary" className="text-xs">인증</Badge>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`w-4 h-4 ${i < (r.rating || 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="p-4 space-y-3">
+                        <p className="text-sm text-gray-700 whitespace-pre-line line-clamp-3">{r.content}</p>
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <User className="w-3 h-3" />
+                          <span>{r.user_name || "익명"}</span>
+                          <span>•</span>
+                          <Calendar className="w-3 h-3" />
+                          <span>{r.created_at ? new Date(r.created_at).toLocaleDateString("ko-KR") : ""}</span>
+                          <span>•</span>
+                          <Heart className="w-3 h-3" />
+                          <span>{r.likes_count || 0}</span>
+                        </div>
+                        <div className="pt-2 border-t">
+                          <form method="post">
+                            <input type="hidden" name="intent" value="delete-review" />
+                            <input type="hidden" name="id" value={r.id} />
+                            <Button type="submit" variant="destructive" size="sm" className="w-full">
+                              <Trash2 className="w-3 h-3 mr-1" />
+                              삭제
+                            </Button>
+                          </form>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
