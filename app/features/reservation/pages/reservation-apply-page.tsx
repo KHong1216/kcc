@@ -1,4 +1,5 @@
 import { Form, useLocation, useNavigate, type MetaFunction } from "react-router";
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Button } from "../../../common/components/ui/button";
 import { Badge } from "../../../common/components/ui/badge";
@@ -62,49 +63,47 @@ export default function ReservationApplyPage({ actionData }: Route.ComponentProp
     const selectedTimeSlots = state?.selectedTimeSlots;
     const selectedTimesSummary = state?.selectedTimesSummary;
 
-    // 선택 정보가 없으면 예약 페이지로 리다이렉트
+    // 성공 메시지 표시 (성공한 경우 선택 정보 체크 안 함)
+    if (actionData?.success) {
+        return (
+            <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gradient-to-br from-green-50 via-teal-50 to-blue-50">
+                <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <Card className="text-center shadow-xl">
+                        <CardHeader>
+                            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <CardTitle className="text-3xl text-green-600 mb-2">신청 완료!</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <p className="text-lg text-gray-700 leading-relaxed">
+                                {actionData.message}
+                            </p>
+                            <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+                                <p className="text-sm text-gray-600">
+                                    곧 연락드리겠습니다. 조금만 기다려주세요! 😊
+                                </p>
+                            </div>
+                            <Button
+                                onClick={() => navigate("/")}
+                                className="w-full bg-green-600 hover:bg-green-700 text-white text-lg py-6 font-semibold shadow-lg hover:shadow-xl transition-all"
+                            >
+                                홈으로 가기
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        );
+    }
+
+    // 선택 정보가 없으면 예약 페이지로 리다이렉트 (성공하지 않은 경우만 체크)
     if (!programId || !selectedTimeSlots) {
         navigate("/reservation");
         return null;
     }
-
-    // 성공 메시지 표시
-if (actionData?.success) {
-    return (
-        <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gray-50">
-            <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <Card className="text-center">
-                    <CardHeader>
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                        <CardTitle className="text-2xl text-green-600">예약 신청 완료!</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-gray-600 mb-6">{actionData.message}</p>
-                        <div className="space-y-2">
-                            <Button 
-                                onClick={() => navigate("/reservation")}
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                            >
-                                다른 프로그램 예약하기
-                            </Button>
-                            <Button 
-                                variant="outline" 
-                                onClick={() => navigate("/")}
-                                className="w-full"
-                            >
-                                홈으로 돌아가기
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-        </div>
-    );
-}
 
     return (
         <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gray-50">

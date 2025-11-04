@@ -6,6 +6,7 @@ export default [
         route("/representative", "features/about/pages/about-representative-page.tsx"),
         route("/counselors", "features/about/pages/about-counselors-page.tsx"),
     ]),
+    route("/join", "features/essay/pages/essay-join-page.tsx"),
     ...prefix("camps", [
         route("/essay", "features/essay/pages/essay-page.tsx"),
         route("/love", "features/love/pages/love-page.tsx"),
