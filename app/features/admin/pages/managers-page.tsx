@@ -47,9 +47,33 @@ export async function action({ request }: Route.ActionArgs) {
   const intent = String(form.get("intent") || "");
 
   if (intent === "add") {
+    let imagePath = "";
+    
+    // 이미지 파일 업로드 처리
+    const imageFile = form.get("image") as File | null;
+    if (imageFile && imageFile.size > 0) {
+      const fileExt = imageFile.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = fileName;
+
+      const { error: uploadError } = await client.storage
+        .from("manager-images")
+        .upload(filePath, imageFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error("Image upload error:", uploadError);
+        return { error: "이미지 업로드에 실패했습니다." };
+      }
+
+      imagePath = filePath;
+    }
+
     const payload = {
       name: String(form.get("name") || ""),
-      image: String(form.get("image") || ""),
+      image: imagePath,
       introduction: String(form.get("introduction") || ""),
       graduation: String(form.get("graduation") || ""),
       qualifications: String(form.get("qualifications") || "").split(",").map(s => s.trim()).filter(Boolean),
@@ -79,9 +103,42 @@ export async function action({ request }: Route.ActionArgs) {
 
   if (intent === "update") {
     const id = Number(form.get("id"));
+    
+    // 기존 매니저 정보 가져오기
+    const { data: existingManager } = await client.from("managers").select("image").eq("id", id).single();
+    
+    let imagePath = existingManager?.image || "";
+    
+    // 새 이미지 파일이 업로드된 경우 처리
+    const imageFile = form.get("image") as File | null;
+    if (imageFile && imageFile.size > 0) {
+      // 기존 이미지 삭제 (있을 경우)
+      if (existingManager?.image) {
+        await client.storage.from("manager-images").remove([existingManager.image]);
+      }
+
+      const fileExt = imageFile.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = fileName;
+
+      const { error: uploadError } = await client.storage
+        .from("manager-images")
+        .upload(filePath, imageFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error("Image upload error:", uploadError);
+        return { error: "이미지 업로드에 실패했습니다." };
+      }
+
+      imagePath = filePath;
+    }
+
     const payload = {
       name: String(form.get("name") || ""),
-      image: String(form.get("image") || ""),
+      image: imagePath,
       introduction: String(form.get("introduction") || ""),
       graduation: String(form.get("graduation") || ""),
       qualifications: String(form.get("qualifications") || "").split(",").map(s => s.trim()).filter(Boolean),
@@ -95,7 +152,18 @@ export async function action({ request }: Route.ActionArgs) {
 
   if (intent === "delete") {
     const id = Number(form.get("id"));
+    
+    // 삭제 전에 이미지 파일 경로 가져오기
+    const { data: managerToDelete } = await client.from("managers").select("image").eq("id", id).single();
+    
+    // 데이터베이스에서 삭제
     await client.from("managers").delete().eq("id", id);
+    
+    // Storage에서 이미지 파일 삭제
+    if (managerToDelete?.image) {
+      await client.storage.from("manager-images").remove([managerToDelete.image]);
+    }
+    
     return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
   }
 
@@ -129,7 +197,7 @@ export default function ManagersPage({ loaderData }: Route.ComponentProps) {
             </div>
           </CardHeader>
           <CardContent className="p-6">
-            <form method="post" className="space-y-6">
+            <form method="post" encType="multipart/form-data" className="space-y-6">
               <input type="hidden" name="intent" value="add" />
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -143,9 +211,16 @@ export default function ManagersPage({ loaderData }: Route.ComponentProps) {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      이미지 파일명 <span className="text-red-500">*</span>
+                      이미지 <span className="text-red-500">*</span>
                     </label>
-                    <Input name="image" placeholder="예: s2.jpg" required className="w-full" />
+                    <Input 
+                      name="image" 
+                      type="file" 
+                      accept="image/*" 
+                      required 
+                      className="w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                    />
+                    <p className="mt-1 text-xs text-gray-500">JPG, PNG, GIF 형식의 이미지를 업로드하세요.</p>
                   </div>
 
                   <div>
@@ -366,6 +441,7 @@ export default function ManagersPage({ loaderData }: Route.ComponentProps) {
           {editingManager && (
             <form
               method="post"
+              encType="multipart/form-data"
               onSubmit={() => setIsDialogOpen(false)}
               className="space-y-6"
             >
@@ -389,15 +465,25 @@ export default function ManagersPage({ loaderData }: Route.ComponentProps) {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      이미지 파일명 <span className="text-red-500">*</span>
+                      이미지
                     </label>
+                    {editingManager.imageUrl && (
+                      <div className="mb-2">
+                        <img 
+                          src={editingManager.imageUrl} 
+                          alt={editingManager.name}
+                          className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">현재 이미지</p>
+                      </div>
+                    )}
                     <Input 
                       name="image" 
-                      placeholder="예: s2.jpg" 
-                      required 
-                      className="w-full"
-                      defaultValue={editingManager.image}
+                      type="file" 
+                      accept="image/*" 
+                      className="w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
                     />
+                    <p className="mt-1 text-xs text-gray-500">새 이미지를 선택하면 기존 이미지가 교체됩니다.</p>
                   </div>
 
                   <div>
