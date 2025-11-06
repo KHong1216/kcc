@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 const heroImages = [
   {
     id: 1,
-    src: "/1.png",
+    src: "/1.webp",
     alt: "코이창작소 메인 이미지 1",
     title: "작은 물결이 큰 도약이 되는 창작소",
     subtitle: "코이창작소",
@@ -16,7 +16,7 @@ const heroImages = [
   },
   {
     id: 2,
-    src: "/2.png",
+    src: "/2.webp",
     alt: "코이창작소 메인 이미지 2",
     title: "청년들의 성장을 돕는 창작 공간",
     subtitle: "상담을 통한 '나'를 찾는 과정",
@@ -25,7 +25,7 @@ const heroImages = [
   },
   {
     id: 3,
-    src: "/3.png",
+    src: "/3.webp",
     alt: "코이창작소 메인 이미지 3",
     title: "코이 = 사랑",
     subtitle: "환경에 따라 성장하는 코이 물고기",

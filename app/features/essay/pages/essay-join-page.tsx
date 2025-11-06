@@ -3,21 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../common/compon
 import { Button } from "../../../common/components/ui/button";
 import { Input } from "../../../common/components/ui/input";
 import { Label } from "../../../common/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../../../common/components/ui/select";
-import { User, Phone, Calendar, Clock } from "lucide-react";
+import { User, Phone, Check } from "lucide-react";
 import { createReservation } from "../../reservation/queries";
 import { useState } from "react";
+import { cn } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "에세이 캠프 신청 - 코이창작소" },
-        { name: "description", content: "에세이 캠프에 간단히 신청하세요" },
+        { title: "굿즈신청 - 코이창작소" },
+        { name: "description", content: "굿즈신청에 간단히 신청하세요" },
         { name: "robots", content: "noindex, nofollow" }
     ];
 };
@@ -29,24 +23,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
     const formData = await request.formData();
 
-    const selectedDate = formData.get("selected_date") as string;
-    const selectedTime = formData.get("selected_time") as string;
+    const goodsType = formData.get("goods_type") as string;
 
-    // 날짜와 시간을 selected_dates 형식으로 변환
-    const selected_dates: Record<string, string[]> = {};
-    if (selectedDate && selectedTime) {
-        selected_dates[selectedDate] = [selectedTime];
-    }
-
-    // QR 코드용 간단 신청 - 이름, 나이, 연락처만 수집
-    // undefined 필드는 제외하고 필수 필드만 포함
+    // 굿즈 신청 - 이름, 나이, 연락처, 굿즈 타입 수집
     const reservationData: any = {
         user_name: formData.get("user_name") as string,
         user_age: parseInt(formData.get("user_age") as string) || 0,
-        user_job: "미입력", // QR 코드 신청은 직업 정보 없음
+        user_job: "미입력",
         user_phone: formData.get("user_phone") as string,
-        program_id: 'essay' as const,
-        selected_dates: selected_dates, // 빈 객체여도 허용
+        program_id: goodsType || 'essay' as const,
+        selected_dates: {}, // 날짜 선택 제거
         status: 'pending' as const
     };
 
@@ -78,36 +64,26 @@ interface EssayJoinPageProps {
     };
 }
 
-const timeSlots = [
-    "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", 
-    "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"
+const goodsOptions = [
+    {
+        id: "love-test",
+        title: "연애경향성 테스트",
+        description: "나의 연애 스타일과 경향을 알아보는 심리 테스트로, 더 나은 관계를 위한 나만의 인사이트를 발견해보세요"
+    },
+    {
+        id: "snap-photo",
+        title: "스냅사진촬영",
+        description: "외적으로 꾸민 나의 모습을 스냅사진으로 담아내며, 동시에 내면의 나를 발견하고 표현하는 특별한 경험"
+    },
+    {
+        id: "essay",
+        title: "나의 한해 이야기를 에세이로 작성하기",
+        description: "지나간 한 해를 돌아보며 나만의 이야기를 글로 풀어내는 시간. 소중한 순간들을 기록하고 나를 더 깊이 이해하는 여정"
+    }
 ];
 
-// 다음 7일간의 날짜 목록 생성
-function getWeekDates() {
-    const dates = [];
-    const today = new Date();
-    
-    for (let i = 0; i < 7; i++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() + i);
-        dates.push({
-            value: date.toDateString(),
-            label: date.toLocaleDateString('ko-KR', {
-                month: 'long',
-                day: 'numeric',
-                weekday: 'short'
-            })
-        });
-    }
-    
-    return dates;
-}
-
 export default function EssayJoinPage({ actionData }: EssayJoinPageProps) {
-    const [selectedDate, setSelectedDate] = useState<string>("");
-    const [selectedTime, setSelectedTime] = useState<string>("");
-    const weekDates = getWeekDates();
+    const [selectedGoods, setSelectedGoods] = useState<string>("");
 
     // 성공 메시지 표시
     if (actionData?.success) {
@@ -145,7 +121,7 @@ export default function EssayJoinPage({ actionData }: EssayJoinPageProps) {
             <section className="py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-2xl mx-auto text-center">
                     <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-                        에세이 캠프 신청
+                        굿즈신청
                     </h1>
                     <p className="text-lg text-gray-700 mb-2">
                         간단한 정보만 입력해주시면 됩니다
@@ -172,6 +148,53 @@ export default function EssayJoinPage({ actionData }: EssayJoinPageProps) {
                         )}
 
                         <Form method="post" className="space-y-6">
+                            {/* 굿즈 선택 */}
+                            <div className="space-y-3">
+                                <Label className="text-base font-semibold">
+                                    굿즈 선택 *
+                                </Label>
+                                <div className="grid grid-cols-1 gap-3">
+                                    {goodsOptions.map((option) => (
+                                        <button
+                                            key={option.id}
+                                            type="button"
+                                            onClick={() => setSelectedGoods(option.id)}
+                                            className={cn(
+                                                "relative p-4 rounded-lg border-2 text-left transition-all",
+                                                "hover:border-green-500 hover:bg-green-50",
+                                                selectedGoods === option.id
+                                                    ? "border-green-600 bg-green-50 shadow-md"
+                                                    : "border-gray-200 bg-white"
+                                            )}
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                <div className={cn(
+                                                    "mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0",
+                                                    selectedGoods === option.id
+                                                        ? "border-green-600 bg-green-600"
+                                                        : "border-gray-300"
+                                                )}>
+                                                    {selectedGoods === option.id && (
+                                                        <Check className="w-3 h-3 text-white" />
+                                                    )}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h3 className="font-semibold text-gray-900 mb-1">
+                                                        {option.title}
+                                                    </h3>
+                                                    {option.description && (
+                                                        <p className="text-sm text-gray-600 leading-relaxed">
+                                                            {option.description}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                                <input type="hidden" name="goods_type" value={selectedGoods} required />
+                            </div>
+
                             {/* 기본 정보 */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
@@ -221,56 +244,6 @@ export default function EssayJoinPage({ actionData }: EssayJoinPageProps) {
                                 />
                             </div>
 
-                            {/* 날짜 및 시간 선택 */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2">
-                                        <Calendar className="w-4 h-4" />
-                                        가능한 날짜 *
-                                    </Label>
-                                    <Select
-                                        value={selectedDate}
-                                        onValueChange={setSelectedDate}
-                                        required
-                                    >
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="날짜를 선택하세요" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {weekDates.map((date) => (
-                                                <SelectItem key={date.value} value={date.value}>
-                                                    {date.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <input type="hidden" name="selected_date" value={selectedDate} required />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2">
-                                        <Clock className="w-4 h-4" />
-                                        가능한 시간 *
-                                    </Label>
-                                    <Select
-                                        value={selectedTime}
-                                        onValueChange={setSelectedTime}
-                                        required
-                                    >
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="시간을 선택하세요" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {timeSlots.map((time) => (
-                                                <SelectItem key={time} value={time}>
-                                                    {time}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <input type="hidden" name="selected_time" value={selectedTime} required />
-                                </div>
-                            </div>
-
                             {/* 안내 문구 */}
                             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                                 <p className="text-sm text-gray-700">
@@ -282,25 +255,15 @@ export default function EssayJoinPage({ actionData }: EssayJoinPageProps) {
                             {/* 제출 버튼 */}
                             <Button
                                 type="submit"
-                                className="w-full bg-green-600 hover:bg-green-700 text-white text-lg py-6 font-semibold shadow-lg hover:shadow-xl transition-all"
+                                disabled={!selectedGoods}
+                                className="w-full bg-green-600 hover:bg-green-700 text-white text-lg py-6 font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                에세이 캠프 신청하기
+                                굿즈신청하기
                             </Button>
                         </Form>
                     </CardContent>
                 </Card>
 
-                {/* 간단한 프로그램 소개 */}
-                <Card className="mt-6 bg-white/80 backdrop-blur-sm">
-                    <CardContent className="p-6">
-                        <h3 className="font-semibold text-gray-900 mb-3">에세이 캠프란?</h3>
-                        <p className="text-sm text-gray-700 leading-relaxed">
-                            "읽는 사람만이 제대로 말할 수 있다"<br />
-                            읽기 → 생각 → 쓰기로 이어지는 여정을 통해<br />
-                            나를 이해하고, 나답게 말할 수 있는 사람이 되어가는 시간입니다.<br />
-                        </p>
-                    </CardContent>
-                </Card>
             </div>
         </div>
     );
