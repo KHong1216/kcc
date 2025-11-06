@@ -6,10 +6,10 @@ import { Button } from "../../../common/components/ui/button";
 export const meta: MetaFunction = () => {
     return [
       { title: "연애경향성 테스트 - 나의 연애를 알아보는 시간 | 코이창작소" },
-      { name: "description", content: "나의 연애, 한 번 제대로 알아볼 사람 여기 있어. 연애경향성 테스트는 그냥 심리 테스트가 아니에요. 당신이 어떤 사람을 좋아하는지, 어떻게 사랑하는지, 그리고 왜 그렇게 사랑하는지 알아보는 시간입니다." },
-      { name: "keywords", content: "연애경향성테스트, 연애심리테스트, 연애상담, 관계상담, 코이창작소" },
+      { name: "description", content: "나의 연애를 알아보자. 연애경향성 테스트는 그냥 질문지가 아니에요. 당신이 어떤 사람을 좋아하는지, 어떻게 사랑하는지, 그리고 왜 그렇게 사랑하는지 알아보는 시간입니다." },
+      { name: "keywords", content: "연애경향성테스트, 연애상담, 관계상담, 코이창작소" },
       { property: "og:title", content: "연애경향성 테스트 - 나의 연애를 알아보는 시간" },
-      { property: "og:description", content: "나의 연애, 한 번 제대로 알아볼 사람 여기 있어. 연애경향성 테스트는 그냥 심리 테스트가 아니에요." },
+      { property: "og:description", content: "나의 연애를 알아보자. 연애경향성 테스트는 그냥 질문지가 아니에요." },
       { property: "og:image", content: "https://www.koicreativelab.com/og-love.jpg" },
     ];
   };
@@ -31,7 +31,7 @@ export default function LovePage() {
                     <div className="space-y-8 text-lg md:text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto mb-12">
                         <p className="text-xl md:text-2xl font-medium">
                             연애경향성 테스트는<br />
-                            <span className="text-2xl md:text-3xl font-bold text-gray-900">그냥 심리 테스트가 아니에요.</span>
+                            <span className="text-2xl md:text-3xl font-bold text-gray-900">그냥 질문지가 아니에요.</span>
                         </p>
                         <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl border border-white/80 shadow-lg">
                             <p className="mb-4">
@@ -62,7 +62,7 @@ export default function LovePage() {
                     
                     <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
                         <p>
-                            보통의 심리 테스트는 질문지에 체크만 하면 끝나죠.<br />
+                            보통의 테스트는 질문지에 체크만 하면 끝나죠.<br />
                             근데 우리는 질문지가 아니라 <span className="font-semibold">이야기</span>로 진행해요.
                         </p>
                         
@@ -310,7 +310,7 @@ export default function LovePage() {
                     
                     <div className="space-y-6 text-lg md:text-xl leading-relaxed">
                         <p>
-                            어쩌면 누군가에게는 이게 그냥 또 하나의 심리 테스트일 수도 있어요.<br />
+                            어쩌면 누군가에게는 이게 그냥 또 하나의 테스트일 수도 있어요.<br />
                             근데… <span className="font-bold">너한테는 조금 다를 수도 있어.</span>
                         </p>
 

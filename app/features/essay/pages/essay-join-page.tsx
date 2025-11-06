@@ -68,7 +68,7 @@ const goodsOptions = [
     {
         id: "love-test",
         title: "연애경향성 테스트",
-        description: "나의 연애 스타일과 경향을 알아보는 심리 테스트로, 더 나은 관계를 위한 나만의 인사이트를 발견해보세요"
+        description: "나의 연애 스타일과 경향을 알아보는 시간으로, 더 나은 관계를 위한 나만의 인사이트를 발견해보세요"
     },
     {
         id: "snap-photo",
@@ -88,7 +88,7 @@ export default function EssayJoinPage({ actionData }: EssayJoinPageProps) {
     // 성공 메시지 표시
     if (actionData?.success) {
         return (
-            <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gradient-to-br from-green-50 via-teal-50 to-blue-50">
+            <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gradien여기t-to-br from-green-50 via-teal-50 to-blue-50">
                 <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <Card className="text-center shadow-xl">
                         <CardHeader>
