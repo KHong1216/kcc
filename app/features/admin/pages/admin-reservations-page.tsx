@@ -118,6 +118,10 @@ export default function AdminReservationsPage({ loaderData }: Route.ComponentPro
                         <p className="font-semibold text-gray-900">{r.user_name || "-"}</p>
                       </div>
                       <div>
+                        <p className="text-xs text-gray-500 mb-1">나이</p>
+                        <p className="text-sm text-gray-700">{typeof r.user_age === "number" && r.user_age > 0 ? r.user_age : "-"}</p>
+                      </div>
+                      <div>
                         <p className="text-xs text-gray-500 mb-1">이메일</p>
                         <p className="text-sm text-gray-700">{r.user_email || "-"}</p>
                       </div>
