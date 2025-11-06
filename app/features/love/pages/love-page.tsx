@@ -26,7 +26,7 @@ export default function LovePage() {
                         연애경향성 테스트
                     </Badge>
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-10 text-gray-900 leading-tight">
-                        "나의 연애, 한 번 제대로<br className="hidden md:block" /> 알아볼 사람 여기 있어."
+                        "나의 연애를 알아보자"
                     </h1>
                     <div className="space-y-8 text-lg md:text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto mb-12">
                         <p className="text-xl md:text-2xl font-medium">
