@@ -5,11 +5,11 @@ import { Button } from "../../../common/components/ui/button";
 
 export const meta: MetaFunction = () => {
     return [
-      { title: "에세이 캠프 - 대화로 쓰는 에세이 | 코이창작소" },
-      { name: "description", content: "너 얘기, 한 번 제대로 들어볼 사람 여기 있어. 에세이 캠프는 그냥 글 쓰는 프로그램이 아니에요. 대화로 나눈 이야기가 한 편의 에세이가 됩니다." },
-      { name: "keywords", content: "에세이쓰기, 글쓰기캠프, 에세이집제작, 글쓰기상담, 코이창작소" },
-      { property: "og:title", content: "에세이 캠프 - 대화로 쓰는 에세이" },
-      { property: "og:description", content: "너 얘기, 한 번 제대로 들어볼 사람 여기 있어. 대화로 나눈 이야기가 한 편의 에세이가 됩니다." },
+      { title: "에세이 캠프 - 나의 한해를 기록하기 | 코이창작소" },
+      { name: "description", content: "지나간 한 해를 기록해보자. 에세이 캠프는 그냥 글 쓰는 프로그램이 아니에요. 대화로 나눈 한 해의 이야기가 한 편의 에세이가 됩니다." },
+      { name: "keywords", content: "에세이쓰기, 글쓰기캠프, 한해기록, 에세이집제작, 글쓰기상담, 코이창작소" },
+      { property: "og:title", content: "에세이 캠프 - 나의 한해를 기록하기" },
+      { property: "og:description", content: "지나간 한 해를 기록해보자. 대화로 나눈 한 해의 이야기가 한 편의 에세이가 됩니다." },
       { property: "og:image", content: "https://www.koicreativelab.com/og-essay.jpg" },
     ];
   };
@@ -26,7 +26,7 @@ export default function EssayPage() {
                         에세이 캠프 Essay Camp
                     </Badge>
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-10 text-gray-900 leading-tight">
-                        "너 얘기, 한 번 제대로<br className="hidden md:block" /> 들어볼 사람 여기 있어."
+                        "지나간 한 해를 기록해보자"
                     </h1>
                     <div className="space-y-8 text-lg md:text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto mb-12">
                         <p className="text-xl md:text-2xl font-medium">
@@ -36,7 +36,7 @@ export default function EssayPage() {
                         <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl border border-white/80 shadow-lg">
                             <p className="mb-4">
                                 우리가 편하게 얘기 나누고, 웃고, 털어놓은 그 대화들로<br />
-                                한 편의 에세이가 만들어집니다.
+                                지나간 한 해의 이야기가 한 편의 에세이가 만들어집니다.
                             </p>
                             <p className="text-xl md:text-2xl font-bold text-green-700">
                                 그리고 그 에세이의 주인공은 '당신'이에요.
@@ -71,15 +71,15 @@ export default function EssayPage() {
                             <ul className="space-y-3 list-none">
                                 <li className="flex items-start">
                                     <span className="text-green-600 mr-2">•</span>
-                                    <span>요즘 뭐가 제일 답답한지</span>
+                                    <span>지나간 한 해에 뭐가 제일 기억에 남는지</span>
                                 </li>
                                 <li className="flex items-start">
                                     <span className="text-green-600 mr-2">•</span>
-                                    <span>자주 하는 말, 자주 떠올리는 생각이 뭔지</span>
+                                    <span>한 해 동안 자주 했던 말, 자주 떠올렸던 생각이 뭔지</span>
                                 </li>
                                 <li className="flex items-start">
                                     <span className="text-green-600 mr-2">•</span>
-                                    <span>지금 어떤 순간을 살고 있는지</span>
+                                    <span>한 해 동안 어떤 순간들을 살아왔는지</span>
                                 </li>
                             </ul>
                             <p className="mt-4">이런 걸 아주 편하게 얘기해요.</p>
@@ -94,7 +94,7 @@ export default function EssayPage() {
 
                         <p>
                             그러면 그게 한 편의 이야기(에세이)가 돼요.<br />
-                            결국 완성본은 <span className="font-semibold">'나만의 얘기 + 사람들이 나에게 건넨 시선'</span>이 같이 들어가요.
+                            결국 완성본은 <span className="font-semibold">'나만의 한 해 이야기 + 사람들이 나에게 건넨 시선'</span>이 같이 들어가요.
                         </p>
 
                         <p className="text-xl font-semibold text-gray-900 text-center py-4">
@@ -104,29 +104,30 @@ export default function EssayPage() {
                 </div>
             </section>
 
-            {/* 읽는 사람만이 제대로 말할 수 있다 */}
+            {/* 한 해를 돌아보는 시간 */}
             <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">
-                        읽는 사람만이 제대로 말할 수 있다
+                        한 해를 돌아보는 시간
                     </h2>
                     
                     <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
                         <p>
                             이번 시즌의 에세이 캠프는<br />
-                            나를 쓰기 이전에 <span className="font-bold">'읽는 사람만이 제대로 말할 수 있다'</span>는 주제로 진행됩니다.
+                            <span className="font-bold">'나의 한 해를 기록하기'</span>라는 주제로 진행됩니다.
                         </p>
 
                         <p>
-                            말하기에서 중요한 건 '무엇을 말할까'보다 '어떻게 말할까'예요.<br />
-                            생각을 깊이 있게 표현하려면 먼저 읽고, 정리하고, 써야 하죠.
+                            지나간 한 해를 돌아보고,<br />
+                            그 한 해에 있었던 이야기를 글로 풀어내는 시간입니다.
                         </p>
 
                         <div className="bg-blue-50 p-6 rounded-lg">
                             <p className="font-semibold text-gray-900 mb-4">
-                                이번 과정은 <span className="text-xl font-bold text-blue-700">읽기 → 생각 → 쓰기</span>로 이어지는 여정을 통해
+                                한 해를 돌아보는 건 단순히 추억을 되새기는 게 아니에요.
                             </p>
                             <p>
+                                그 한 해에 있었던 순간들을 다시 보면서<br />
                                 '나를 이해하고, 나답게 말할 수 있는 사람'이 되어가는 시간을 만듭니다.
                             </p>
                         </div>
@@ -160,7 +161,7 @@ export default function EssayPage() {
                         <div className="bg-blue-50 p-6 rounded-lg">
                             <p className="font-semibold text-gray-900 mb-4">분위기는 훨씬 가볍고 자연스러워요.</p>
                             <p>
-                                그냥 편하게 앉아서 얘기하다 보면<br />
+                                그냥 편하게 앉아서 한 해 얘기하다 보면<br />
                                 "어? 이거 그냥 말한 건데 기록되면 좀 멋있는데?"<br />
                                 싶은 순간이 나와요.
                             </p>
@@ -168,7 +169,7 @@ export default function EssayPage() {
 
                         <p className="text-xl font-semibold text-center py-4">
                             우리가 하는 건 <span className="text-blue-600">'고민을 고쳐주는 것'</span>이 아니라<br />
-                            <span className="text-blue-600">'네가 어떤 사람인지 네 말로 남겨주는 것'</span>에 가까워요.<br />
+                            <span className="text-blue-600">'네가 살아온 한 해를 네 말로 남겨주는 것'</span>에 가까워요.<br />
                             그 느낌 그대로.
                         </p>
                     </div>
@@ -197,7 +198,7 @@ export default function EssayPage() {
                                 </li>
                                 <li className="flex items-start">
                                     <span className="text-green-600 mr-3 font-bold">•</span>
-                                    <span>"누가 내 말 좀 제대로 들어줬으면"</span>
+                                    <span>"지나간 한 해를 돌아보고 싶어"</span>
                                 </li>
                             </ul>
                         </Card>
@@ -205,11 +206,11 @@ export default function EssayPage() {
                             <ul className="space-y-4 list-none">
                                 <li className="flex items-start">
                                     <span className="text-blue-600 mr-3 font-bold">•</span>
-                                    <span>"나는 그냥 내가 어떤 사람인지 궁금하긴 해"</span>
+                                    <span>"한 해 동안의 나를 기록하고 싶어"</span>
                                 </li>
                                 <li className="flex items-start">
                                     <span className="text-blue-600 mr-3 font-bold">•</span>
-                                    <span>"지금 이 시기를 언젠가 기억하고 싶다"</span>
+                                    <span>"이 한 해를 언젠가 기억하고 싶다"</span>
                                 </li>
                             </ul>
                         </Card>
@@ -274,7 +275,7 @@ export default function EssayPage() {
                                 <div className="flex-1">
                                     <h3 className="text-xl font-bold mb-3 text-gray-900">대화 진행</h3>
                                     <p className="text-gray-700 leading-relaxed">
-                                        정해진 시간에 편하게 이야기를 나눠요.<br />
+                                        정해진 시간에 편하게 한 해 이야기를 나눠요.<br />
                                         1:1로 할 수도 있고, 작은 그룹으로 진행될 수도 있어요.<br />
                                         <span className="font-semibold">"면접" 아니고 "수다"에 더 가까워요.</span>
                                     </p>
@@ -324,13 +325,13 @@ export default function EssayPage() {
                             </p>
                             <p className="text-lg text-center">
                                 우리가 하고 싶은 건<br />
-                                <span className="text-xl font-bold text-green-700">"지금의 너를 지금 그대로 기록해 놓는 것."</span>
+                                <span className="text-xl font-bold text-green-700">"지나간 한 해의 너를 그대로 기록해 놓는 것."</span>
                             </p>
                         </div>
 
                         <p className="text-lg leading-relaxed">
                             나중에 돌아봤을 때<br />
-                            "아 그때 내가 이런 생각 했었구나. 그때 내 옆에 이런 말을 해준 사람이 있었구나."<br />
+                            "아 그 한 해에 내가 이런 생각 했었구나. 그 한 해에 내 옆에 이런 말을 해준 사람이 있었구나."<br />
                             그걸 그대로 볼 수 있게.
                         </p>
                     </div>
@@ -352,7 +353,7 @@ export default function EssayPage() {
 
                         <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/20">
                             <p className="text-2xl md:text-3xl font-semibold leading-relaxed">
-                                네 이야기를 제대로 들어주는 자리가<br />
+                                네 한 해 이야기를 제대로 들어주는 자리가<br />
                                 마지막으로 언제였는지, 생각나?
                             </p>
                         </div>

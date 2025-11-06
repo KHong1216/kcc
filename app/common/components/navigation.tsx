@@ -25,12 +25,12 @@ const menus = [
         items: [
             {
                 name: "에세이",
-                description: "에세이 캠프 프로젝트",
+                description: "나의 한해를 기록하기",
                 to: "/camps/essay",
             },
             {
-                name: "연애",
-                description: "건강한 연애를 위한 프로젝트",
+                name: "연애경향성",
+                description: "나의 연애를 알아보는 시간",
                 to: "/camps/love",
             },
             {

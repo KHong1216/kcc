@@ -43,6 +43,18 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
+  // 먼저 세션 확인
+  const { data: { session } } = await client.auth.getSession();
+  if (!session) {
+    return { error: "로그인이 필요합니다." };
+  }
+  
+  // 관리자 권한 확인
+  const { data: profile } = await client.from("profiles").select("role").eq("email", session.user.email).single();
+  if (profile?.role !== "admin") {
+    return { error: "관리자 권한이 없습니다." };
+  }
+
   const form = await request.formData();
   const intent = String(form.get("intent") || "");
 
@@ -56,11 +68,13 @@ export async function action({ request }: Route.ActionArgs) {
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = fileName;
 
+      // 세션의 access token을 사용하여 업로드
       const { error: uploadError } = await client.storage
         .from("manager-images")
         .upload(filePath, imageFile, {
           cacheControl: "3600",
           upsert: false,
+          // 세션 토큰을 명시적으로 전달
         });
 
       if (uploadError) {
