@@ -58,6 +58,7 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
                                     src={representative.image}
                                     alt={representative.name}
                                     className="w-full h-full object-cover object-center"
+                                    decoding="async"
                                 />
                             </div>
                             {/* 플로팅 배지 */}

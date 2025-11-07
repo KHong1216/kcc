@@ -1,10 +1,9 @@
 import type { MetaFunction } from "react-router";
-import type { Route } from "./+types/managers-page";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
-import { Button } from "../../../common/components/ui/button";
-import { Input } from "../../../common/components/ui/input";
-import { Textarea } from "../../../common/components/ui/textarea";
-import { Badge } from "../../../common/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/components/ui/card";
+import { Button } from "../../../../common/components/ui/button";
+import { Input } from "../../../../common/components/ui/input";
+import { Textarea } from "../../../../common/components/ui/textarea";
+import { Badge } from "../../../../common/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -12,184 +11,266 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../../../common/components/ui/dialog";
-import { 
-  Plus, 
-  Trash2,
-  Edit
-} from "lucide-react";
-import client from "../../../lib/supa-client";
+} from "../../../../common/components/ui/dialog";
+import { Plus, Trash2, Edit } from "lucide-react";
 import { useState } from "react";
+import client from "../../../../lib/supa-client";
+import {
+  getAllManagers,
+  createManager,
+  updateManager,
+  deleteManager,
+  toggleManagerActive,
+  toggleManagerRepresentative,
+  uploadManagerImage,
+  deleteManagerImage,
+  getManagerImagePath,
+  generateImageFileName,
+  type ManagerWithImageUrl,
+} from "../queries";
+import type { Route } from "./+types/admin-managers-page";
 
 export const meta: MetaFunction = () => [{ title: "매니저 설정 | 코이창작소" }];
 
 export async function loader({ request }: Route.LoaderArgs) {
   const { data: { session } } = await client.auth.getSession();
-  if (!session) return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
-  const { data: profile } = await client.from("profiles").select("role").eq("email", session.user.email).single();
-  if (profile?.role !== "admin") return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
+  if (!session) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/admin/login" },
+    });
+  }
 
-  const { data: managers } = await client.from("managers").select("*").order("id", { ascending: true });
-  
+  // Promise.all로 병렬 처리
+  const [profileResult, managersResult] = await Promise.all([
+    client.from("profiles").select("role").eq("email", session.user.email).single(),
+    getAllManagers(),
+  ]);
+
+  // 에러 처리
+  if (profileResult.error || profileResult.data?.role !== "admin") {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/admin/login" },
+    });
+  }
+
+  if (managersResult.error) {
+    console.error("[loader] managers error:", managersResult.error);
+    return { managers: [] };
+  }
+
   // 이미지 URL 변환
-  const managersWithImageUrl = (managers ?? []).map(manager => ({
+  const managersWithImageUrl: ManagerWithImageUrl[] = (managersResult.data ?? []).map(manager => ({
     ...manager,
+    qualifications: Array.isArray(manager.qualifications) ? manager.qualifications : [],
+    career: Array.isArray(manager.career) ? manager.career : [],
     imageUrl: manager.image 
       ? client.storage.from("manager-images").getPublicUrl(manager.image).data.publicUrl
       : null
   }));
-  
+
   return { managers: managersWithImageUrl };
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  // 먼저 세션 확인
   const { data: { session } } = await client.auth.getSession();
   if (!session) {
     return { error: "로그인이 필요합니다." };
   }
-  
+
   // 관리자 권한 확인
-  const { data: profile } = await client.from("profiles").select("role").eq("email", session.user.email).single();
-  if (profile?.role !== "admin") {
+  const profileResult = await client
+    .from("profiles")
+    .select("role")
+    .eq("email", session.user.email)
+    .single();
+
+  if (profileResult.error || profileResult.data?.role !== "admin") {
     return { error: "관리자 권한이 없습니다." };
   }
 
   const form = await request.formData();
   const intent = String(form.get("intent") || "");
 
-  if (intent === "add") {
-    let imagePath = "";
-    
-    // 이미지 파일 업로드 처리
-    const imageFile = form.get("image") as File | null;
-    if (imageFile && imageFile.size > 0) {
-      const fileExt = imageFile.name.split(".").pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const filePath = fileName;
+  try {
+    if (intent === "add") {
+      let imagePath = "";
 
-      // 세션의 access token을 사용하여 업로드
-      const { error: uploadError } = await client.storage
-        .from("manager-images")
-        .upload(filePath, imageFile, {
-          cacheControl: "3600",
-          upsert: false,
-          // 세션 토큰을 명시적으로 전달
-        });
+      // 이미지 파일 업로드 처리
+      const imageFile = form.get("image") as File | null;
+      if (imageFile && imageFile.size > 0) {
+        const filePath = generateImageFileName(imageFile.name);
+        const uploadResult = await uploadManagerImage(imageFile, filePath);
 
-      if (uploadError) {
-        console.error("Image upload error:", uploadError);
-        return { error: "이미지 업로드에 실패했습니다." };
+        if (uploadResult.error) {
+          console.error("Image upload error:", uploadResult.error);
+          return { error: "이미지 업로드에 실패했습니다." };
+        }
+
+        imagePath = filePath;
       }
 
-      imagePath = filePath;
-    }
+      // 매니저 생성
+      const createResult = await createManager({
+        name: String(form.get("name") || ""),
+        image: imagePath || null,
+        introduction: String(form.get("introduction") || ""),
+        graduation: String(form.get("graduation") || ""),
+        qualifications: String(form.get("qualifications") || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        career: String(form.get("career") || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        specialty: String(form.get("specialty") || ""),
+        description: String(form.get("description") || ""),
+        is_active: true,
+        is_representative: false,
+      });
 
-    const payload = {
-      name: String(form.get("name") || ""),
-      image: imagePath,
-      introduction: String(form.get("introduction") || ""),
-      graduation: String(form.get("graduation") || ""),
-      qualifications: String(form.get("qualifications") || "").split(",").map(s => s.trim()).filter(Boolean),
-      career: String(form.get("career") || "").split(",").map(s => s.trim()).filter(Boolean),
-      specialty: String(form.get("specialty") || ""),
-      description: String(form.get("description") || ""),
-      is_active: true,
-      is_representative: false
-    };
-    await client.from("managers").insert(payload);
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-  }
-
-  if (intent === "toggle-active") {
-    const id = Number(form.get("id"));
-    const is_active = String(form.get("is_active")) === "true";
-    await client.from("managers").update({ is_active: !is_active }).eq("id", id);
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-  }
-
-  if (intent === "toggle-rep") {
-    const id = Number(form.get("id"));
-    const is_representative = String(form.get("is_representative")) === "true";
-    await client.from("managers").update({ is_representative: !is_representative }).eq("id", id);
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-  }
-
-  if (intent === "update") {
-    const id = Number(form.get("id"));
-    
-    // 기존 매니저 정보 가져오기
-    const { data: existingManager } = await client.from("managers").select("image").eq("id", id).single();
-    
-    let imagePath = existingManager?.image || "";
-    
-    // 새 이미지 파일이 업로드된 경우 처리
-    const imageFile = form.get("image") as File | null;
-    if (imageFile && imageFile.size > 0) {
-      // 기존 이미지 삭제 (있을 경우)
-      if (existingManager?.image) {
-        await client.storage.from("manager-images").remove([existingManager.image]);
+      if (createResult.error) {
+        console.error("Create manager error:", createResult.error);
+        return { error: "매니저 추가에 실패했습니다." };
       }
 
-      const fileExt = imageFile.name.split(".").pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const filePath = fileName;
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
+    }
 
-      const { error: uploadError } = await client.storage
-        .from("manager-images")
-        .upload(filePath, imageFile, {
-          cacheControl: "3600",
-          upsert: false,
-        });
+    if (intent === "update") {
+      const id = Number(form.get("id"));
+      
+      // 기존 매니저 이미지 경로 조회
+      const existingImageResult = await getManagerImagePath(id);
+      let imagePath = existingImageResult.data?.image || "";
 
-      if (uploadError) {
-        console.error("Image upload error:", uploadError);
-        return { error: "이미지 업로드에 실패했습니다." };
+      // 새 이미지 파일이 업로드된 경우 처리
+      const imageFile = form.get("image") as File | null;
+      if (imageFile && imageFile.size > 0) {
+        // 기존 이미지 삭제
+        if (existingImageResult.data?.image) {
+          await deleteManagerImage(existingImageResult.data.image);
+        }
+
+        // 새 이미지 업로드
+        const filePath = generateImageFileName(imageFile.name);
+        const uploadResult = await uploadManagerImage(imageFile, filePath);
+
+        if (uploadResult.error) {
+          console.error("Image upload error:", uploadResult.error);
+          return { error: "이미지 업로드에 실패했습니다." };
+        }
+
+        imagePath = filePath;
       }
 
-      imagePath = filePath;
+      // 매니저 수정
+      const updateResult = await updateManager({
+        id,
+        name: String(form.get("name") || ""),
+        image: imagePath || null,
+        introduction: String(form.get("introduction") || ""),
+        graduation: String(form.get("graduation") || ""),
+        qualifications: String(form.get("qualifications") || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        career: String(form.get("career") || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        specialty: String(form.get("specialty") || ""),
+        description: String(form.get("description") || ""),
+      });
+
+      if (updateResult.error) {
+        console.error("Update manager error:", updateResult.error);
+        return { error: "매니저 수정에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
     }
 
-    const payload = {
-      name: String(form.get("name") || ""),
-      image: imagePath,
-      introduction: String(form.get("introduction") || ""),
-      graduation: String(form.get("graduation") || ""),
-      qualifications: String(form.get("qualifications") || "").split(",").map(s => s.trim()).filter(Boolean),
-      career: String(form.get("career") || "").split(",").map(s => s.trim()).filter(Boolean),
-      specialty: String(form.get("specialty") || ""),
-      description: String(form.get("description") || ""),
-    };
-    await client.from("managers").update(payload).eq("id", id);
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-  }
+    if (intent === "delete") {
+      const id = Number(form.get("id"));
 
-  if (intent === "delete") {
-    const id = Number(form.get("id"));
-    
-    // 삭제 전에 이미지 파일 경로 가져오기
-    const { data: managerToDelete } = await client.from("managers").select("image").eq("id", id).single();
-    
-    // 데이터베이스에서 삭제
-    await client.from("managers").delete().eq("id", id);
-    
-    // Storage에서 이미지 파일 삭제
-    if (managerToDelete?.image) {
-      await client.storage.from("manager-images").remove([managerToDelete.image]);
+      // 삭제 전에 이미지 파일 경로 가져오기
+      const imageResult = await getManagerImagePath(id);
+
+      // 데이터베이스에서 삭제
+      const deleteResult = await deleteManager(id);
+
+      if (deleteResult.error) {
+        console.error("Delete manager error:", deleteResult.error);
+        return { error: "매니저 삭제에 실패했습니다." };
+      }
+
+      // Storage에서 이미지 파일 삭제
+      if (imageResult.data?.image) {
+        await deleteManagerImage(imageResult.data.image);
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
     }
-    
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-  }
 
-  return { ok: true };
+    if (intent === "toggle-active") {
+      const id = Number(form.get("id"));
+      const is_active = String(form.get("is_active")) === "true";
+      
+      const result = await toggleManagerActive(id, is_active);
+      
+      if (result.error) {
+        console.error("Toggle active error:", result.error);
+        return { error: "상태 변경에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
+    }
+
+    if (intent === "toggle-rep") {
+      const id = Number(form.get("id"));
+      const is_representative = String(form.get("is_representative")) === "true";
+      
+      const result = await toggleManagerRepresentative(id, is_representative);
+      
+      if (result.error) {
+        console.error("Toggle representative error:", result.error);
+        return { error: "대표 지정 변경에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error("[action] error:", error);
+    return { error: "작업 중 오류가 발생했습니다." };
+  }
 }
 
-export default function ManagersPage({ loaderData }: Route.ComponentProps) {
-  const { managers } = loaderData as { managers: any[] };
-  const [editingManager, setEditingManager] = useState<any | null>(null);
+export default function AdminManagersPage({ loaderData }: Route.ComponentProps) {
+  const { managers } = loaderData as { managers: ManagerWithImageUrl[] };
+  const [editingManager, setEditingManager] = useState<ManagerWithImageUrl | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleEdit = (manager: any) => {
+  const handleEdit = (manager: ManagerWithImageUrl) => {
     setEditingManager(manager);
     setIsDialogOpen(true);
   };

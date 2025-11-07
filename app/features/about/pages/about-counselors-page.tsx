@@ -6,6 +6,7 @@ import { Input } from "../../../common/components/ui/input";
 import {Briefcase, Heart, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { getManagers } from "../queries";
 import type { Route } from "./+types/about-counselors-page";
+import client from "../../../lib/supa-client";
 
 export const meta: MetaFunction = () => {
     return [
@@ -19,7 +20,23 @@ export const meta: MetaFunction = () => {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const managers = await getManagers();
+    const result = await getManagers();
+    
+    if (result.error) {
+        console.error("[loader] managers error:", result.error);
+        return { managers: [] };
+    }
+
+    // 이미지 URL 변환
+    const managers = (result.data ?? []).map(manager => ({
+        ...manager,
+        qualifications: Array.isArray(manager.qualifications) ? manager.qualifications : [],
+        career: Array.isArray(manager.career) ? manager.career : [],
+        image: manager.image 
+            ? `${client.supabaseUrl}/storage/v1/object/public/manager-images/${manager.image}`
+            : '/placeholder.jpg'
+    }));
+
     return { managers };
 }
 

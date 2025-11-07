@@ -1,79 +1,159 @@
 // app/features/admin/pages/admin-community-page.tsx
 import type { MetaFunction } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
-import { Button } from "../../../common/components/ui/button";
-import { Input } from "../../../common/components/ui/input";
-import { Textarea } from "../../../common/components/ui/textarea";
-import client from "../../../lib/supa-client";
-import { Badge } from "../../../common/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/components/ui/card";
+import { Button } from "../../../../common/components/ui/button";
+import { Input } from "../../../../common/components/ui/input";
+import { Textarea } from "../../../../common/components/ui/textarea";
+import client from "../../../../lib/supa-client";
+import { Badge } from "../../../../common/components/ui/badge";
 import { Plus, Edit2, Trash2, Star, Heart, Calendar, User } from "lucide-react";
+import {
+  getAllNotices,
+  getAllReviews,
+  createNotice,
+  updateNotice,
+  deleteNotice,
+  deleteReview,
+} from "../queries";
 import type { Route } from "./+types/admin-community-page";
 
 export const meta: MetaFunction = () => [
   { title: "커뮤니티 관리 | 코이창작소" },
-  { name: "description", content: "공지/리뷰 관리" }
+  { name: "description", content: "공지/리뷰 관리" },
 ];
 
 export async function loader({ request }: Route.LoaderArgs) {
   const { data: { session } } = await client.auth.getSession();
-  if (!session) return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
+  if (!session) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/admin/login" },
+    });
+  }
 
-  const { data: profile } = await client.from("profiles").select("role").eq("email", session.user.email).single();
-  if (profile?.role !== "admin") return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
-
-  const [{ data: notices }, { data: reviews }] = await Promise.all([
-    client.from("notices").select("*").order("created_at", { ascending: false }),
-    client.from("reviews").select("*").order("created_at", { ascending: false }),
+  // Promise.all로 병렬 처리
+  const [profileResult, noticesResult, reviewsResult] = await Promise.all([
+    client.from("profiles").select("role").eq("email", session.user.email).single(),
+    getAllNotices(),
+    getAllReviews(),
   ]);
 
-  return { notices: notices ?? [], reviews: reviews ?? [] };
+  // 에러 처리
+  if (profileResult.error || profileResult.data?.role !== "admin") {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/admin/login" },
+    });
+  }
+
+  if (noticesResult.error) {
+    console.error("[loader] notices error:", noticesResult.error);
+  }
+
+  if (reviewsResult.error) {
+    console.error("[loader] reviews error:", reviewsResult.error);
+  }
+
+  return {
+    notices: noticesResult.data ?? [],
+    reviews: reviewsResult.data ?? [],
+  };
 }
 
 export async function action({ request }: Route.ActionArgs) {
+  const { data: { session } } = await client.auth.getSession();
+  if (!session) {
+    return { error: "로그인이 필요합니다." };
+  }
+
+  // 관리자 권한 확인
+  const profileResult = await client
+    .from("profiles")
+    .select("role")
+    .eq("email", session.user.email)
+    .single();
+
+  if (profileResult.error || profileResult.data?.role !== "admin") {
+    return { error: "관리자 권한이 없습니다." };
+  }
+
   const form = await request.formData();
   const intent = String(form.get("intent") || "");
 
-  if (intent === "create-notice") {
-    const title = String(form.get("title") || "");
-    const content = String(form.get("content") || "");
-    const category = String(form.get("category") || "기타");
-    const is_important = String(form.get("is_important")) === "true";
-    const author = String(form.get("author") || "관리자");
+  try {
+    if (intent === "create-notice") {
+      const result = await createNotice({
+        title: String(form.get("title") || ""),
+        content: String(form.get("content") || ""),
+        category: String(form.get("category") || "기타"),
+        is_important: String(form.get("is_important")) === "true",
+        author: String(form.get("author") || "관리자"),
+      });
 
-    await client.from("notices").insert({
-      title,
-      content,
-      category,
-      is_important,
-      is_published: true,
-      author,
-    });
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
+      if (result.error) {
+        console.error("[action] create notice error:", result.error);
+        return { error: "공지사항 작성에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
+    }
+
+    if (intent === "update-notice") {
+      const result = await updateNotice({
+        id: String(form.get("id") || ""),
+        title: String(form.get("title") || ""),
+        content: String(form.get("content") || ""),
+        category: String(form.get("category") || "기타"),
+        is_important: String(form.get("is_important")) === "true",
+      });
+
+      if (result.error) {
+        console.error("[action] update notice error:", result.error);
+        return { error: "공지사항 수정에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
+    }
+
+    if (intent === "delete-notice") {
+      const result = await deleteNotice(String(form.get("id") || ""));
+
+      if (result.error) {
+        console.error("[action] delete notice error:", result.error);
+        return { error: "공지사항 삭제에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
+    }
+
+    if (intent === "delete-review") {
+      const result = await deleteReview(String(form.get("id") || ""));
+
+      if (result.error) {
+        console.error("[action] delete review error:", result.error);
+        return { error: "리뷰 삭제에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname },
+      });
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error("[action] error:", error);
+    return { error: "작업 중 오류가 발생했습니다." };
   }
-
-  if (intent === "update-notice") {
-    const id = String(form.get("id") || "");
-    const title = String(form.get("title") || "");
-    const content = String(form.get("content") || "");
-    const category = String(form.get("category") || "기타");
-    const is_important = String(form.get("is_important")) === "true";
-    await client.from("notices").update({ title, content, category, is_important }).eq("id", id);
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-  }
-
-  if (intent === "delete-notice") {
-    const id = String(form.get("id") || "");
-    await client.from("notices").delete().eq("id", id);
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-  }
-
-  if (intent === "delete-review") {
-    const id = String(form.get("id") || "");
-    await client.from("reviews").delete().eq("id", id);
-    return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-  }
-
-  return { ok: true };
 }
 
 export default function AdminCommunityPage({ loaderData }: Route.ComponentProps) {

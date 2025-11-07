@@ -1,8 +1,8 @@
 import { Form, useActionData, useNavigation } from "react-router";
-import { Button } from "../../../common/components/ui/button";
-import { Input } from "../../../common/components/ui/input";
-import client from "../../../lib/supa-client";
-import type { Route } from "./+types/admin-login-page";
+import { Button } from "../../../../common/components/ui/button";
+import { Input } from "../../../../common/components/ui/input";
+import client from "../../../../lib/supa-client";
+import type { Route } from "../../pages/+types/admin-login-page";
 
 export async function action({ request }: Route.ActionArgs) {
   const form = await request.formData();

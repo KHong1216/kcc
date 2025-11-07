@@ -16,8 +16,14 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async () => {
-    const programs = await getPrograms();
-    return { programs };
+    const result = await getPrograms();
+    
+    if (result.error) {
+        console.error("[loader] programs error:", result.error);
+        return { programs: [] };
+    }
+
+    return { programs: result.data ?? [] };
 };
 
 const timeSlots = [
@@ -193,18 +199,18 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
                                                 <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
                                                     <Clock className="w-5 h-5 text-blue-600" />
                                                 </div>
-                                                <div className="min-w-0">
+                                                <div className="min-w-0 flex-1">
                                                     <p className="text-xs text-gray-500">소요 시간</p>
-                                                    <p className="text-sm font-semibold text-gray-900 truncate">{program.duration || '상담 후 결정'}</p>
+                                                    <p className="text-xs font-semibold text-gray-900 line-clamp-2 leading-tight">{program.duration || '상담 후 결정'}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center space-x-3">
                                                 <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
                                                     <Users className="w-5 h-5 text-purple-600" />
                                                 </div>
-                                                <div className="min-w-0">
+                                                <div className="min-w-0 flex-1">
                                                     <p className="text-xs text-gray-500">대상</p>
-                                                    <p className="text-sm font-semibold text-gray-900 line-clamp-2">{program.target_audience || '청년 누구나'}</p>
+                                                    <p className="text-xs font-semibold text-gray-900 line-clamp-2 leading-tight">{program.target_audience || '청년 누구나'}</p>
                                                 </div>
                                             </div>
                                         </div>

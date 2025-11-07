@@ -1,12 +1,16 @@
-// app/features/admin/pages/admin-programs-page.tsx
 import type { MetaFunction } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
-import { Button } from "../../../common/components/ui/button";
-import { Input } from "../../../common/components/ui/input";
-import { Textarea } from "../../../common/components/ui/textarea";
-import { Badge } from "../../../common/components/ui/badge";
-import client from "../../../lib/supa-client";
-import type { Route } from "./+types/admin-programs-page";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/components/ui/card";
+import { Button } from "../../../../common/components/ui/button";
+import { Input } from "../../../../common/components/ui/input";
+import { Textarea } from "../../../../common/components/ui/textarea";
+import { Badge } from "../../../../common/components/ui/badge";
+import client from "../../../../lib/supa-client";
+import {
+  getAllPrograms,
+  updateProgram,
+  toggleProgramActive,
+} from "../queries";
+import type { Route } from "../../program/pages/+types/admin-programs-page";
 
 export const meta: MetaFunction = () => [
   { title: "프로젝트 관리 | 코이창작소" },
@@ -15,62 +19,105 @@ export const meta: MetaFunction = () => [
 
 export async function loader({ request }: Route.LoaderArgs) {
   const { data: { session } } = await client.auth.getSession();
-  if (!session) return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
-  const { data: profile } = await client.from("profiles").select("role").eq("email", session.user.email).single();
-  if (profile?.role !== "admin") return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
+  if (!session) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/admin/login" },
+    });
+  }
 
-  const { data: programs } = await client
-    .from("programs")
-    .select("*")
-    .order("id", { ascending: true });
+  // Promise.all로 병렬 처리
+  const [profileResult, programsResult] = await Promise.all([
+    client.from("profiles").select("role").eq("email", session.user.email).single(),
+    getAllPrograms(),
+  ]);
 
-  return { programs: programs ?? [] };
+  // 에러 처리
+  if (profileResult.error || profileResult.data?.role !== "admin") {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/admin/login" },
+    });
+  }
+
+  if (programsResult.error) {
+    console.error("[loader] programs error:", programsResult.error);
+    return { programs: [] };
+  }
+
+  return { programs: programsResult.data ?? [] };
 }
 
 export async function action({ request }: Route.ActionArgs) {
+  const { data: { session } } = await client.auth.getSession();
+  if (!session) {
+    return { error: "로그인이 필요합니다." };
+  }
+
+  // 관리자 권한 확인
+  const profileResult = await client
+    .from("profiles")
+    .select("role")
+    .eq("email", session.user.email)
+    .single();
+
+  if (profileResult.error || profileResult.data?.role !== "admin") {
+    return { error: "관리자 권한이 없습니다." };
+  }
+
   const form = await request.formData();
   const intent = String(form.get("intent") || "");
 
-  if (intent === "update") {
-    const id = String(form.get("id") || "");
-    const title = String(form.get("title") || "");
-    const description = String(form.get("description") || "");
-    const duration = String(form.get("duration") || "");
-    const target_audience = String(form.get("target_audience") || "");
-    const icon = String(form.get("icon") || "");
-    const badge = String(form.get("badge") || "");
-    
-    await client.from("programs").update({
-      title,
-      description,
-      duration,
-      target_audience,
-      icon,
-      badge,
-    }).eq("id", id);
+  try {
+    if (intent === "update") {
+      const id = Number(form.get("id"));
+      const result = await updateProgram({
+        id,
+        title: String(form.get("title") || ""),
+        description: String(form.get("description") || ""),
+        duration: String(form.get("duration") || ""),
+        target_audience: String(form.get("target_audience") || ""),
+        icon: String(form.get("icon") || ""),
+        badge: String(form.get("badge") || ""),
+      });
 
-    return new Response(null, {
-      status: 302,
-      headers: { Location: new URL(request.url).pathname }
-    });
+      if (result.error) {
+        console.error("[action] update program error:", result.error);
+        return { error: "프로그램 수정에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname }
+      });
+    }
+
+    if (intent === "toggle-active") {
+      const id = Number(form.get("id"));
+      const is_active = String(form.get("is_active")) === "true";
+      
+      const result = await toggleProgramActive(id, is_active);
+
+      if (result.error) {
+        console.error("[action] toggle active error:", result.error);
+        return { error: "상태 변경에 실패했습니다." };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname }
+      });
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error("[action] error:", error);
+    return { error: "작업 중 오류가 발생했습니다." };
   }
-
-  if (intent === "toggle-active") {
-    const id = String(form.get("id") || "");
-    const is_active = String(form.get("is_active")) === "true";
-    await client.from("programs").update({ is_active: !is_active }).eq("id", id);
-
-    return new Response(null, {
-      status: 302,
-      headers: { Location: new URL(request.url).pathname }
-    });
-  }
-
-  return { ok: true };
 }
 
 export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) {
-    const { programs } = loaderData as { programs: any[] };
+  const { programs } = loaderData as { programs: any[] };
 
     return (
       <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8 bg-gray-50">

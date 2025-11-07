@@ -7,21 +7,27 @@ import type { Route } from "./+types/notice-page";
 import { getNotices } from "../queries";
 
 export const meta: MetaFunction = () => {
-    return [
-        { title: "공지사항 - 코이창작소" },
-        { name: "description", content: "코이창작소 공지사항 및 소식" }
-    ];
+  return [
+    { title: "공지사항 - 코이창작소" },
+    { name: "description", content: "코이창작소 공지사항 및 소식" }
+  ];
 };
 
-export const loader = async () => {
-    const notices = await getNotices();
-    return { notices };
+export async function loader() {
+  const result = await getNotices();
+  
+  if (result.error) {
+    console.error("[loader] notices error:", result.error);
+    return { notices: [] };
+  }
+
+  return { notices: result.data ?? [] };
 }
 
-
 export default function NoticePage({ loaderData }: Route.ComponentProps) {
-    const {notices} = loaderData;
-    return (
+  const { notices } = loaderData;
+  
+  return (
         <div className="min-h-screen w-full pt-16 sm:pt-20 bg-gray-50">
             {/* 헤더 섹션 */}
             <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">

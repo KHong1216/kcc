@@ -1,8 +1,7 @@
-import { Link, useNavigate, type MetaFunction } from "react-router";
-import type { Route } from "./+types/admin-page";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
-import { Button } from "../../../common/components/ui/button";
-import { Badge } from "../../../common/components/ui/badge";
+import { useNavigate, type MetaFunction } from "react-router";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/components/ui/card";
+import { Button } from "../../../../common/components/ui/button";
+import { Badge } from "../../../../common/components/ui/badge";
 import {
   Users,
   Calendar,
@@ -13,7 +12,9 @@ import {
   Eye,
   Settings
 } from "lucide-react";
-import client from "../../../lib/supa-client";
+import client from "../../../../lib/supa-client";
+import { getAdminStats } from "../queries";
+import type { Route } from "./+types/admin-page";
 
 export const meta: MetaFunction = () => [
   { title: "관리자 대시보드 | 코이창작소" },
@@ -31,37 +32,29 @@ export async function loader({ request }: Route.LoaderArgs) {
     });
   }
 
-  // 관리자 권한 확인 (profiles 테이블에서 role 체크)
-  const { data: profile } = await client
-    .from("profiles")  // "ㅔ" → "profiles"로 수정
-    .select("role")
-    .eq("email", session.user.email)
-    .single();
+  // Promise.all로 병렬 처리
+  const [profileResult, statsResults] = await Promise.all([
+    client.from("profiles").select("role").eq("email", session.user.email).single(),
+    getAdminStats(),
+  ]);
 
-  if (!profile || profile.role !== 'admin') {
+  // 관리자 권한 확인
+  if (profileResult.error || profileResult.data?.role !== "admin") {
     return new Response(null, {
       status: 302,
       headers: { Location: "/admin/login" }
     });
   }
 
-  // 통계 데이터 조회
-  const [
-    { count: managerCount },
-    { count: reservationCount },
-    { count: communityCount }
-  ] = await Promise.all([
-    client.from("managers").select("*", { count: "exact", head: true }).eq("is_active", true),
-    client.from("reservations").select("*", { count: "exact", head: true }),
-    client.from("community_posts").select("*", { count: "exact", head: true })
-  ]);
+  // 통계 데이터 처리
+  const [managerCountResult, reservationCountResult, communityCountResult] = statsResults;
 
   return {
     admin: session.user,
     stats: {
-      managerCount: managerCount || 0,
-      reservationCount: reservationCount || 0,
-      communityCount: communityCount || 0
+      managerCount: managerCountResult.count || 0,
+      reservationCount: reservationCountResult.count || 0,
+      communityCount: communityCountResult.count || 0
     }
   };
 }

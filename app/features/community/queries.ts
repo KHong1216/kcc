@@ -1,10 +1,12 @@
 import client from "../../lib/supa-client";
 
+// ==================== 타입 정의 ====================
+
 export interface Notice {
   id: string;
   title: string;
   content: string;
-  category: string; // '일정' | '프로그램' | '이벤트' | '기타' 대신 string으로 변경
+  category: string;
   is_important: boolean;
   is_published: boolean;
   created_at: string;
@@ -25,97 +27,99 @@ export interface Review {
   updated_at: string;
 }
 
-// 공지사항 조회
-export async function getNotices(): Promise<Notice[]> {
-  const { data, error } = await client
-    .from('notices')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Error fetching notices:', error);
-    return [];
-  }
-
-  return data || [];
+export interface CreateReviewInput {
+  user_name: string;
+  program_id: 'love' | 'photo' | 'essay';
+  rating: number;
+  title: string;
+  content: string;
+  is_verified?: boolean;
 }
 
-// 공지사항 상세 조회
-export async function getNoticeById(id: string): Promise<Notice | null> {
-  const { data, error } = await client
-    .from('notices')
-    .select('*')
-    .eq('id', id)
-    .eq('is_published', true)
+// ==================== 공지사항 관련 쿼리 ====================
+
+/**
+ * 공지사항 조회 (발행된 것만)
+ * @returns 공지사항 배열 Promise
+ */
+export function getNotices() {
+  return client
+    .from<Notice>("notices")
+    .select("*")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false });
+}
+
+/**
+ * 공지사항 상세 조회
+ * @param id - 공지사항 ID
+ * @returns 공지사항 상세 정보 Promise
+ */
+export function getNoticeById(id: string) {
+  return client
+    .from<Notice>("notices")
+    .select("*")
+    .eq("id", id)
+    .eq("is_published", true)
     .single();
-
-  if (error) {
-    console.error('Error fetching notice:', error);
-    return null;
-  }
-
-  return data;
 }
 
-// 리뷰 조회
-export async function getReviews(): Promise<Review[]> {
-  const { data, error } = await client
-    .from('reviews')
-    .select('*')
-    .order('created_at', { ascending: false });
+// ==================== 리뷰 관련 쿼리 ====================
 
-  if (error) {
-    console.error('Error fetching reviews:', error);
-    return [];
-  }
-
-  return data || [];
+/**
+ * 전체 리뷰 조회
+ * @returns 리뷰 배열 Promise
+ */
+export function getReviews() {
+  return client
+    .from<Review>("reviews")
+    .select("*")
+    .order("created_at", { ascending: false });
 }
 
-// 프로그램별 리뷰 조회
-export async function getReviewsByProgram(programId: string): Promise<Review[]> {
-  const { data, error } = await client
-    .from('reviews')
-    .select('*')
-    .eq('program_id', programId)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Error fetching reviews by program:', error);
-    return [];
-  }
-
-  return data || [];
+/**
+ * 프로그램별 리뷰 조회
+ * @param programId - 프로그램 ID
+ * @returns 리뷰 배열 Promise
+ */
+export function getReviewsByProgram(programId: string) {
+  return client
+    .from<Review>("reviews")
+    .select("*")
+    .eq("program_id", programId)
+    .order("created_at", { ascending: false });
 }
 
-// 리뷰 생성
-export async function createReview(review: Omit<Review, 'id' | 'created_at' | 'updated_at' | 'likes_count'>): Promise<Review | null> {
-  const { data, error } = await client
-    .from('reviews')
-    .insert([{ ...review, likes_count: 0 }])
+/**
+ * 리뷰 생성
+ * @param input - 리뷰 생성 데이터
+ * @returns 생성 결과 Promise
+ */
+export function createReview(input: CreateReviewInput) {
+  return client
+    .from("reviews")
+    .insert([{
+      user_name: input.user_name,
+      program_id: input.program_id,
+      rating: input.rating,
+      title: input.title,
+      content: input.content,
+      is_verified: input.is_verified ?? false,
+      likes_count: 0,
+    }])
     .select()
     .single();
-
-  if (error) {
-    console.error('Error creating review:', error);
-    return null;
-  }
-
-  return data;
 }
 
-// 리뷰 좋아요 업데이트
-export async function updateReviewLikes(id: string, likesCount: number): Promise<boolean> {
-  const { error } = await client
-    .from('reviews')
+/**
+ * 리뷰 좋아요 업데이트
+ * @param id - 리뷰 ID
+ * @param likesCount - 좋아요 수
+ * @returns 업데이트 결과 Promise
+ */
+export function updateReviewLikes(id: string, likesCount: number) {
+  return client
+    .from("reviews")
     .update({ likes_count: likesCount })
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error updating review likes:', error);
-    return false;
-  }
-
-  return true;
+    .eq("id", id);
 }

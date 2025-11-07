@@ -24,6 +24,13 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  // 첫 번째 히어로 이미지 preload (LCP 개선)
+  {
+    rel: "preload",
+    href: "/1.webp",
+    as: "image",
+    fetchPriority: "high",
+  },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {

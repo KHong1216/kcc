@@ -16,9 +16,15 @@ export const meta: MetaFunction = () => {
     ];
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-    const reviews = await getReviews();
-    return { reviews };
+export async function loader() {
+    const result = await getReviews();
+
+    if (result.error) {
+        console.error("[loader] reviews error:", result.error);
+        return { reviews: [] };
+    }
+
+    return { reviews: result.data ?? [] };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -35,22 +41,30 @@ export async function action({ request }: Route.ActionArgs) {
         if (!user_name || !program_id || !rating || !title || !content)
             return { ok: false, message: "필수 항목을 입력하세요." };
 
-        await createReview({
+        // 타입 검증
+        if (!['love', 'photo', 'essay'].includes(program_id)) {
+            return { ok: false, message: "올바른 프로그램을 선택하세요." };
+        }
+
+        const result = await createReview({
             user_name,
-            program_id: program_id as any,
+            program_id: program_id as 'love' | 'photo' | 'essay',
             rating,
             title,
             content,
             is_verified: false,
-            updated_at: new Date().toISOString(),
-        } as any);
+        });
+
+        if (result.error) {
+            console.error("[action] create review error:", result.error);
+            return { ok: false, message: "리뷰 작성에 실패했습니다." };
+        }
 
         return new Response(null, {
             status: 302,
             headers: { Location: new URL(request.url).pathname }
         });
     }
-
     return { ok: true };
 }
 

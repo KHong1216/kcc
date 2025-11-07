@@ -1,6 +1,6 @@
 import type { MetaFunction } from "react-router"
-import { Card, CardContent } from "../../../common/components/ui/card"
-import { Badge } from "../../../common/components/ui/badge"
+import { Card, CardContent } from "../../../../common/components/ui/card"
+import { Badge } from "../../../../common/components/ui/badge"
 import { Camera, Clock, Construction } from "lucide-react"
 
 export const meta: MetaFunction = () => {

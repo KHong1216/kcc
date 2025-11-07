@@ -1,11 +1,15 @@
-// app/features/admin/pages/admin-reservations-page.tsx
 import type { MetaFunction } from "react-router";
 import type { Route } from "./+types/admin-reservations-page";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
-import { Button } from "../../../common/components/ui/button";
-import { Input } from "../../../common/components/ui/input";
-import { Badge } from "../../../common/components/ui/badge";
-import client from "../../../lib/supa-client";
+import { Card, CardContent } from "../../../../common/components/ui/card";
+import { Button } from "../../../../common/components/ui/button";
+import { Input } from "../../../../common/components/ui/input";
+import { Badge } from "../../../../common/components/ui/badge";
+import client from "../../../../lib/supa-client";
+import {
+  getAllReservations,
+  updateReservationStatus,
+  updateReservationConfirm,
+} from "../queries";
 
 export const meta: MetaFunction = () => [
   { title: "예약 관리 | 코이창작소" },
@@ -14,66 +18,123 @@ export const meta: MetaFunction = () => [
 
 export async function loader({ request }: Route.LoaderArgs) {
   const { data: { session } } = await client.auth.getSession();
-  if (!session) return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
-  const { data: profile } = await client.from("profiles").select("role").eq("email", session.user.email).single();
-  if (profile?.role !== "admin") return new Response(null, { status: 302, headers: { Location: "/admin/login" } });
+  if (!session) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/admin/login" },
+    });
+  }
 
-  const { data: reservations } = await client
-    .from("reservations")
-    .select("*")
-    .order("created_at", { ascending: false });
+  // Promise.all로 병렬 처리
+  const [profileResult, reservationsResult] = await Promise.all([
+    client.from("profiles").select("role").eq("email", session.user.email).single(),
+    getAllReservations(),
+  ]);
 
-  return { reservations: reservations ?? [] };
+  // 에러 처리
+  if (profileResult.error || profileResult.data?.role !== "admin") {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/admin/login" },
+    });
+  }
+
+  if (reservationsResult.error) {
+    console.error("[loader] reservations error:", reservationsResult.error);
+    return { reservations: [] };
+  }
+
+  return { reservations: reservationsResult.data ?? [] };
 }
 
-
 export async function action({ request }: Route.ActionArgs) {
+  const { data: { session } } = await client.auth.getSession();
+  if (!session) {
+    return { error: "로그인이 필요합니다." };
+  }
+
+  // 관리자 권한 확인
+  const profileResult = await client
+    .from("profiles")
+    .select("role")
+    .eq("email", session.user.email)
+    .single();
+
+  if (profileResult.error || profileResult.data?.role !== "admin") {
+    return { error: "관리자 권한이 없습니다." };
+  }
+
   const form = await request.formData();
   const intent = String(form.get("intent") || "");
 
-  if (intent === "update-status") {
-		const id = String(form.get("id") || "");
-		const status = String(form.get("status") || "");
+  try {
+    if (intent === "update-status") {
+      const id = String(form.get("id") || "");
+      const status = String(form.get("status") || "") as 'pending' | 'confirmed' | 'completed' | 'cancelled';
 
-		if (!id || !status) return { ok: false, message: "invalid input" };
+      if (!id || !status) {
+        return { ok: false, message: "invalid input" };
+      }
 
-		const { error } = await client.from("reservations").update({ status }).eq("id", id);
-		if (error) {
-			console.error("update-status error", error);
-			return { ok: false, message: error.message };
-		}
-		return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-	}
+      const result = await updateReservationStatus({ id, status });
 
-  if (intent === "update-confirm") {
-		const id = String(form.get("id") || "");
-		const dateRaw = form.get("confirmed_date");
-		const timeRaw = form.get("confirmed_time");
-		if (!id) return { ok: false, message: "invalid id" };
+      if (result.error) {
+        console.error("[action] update-status error:", result.error);
+        return { ok: false, message: result.error.message };
+      }
 
-    const confirmed_date = dateRaw ? String(dateRaw) : null; // 빈 값은 null
-		const confirmed_time = timeRaw ? String(timeRaw) : null; // 빈 값은 null
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname }
+      });
+    }
 
-		const { error } = await client.from("reservations").update({ confirmed_date, confirmed_time }).eq("id", id);
-		if (error) {
-			console.error("update-confirmed_date, confirmed_time error", error);
-			return { ok: false, message: error.message };
-		}
-		return new Response(null, { status: 302, headers: { Location: new URL(request.url).pathname } });
-	}
+    if (intent === "update-confirm") {
+      const id = String(form.get("id") || "");
+      const dateRaw = form.get("confirmed_date");
+      const timeRaw = form.get("confirmed_time");
 
-  return { ok: true };
+      if (!id) {
+        return { ok: false, message: "invalid id" };
+      }
+
+      const confirmed_date = dateRaw ? String(dateRaw) : null;
+      const confirmed_time = timeRaw ? String(timeRaw) : null;
+
+      const result = await updateReservationConfirm({
+        id,
+        confirmed_date,
+        confirmed_time,
+      });
+
+      if (result.error) {
+        console.error("[action] update-confirm error:", result.error);
+        return { ok: false, message: result.error.message };
+      }
+
+      return new Response(null, {
+        status: 302,
+        headers: { Location: new URL(request.url).pathname }
+      });
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error("[action] error:", error);
+    return { error: "작업 중 오류가 발생했습니다." };
+  }
 }
 
 function getTenMinuteTimes(): string[] {
-	const out: string[] = [];
-	for (let h = 0; h < 24; h++)
-		for (let m = 0; m < 60; m += 10) {
-			const hh = String(h).padStart(2, "0");
-			const mm = String(m).padStart(2, "0");
-			out.push(`${hh}:${mm}`);
-		}
-	return out;
+  const out: string[] = [];
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 10) {
+      const hh = String(h).padStart(2, "0");
+      const mm = String(m).padStart(2, "0");
+      out.push(`${hh}:${mm}`);
+    }
+  }
+  return out;
 }
 
 const getStatusBadge = (status: string) => {

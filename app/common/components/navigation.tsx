@@ -21,22 +21,22 @@ const menus = [
     },
     {
         name: "Project",
-        to: "/camps/essay",
+        to: "/programs/essay",
         items: [
             {
                 name: "에세이",
                 description: "나의 한해를 기록하기",
-                to: "/camps/essay",
+                to: "/programs/essay",
             },
             {
                 name: "연애경향성",
                 description: "나의 연애를 알아보는 시간",
-                to: "/camps/love",
+                to: "/programs/love",
             },
             {
                 name: "사진",
                 description: "사진 프로젝트",
-                to: "/camps/photo",
+                to: "/programs/photo",
             },
             
         ]
