@@ -6,7 +6,6 @@ import { Input } from "../../../common/components/ui/input";
 import {Briefcase, Heart, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { getManagers } from "../queries";
 import type { Route } from "./+types/about-counselors-page";
-import client from "../../../lib/supa-client";
 
 export const meta: MetaFunction = () => {
     return [
@@ -20,37 +19,21 @@ export const meta: MetaFunction = () => {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const result = await getManagers();
-    
-    if (result.error) {
-        console.error("[loader] managers error:", result.error);
-        return { managers: [] };
-    }
-
-    // 이미지 URL 변환
-    const managers = (result.data ?? []).map(manager => ({
-        ...manager,
-        qualifications: Array.isArray(manager.qualifications) ? manager.qualifications : [],
-        career: Array.isArray(manager.career) ? manager.career : [],
-        image: manager.image 
-            ? `${client.supabaseUrl}/storage/v1/object/public/manager-images/${manager.image}`
-            : '/placeholder.jpg'
-    }));
-
+    const managers = await getManagers();
     return { managers };
 }
 
 export default function AboutCounselorsPage({loaderData}: Route.ComponentProps) {
-    const { managers } = loaderData;
+    const { managers = [] } = loaderData;
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const managersPerPage = 3; // 데스크톱에서 3명, 모바일에서 2명으로 조정 가능
 
     // 검색 필터링
-    const filteredManagers = managers.filter(manager =>
-        manager.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        manager.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        manager.introduction.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredManagers = (managers || []).filter(manager =>
+        manager.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (manager.specialty && manager.specialty.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (manager.introduction && manager.introduction.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     // 페이지네이션 계산

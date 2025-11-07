@@ -17,29 +17,36 @@ export interface Manager {
 }
 
 export async function getManagers(): Promise<Manager[]> {
-    const { data, error } = await client
-      .from("managers")
-      .select("*")
-      .eq("is_active", true)
-      .eq("is_representative", false) // 대표 제외
-      .order("id", { ascending: true });
-  
-    if (error) {
-      console.error("Error fetching managers:", error);
+    try {
+      const { data, error } = await client
+        .from("managers")
+        .select("*")
+        .eq("is_active", true)
+        .order("id", { ascending: true });
+    
+      if (error) {
+        return [];
+      }
+      
+      if (!data) {
+        return [];
+      }
+      
+      // 대표 제외 필터링 (is_representative가 true가 아닌 경우: false, null, undefined)
+      const nonRepresentativeManagers = data.filter(manager => manager.is_representative !== true);
+      
+      // 매니저들도 이미지 URL 생성
+      return nonRepresentativeManagers.map(manager => ({
+        ...manager,
+        qualifications: Array.isArray(manager.qualifications) ? manager.qualifications : [],
+        career: Array.isArray(manager.career) ? manager.career : [],
+        image: manager.image 
+          ? `${client.supabaseUrl}/storage/v1/object/public/manager-images/${manager.image}`
+          : '/placeholder.jpg'
+      }));
+    } catch (err) {
       return [];
     }
-    
-    if (!data) return [];
-    
-    // 매니저들도 이미지 URL 생성
-    return data.map(manager => ({
-      ...manager,
-      qualifications: Array.isArray(manager.qualifications) ? manager.qualifications : [],
-      career: Array.isArray(manager.career) ? manager.career : [],
-      image: manager.image 
-        ? `${client.supabaseUrl}/storage/v1/object/public/manager-images/${manager.image}`
-        : '/placeholder.jpg'
-    }));
 }
 
   export async function searchManagers(searchTerm: string): Promise<Manager[]> {
@@ -47,7 +54,6 @@ export async function getManagers(): Promise<Manager[]> {
       .from("managers")
       .select("*")
       .eq("is_active", true)
-      .eq("is_representative", false) // 대표 제외
       .or([
         `name.ilike.%${searchTerm}%`,
         `specialty.ilike.%${searchTerm}%`,
@@ -56,10 +62,22 @@ export async function getManagers(): Promise<Manager[]> {
       .order("id", { ascending: true });
   
     if (error) {
-      console.error("Error searching managers:", error);
       return [];
     }
-    return data || [];
+    
+    if (!data) return [];
+    
+    // 대표 제외 필터링
+    const nonRepresentativeManagers = data.filter(manager => manager.is_representative !== true);
+    
+    return nonRepresentativeManagers.map(manager => ({
+      ...manager,
+      qualifications: Array.isArray(manager.qualifications) ? manager.qualifications : [],
+      career: Array.isArray(manager.career) ? manager.career : [],
+      image: manager.image 
+        ? `${client.supabaseUrl}/storage/v1/object/public/manager-images/${manager.image}`
+        : '/placeholder.jpg'
+    }));
   }
 
 export async function getRepresentativeFromManagers(): Promise<Manager | null> {
@@ -72,7 +90,6 @@ export async function getRepresentativeFromManagers(): Promise<Manager | null> {
 		.maybeSingle();
 
 	if (error) {
-		console.error("[getRepresentativeFromManagers] supabase error:", error);
 		return null;
 	}
 	
