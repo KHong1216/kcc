@@ -4,13 +4,14 @@ import { Button } from "../../../../common/components/ui/button";
 import { Input } from "../../../../common/components/ui/input";
 import { Textarea } from "../../../../common/components/ui/textarea";
 import { Badge } from "../../../../common/components/ui/badge";
+import { FolderOpen, Sparkles, Save } from "lucide-react";
 import client from "../../../../lib/supa-client";
 import {
   getAllPrograms,
   updateProgram,
   toggleProgramActive,
 } from "../queries";
-import type { Route } from "../../program/pages/+types/admin-programs-page";
+import type { Route } from "../../programs/pages/+types/admin-programs-page";
 
 export const meta: MetaFunction = () => [
   { title: "프로젝트 관리 | 코이창작소" },
@@ -120,36 +121,63 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
   const { programs } = loaderData as { programs: any[] };
 
     return (
-      <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-6xl mx-auto py-8">
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">프로젝트 관리</h1>
-            <p className="text-gray-600">프로젝트 콘텐츠 및 공개 상태를 관리하세요.</p>
+      <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
+        {/* 배경 장식 */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#A8C5F8' }}></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#F3C3E6' }}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#FFE6C5' }}></div>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+          {/* 헤더 */}
+          <div className="mb-8">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                <FolderOpen className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>프로젝트 관리</h1>
+                <p className="text-[#3B2F2F]/80 flex items-center gap-2" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-4 h-4" style={{ color: '#F3C3E6' }} />
+                  프로젝트 콘텐츠 및 공개 상태를 관리하세요
+                </p>
+              </div>
+            </div>
           </div>
 
           {programs.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <p className="text-gray-500 text-lg">등록된 프로그램이 없습니다.</p>
+            <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)]">
+              <CardContent className="p-16 text-center">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FFF0F5, #FFE5E5)' }}>
+                  <FolderOpen className="w-10 h-10" style={{ color: '#F3C3E6' }} />
+                </div>
+                <p className="text-[#3B2F2F] text-lg font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>등록된 프로그램이 없습니다.</p>
+                <p className="text-[#7A6666] text-sm mt-2 opacity-80" style={{ lineHeight: '1.6' }}>프로그램을 추가해보세요</p>
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-6">
               {programs.map(p => (
-                <Card key={p.id} className="overflow-hidden">
-                  <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 border-b">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                <Card key={p.id} className="overflow-hidden border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
+                  <CardHeader className="border-b border-[#FADADD]/30 pb-4 relative overflow-hidden" style={{ background: 'linear-gradient(90deg, #FFF0F5, #FFE5E5)' }}>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(243,195,230,0.1), rgba(255,230,197,0.1))' }}></div>
+                    <div className="flex items-center justify-between relative z-10">
+                      <div className="flex items-center gap-4">
                         {p.icon && (
-                          <div className="text-3xl">{p.icon}</div>
+                          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                            {p.icon}
+                          </div>
                         )}
                         <div>
-                          <CardTitle className="text-xl">{p.title || "이름 없음"}</CardTitle>
-                          <div className="flex items-center gap-2 mt-1">
+                          <CardTitle className="text-2xl font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>{p.title || "이름 없음"}</CardTitle>
+                          <div className="flex items-center gap-2">
                             {p.badge && (
-                              <Badge variant="outline" className="text-xs">{p.badge}</Badge>
+                              <Badge className="bg-[#E8F4FB] text-[#2D6A9F] text-xs border-0 shadow-md">
+                                {p.badge}
+                              </Badge>
                             )}
-                            <Badge variant={p.is_active ? "default" : "secondary"} className="text-xs">
+                            <Badge className={`text-xs border-0 ${p.is_active ? "bg-green-500 text-white" : "bg-gray-400 text-white"}`}>
                               {p.is_active ? "활성화" : "비활성화"}
                             </Badge>
                           </div>
@@ -161,8 +189,12 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
                         <input type="hidden" name="is_active" value={String(p.is_active)} />
                         <Button 
                           type="submit" 
-                          variant={p.is_active ? "destructive" : "default"}
                           size="sm"
+                          className={`shadow-md hover:shadow-lg transition-all text-white ${
+                            p.is_active 
+                              ? "bg-orange-500 hover:bg-orange-600" 
+                              : "bg-green-500 hover:bg-green-600"
+                          }`}
                         >
                           {p.is_active ? "비활성화" : "활성화"}
                         </Button>
@@ -176,48 +208,48 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* 왼쪽 컬럼 */}
-                        <div className="space-y-4">
+                        <div className="space-y-5">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                               제목
                             </label>
                             <Input 
                               name="title" 
                               defaultValue={p.title || ""} 
                               required 
-                              className="w-full"
+                              className="w-full h-11 rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white text-[#3B2F2F]"
                             />
                           </div>
                           
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                               설명
                             </label>
                             <Textarea 
                               name="description" 
                               rows={4} 
                               defaultValue={p.description || ""} 
-                              className="w-full"
+                              className="w-full rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white resize-none text-[#3B2F2F]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                               소요 기간
                             </label>
                             <Input 
                               name="duration" 
                               defaultValue={p.duration || ""} 
                               placeholder="예: 약 1~2시간"
-                              className="w-full"
+                              className="w-full h-11 rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white text-[#3B2F2F]"
                             />
                           </div>
                         </div>
 
                         {/* 오른쪽 컬럼 */}
-                        <div className="space-y-4">
+                        <div className="space-y-5">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                               대상
                             </label>
                             <Textarea 
@@ -225,39 +257,44 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
                               rows={4} 
                               defaultValue={p.target_audience || ""} 
                               placeholder="예: 글쓰기를 통해 성장하고 싶은 청년들"
-                              className="w-full"
+                              className="w-full rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white resize-none text-[#3B2F2F]"
                             />
                           </div>
 
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                                 아이콘
                               </label>
                               <Input 
                                 name="icon" 
                                 defaultValue={p.icon || ""} 
                                 placeholder="예: ✨"
-                                className="w-full"
+                                className="w-full h-11 rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white text-[#3B2F2F]"
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                                 배지
                               </label>
                               <Input 
                                 name="badge" 
                                 defaultValue={p.badge || ""} 
                                 placeholder="예: NEW"
-                                className="w-full"
+                                className="w-full h-11 rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white text-[#3B2F2F]"
                               />
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="pt-4 border-t">
-                        <Button type="submit" variant="default" className="w-full md:w-auto">
+                      <div className="pt-4 border-t border-[#FADADD]/30">
+                        <Button 
+                          type="submit" 
+                          className="w-full md:w-auto text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:opacity-90"
+                          style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}
+                        >
+                          <Save className="w-4 h-4 mr-2" />
                           내용 저장
                         </Button>
                       </div>
@@ -268,6 +305,7 @@ export default function AdminProgramsPage({ loaderData }: Route.ComponentProps) 
             </div>
           )}
         </div>
+
       </div>
     );
 }

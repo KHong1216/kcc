@@ -55,14 +55,14 @@ export default function AboutCounselorsPage({loaderData}: Route.ComponentProps) 
     };
 
     return (
-        <div className="min-h-screen w-full pt-16 sm:pt-20">
+        <div className="min-h-screen w-full">
             {/* 히어로 섹션 */}
-            <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+            <section className="pt-14 sm:pt-16 lg:pt-[4.5rem] px-4 sm:px-6 lg:px-8 bg-koi-hero min-h-[300px] flex items-center">
+                <div className="max-w-4xl mx-auto text-center w-full">
+                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 text-[#3B2F2F]">
                         코이매니저 소개
                     </h1>
-                    <p className="text-lg text-gray-600 mb-6">
+                    <p className="text-lg text-[#3B2F2F] opacity-80 mb-6">
                         함께 성장하는 여정을 시작해보세요
                     </p>
 
@@ -81,15 +81,15 @@ export default function AboutCounselorsPage({loaderData}: Route.ComponentProps) 
             </section>
 
             {/* 매니저 소개 섹션 */}
-            <section className="py-12 px-4 sm:px-6 lg:px-8">
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto">
                     {/* 검색 결과 정보 */}
                     <div className="mb-6 text-center">
-                        <p className="text-gray-600">
+                        <p className="text-[#7A6666] opacity-80">
                             {searchTerm ? (
-                                <>"{searchTerm}" 검색 결과: <span className="font-semibold text-blue-600">{filteredManagers.length}명</span>의 매니저</>
+                                <>"{searchTerm}" 검색 결과: <span className="font-semibold text-koi-blue">{filteredManagers.length}명</span>의 매니저</>
                             ) : (
-                                <>총 <span className="font-semibold text-blue-600">{managers.length}명</span>의 매니저</>
+                                <>총 <span className="font-semibold text-koi-blue">{managers.length}명</span>의 매니저</>
                             )}
                         </p>
                     </div>
@@ -108,9 +108,9 @@ export default function AboutCounselorsPage({loaderData}: Route.ComponentProps) 
 
                                 <CardContent className="p-6">
                                     <div className="mb-4">
-                                        <h2 className="text-xl font-bold mb-2 text-gray-900">{manager.name}</h2>
-                                        <p className="text-blue-600 font-medium mb-3">{manager.introduction}</p>
-                                        <p className="text-gray-600 text-sm leading-relaxed">{manager.description}</p>
+                                        <h2 className="text-xl font-semibold mb-2 text-[#3B2F2F]">{manager.name}</h2>
+                                        <p className="text-koi-blue font-medium mb-3">{manager.introduction}</p>
+                                        <p className="text-[#7A6666] text-sm opacity-80 leading-relaxed">{manager.description}</p>
                                     </div>
 
                                     {/* 정보 그리드 */}
@@ -142,27 +142,27 @@ export default function AboutCounselorsPage({loaderData}: Route.ComponentProps) 
                                         {/* 전문 분야 */}
                                         <div className="space-y-2">
                                             <div className="flex items-center space-x-2">
-                                                <Heart className="w-4 h-4 text-blue-600" />
-                                                <h3 className="text-sm font-semibold text-gray-900">전문 분야</h3>
+                                                <Heart className="w-4 h-4 text-koi-blue" />
+                                                <h3 className="text-sm font-semibold text-[#3B2F2F]">전문 분야</h3>
                                             </div>
-                                            <p className="text-gray-600 text-xs">{manager.specialty}</p>
+                                            <p className="text-[#7A6666] text-xs opacity-80">{manager.specialty}</p>
                                         </div>
 
                                         {/* 주요 경력 */}
                                         <div className="space-y-2">
                                             <div className="flex items-center space-x-2">
-                                                <Briefcase className="w-4 h-4 text-blue-600" />
-                                                <h3 className="text-sm font-semibold text-gray-900">주요 경력</h3>
+                                                <Briefcase className="w-4 h-4 text-koi-blue" />
+                                                <h3 className="text-sm font-semibold text-[#3B2F2F]">주요 경력</h3>
                                             </div>
                                             <ul className="space-y-1">
                                                 {manager.career.slice(0, 2).map((item, idx) => (
-                                                    <li key={idx} className="flex items-start text-xs text-gray-600">
-                                                        <span className="w-1 h-1 bg-blue-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                                                    <li key={idx} className="flex items-start text-xs text-[#7A6666] opacity-80">
+                                                        <span className="w-1 h-1 bg-koi-blue rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                                                         {item}
                                                     </li>
                                                 ))}
                                                 {manager.career.length > 2 && (
-                                                    <li className="text-xs text-gray-500">+{manager.career.length - 2}개 더</li>
+                                                    <li className="text-xs text-[#8B7D7D] opacity-80">+{manager.career.length - 2}개 더</li>
                                                 )}
                                             </ul>
                                         </div>
@@ -217,20 +217,20 @@ export default function AboutCounselorsPage({loaderData}: Route.ComponentProps) 
                     {/* 검색 결과가 없을 때 */}
                     {filteredManagers.length === 0 && (
                         <div className="text-center py-12">
-                            <p className="text-gray-500 text-lg">검색 결과가 없습니다.</p>
-                            <p className="text-gray-400 text-sm mt-2">다른 검색어를 시도해보세요.</p>
+                            <p className="text-[#7A6666] text-lg opacity-80">검색 결과가 없습니다.</p>
+                            <p className="text-[#8B7D7D] text-sm opacity-80 mt-2">다른 검색어를 시도해보세요.</p>
                         </div>
                     )}
                 </div>
             </section>
 
             {/* CTA 섹션 */}
-            <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-koi-soft">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-900">
+                    <h2 className="text-2xl font-bold mb-4 text-[#3B2F2F]">
                         함께 이야기 나눠요
                     </h2>
-                    <p className="text-gray-600 mb-6">
+                    <p className="text-[#7A6666] opacity-80 mb-6">
                         어려운 일이 있거나 누군가와 이야기하고 싶을 때 언제든 연락주세요
                     </p>
                     {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">

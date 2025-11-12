@@ -57,6 +57,7 @@ export default function App() {
   return (
     <div className="h-screen w-full">
       <Navigation />
+      {/* Outlet에 key를 주지 않아서 같은 경로로 이동해도 재마운트 방지 */}
       <Outlet />
     </div>
   )

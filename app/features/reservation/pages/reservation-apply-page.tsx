@@ -1,5 +1,4 @@
 import { Form, useLocation, useNavigate, type MetaFunction } from "react-router";
-import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../common/components/ui/card";
 import { Button } from "../../../common/components/ui/button";
 import { Badge } from "../../../common/components/ui/badge";

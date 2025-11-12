@@ -16,33 +16,35 @@ export const meta: MetaFunction = () => {
 
 export default function PhotoPage() {
     return (
-        <div className="min-h-screen w-full pt-16 sm:pt-20">
+        <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif', lineHeight: '1.6' }}>
             {/* 히어로 섹션 */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+            <section className="py-24 px-4 sm:px-6 lg:px-8 min-h-[80vh] flex items-center" style={{ background: 'linear-gradient(180deg, #F0F9FF, #E8F4FB)' }}>
                 <div className="max-w-4xl mx-auto text-center">
                     <div className="mb-6">
-                        <Construction className="w-16 h-16 text-purple-500 mx-auto mb-4" />
+                        <Construction className="w-16 h-16 mx-auto mb-4" style={{ color: '#A8C5F8' }} />
                     </div>
-                    <Badge className="mb-4 bg-purple-500 text-white">준비중</Badge>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+                    <Badge className="mb-6 text-base px-4 py-2 font-semibold" style={{ backgroundColor: '#A8C5F8', color: '#1E3A8A' }}>
+                        준비중
+                    </Badge>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 text-[#3B2F2F] leading-tight" style={{ lineHeight: '1.6' }}>
                         사진 캠프
                     </h1>
-                    <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                    <p className="text-xl text-[#3B2F2F]/85 mb-8 leading-relaxed" style={{ lineHeight: '1.6' }}>
                         곧 만나보실 수 있는 특별한 프로그램입니다
                     </p>
                     
-                    <Card className="max-w-2xl mx-auto">
+                    <Card className="max-w-2xl mx-auto bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] shadow-[0_4px_24px_rgba(0,0,0,0.05)]">
                         <CardContent className="p-8">
                             <div className="text-center">
-                                <Camera className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-                                <h2 className="text-2xl font-bold mb-4 text-gray-900">
+                                <Camera className="w-12 h-12 mx-auto mb-4" style={{ color: '#A8C5F8' }} />
+                                <h2 className="text-2xl font-extrabold tracking-tight mb-4 text-[#3B2F2F]" style={{ lineHeight: '1.6' }}>
                                     준비중인 프로그램
                                 </h2>
-                                <p className="text-gray-600 mb-6">
+                                <p className="text-[#3B2F2F]/85 mb-6 leading-relaxed" style={{ lineHeight: '1.6' }}>
                                     사진을 통해 자신을 발견하고 표현하는 특별한 프로그램을 준비하고 있습니다.
                                 </p>
-                                <div className="flex items-center justify-center gap-2 text-gray-500">
-                                    <Clock className="w-5 h-5" />
+                                <div className="flex items-center justify-center gap-2 text-[#7A6666] opacity-80">
+                                    <Clock className="w-5 h-5" style={{ color: '#A8C5F8' }} />
                                     <span>곧 공개 예정</span>
                                 </div>
                             </div>

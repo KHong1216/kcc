@@ -37,11 +37,13 @@ const heroImages = [
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isClient, setIsClient] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const navigate = useNavigate();
 
   // 클라이언트 사이드에서만 framer-motion 활성화
   useEffect(() => {
     setIsClient(true);
+    setIsMounted(true);
   }, []);
 
   const nextSlide = () => {
@@ -69,9 +71,10 @@ export function HeroSection() {
 
     return (
       <SlideWrapper
+        key={`first-slide-${image.id}`}
         className="absolute inset-0 w-full h-full z-10"
         {...(isClient && {
-          initial: { opacity: 0 },
+          initial: isMounted ? false : { opacity: 0 },
           animate: { opacity: currentSlide === 0 ? 1 : 0 },
           transition: { duration: 0.8, ease: "easeInOut" }
         })}
@@ -79,12 +82,14 @@ export function HeroSection() {
       >
         <div className="relative w-full h-full">
           <img
+            key={`hero-${image.id}`}
             src={image.src}
             alt={image.alt}
             className="w-full h-full object-cover"
             fetchPriority="high"
             loading="eager"
             decoding="async"
+            style={{ imageRendering: 'auto' }}
           />
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
@@ -182,10 +187,10 @@ export function HeroSection() {
           
           return (
             <SlideWrapper
-              key={image.id}
+              key={`slide-${image.id}`}
               className={`absolute inset-0 w-full h-full ${actualIndex === currentSlide ? 'z-10' : 'z-0'}`}
               {...(isClient && {
-                initial: { opacity: 0 },
+                initial: isMounted ? false : { opacity: 0 },
                 animate: {
                   opacity: actualIndex === currentSlide ? 1 : 0,
                   scale: actualIndex === currentSlide ? 1 : 1.1
@@ -196,11 +201,13 @@ export function HeroSection() {
             >
               <div className="relative w-full h-full">
                 <img
+                  key={`hero-${image.id}`}
                   src={image.src}
                   alt={image.alt}
                   className="w-full h-full object-cover"
                   loading="lazy"
                   decoding="async"
+                  style={{ imageRendering: 'auto' }}
                 />
                 <div className="absolute inset-0 bg-black/40"></div>
               </div>

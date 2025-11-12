@@ -8,8 +8,11 @@ export interface Reservation {
   user_age: number | null;
   user_email: string;
   user_phone: string;
+  user_job?: string;
   program_id: string;
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  notes?: string;
+  admin_notes?: string;
   confirmed_date: string | null;
   confirmed_time: string | null;
   created_at: string;
@@ -35,8 +38,8 @@ export interface UpdateReservationConfirmInput {
  */
 export function getAllReservations() {
   return client
-    .from<Reservation>("reservations")
-    .select("*")
+    .from("reservations")
+    .select("id,user_name,user_age,user_email,user_phone,user_job,program_id,status,notes,admin_notes,confirmed_date,confirmed_time,created_at,updated_at")
     .order("created_at", { ascending: false });
 }
 

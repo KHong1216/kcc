@@ -32,12 +32,12 @@ export function getReservationCount() {
 }
 
 /**
- * 커뮤니티 게시글 수 조회
+ * 리뷰 수 조회
  * @returns 카운트 결과 Promise
  */
 export function getCommunityPostCount() {
   return client
-    .from("community_posts")
+    .from("reviews")
     .select("*", { count: "exact", head: true });
 }
 

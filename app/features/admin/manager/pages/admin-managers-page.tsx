@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../../../common/components/ui/dialog";
-import { Plus, Trash2, Edit } from "lucide-react";
+import { Plus, Trash2, Edit, Users, Sparkles } from "lucide-react";
 import { useState } from "react";
 import client from "../../../../lib/supa-client";
 import {
@@ -276,19 +276,39 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
   };
 
   return (
-    <div className="min-h-screen w-full pt-16 sm:pt-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">매니저 설정</h1>
-          <p className="text-gray-600">매니저 정보를 추가하고 활성화 상태를 관리하세요.</p>
+    <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
+      {/* 배경 장식 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#A8C5F8' }}></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#F3C3E6' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#FFE6C5' }}></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+        {/* 헤더 */}
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+              <Users className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>매니저 설정</h1>
+              <p className="text-[#3B2F2F]/80 flex items-center gap-2" style={{ lineHeight: '1.6' }}>
+                <Sparkles className="w-4 h-4" style={{ color: '#A8C5F8' }} />
+                매니저 정보를 추가하고 활성화 상태를 관리하세요
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* 매니저 추가 폼 */}
-        <Card className="mb-8">
-          <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b">
-            <div className="flex items-center gap-2">
-              <Plus className="w-5 h-5 text-blue-600" />
-              <CardTitle>새 매니저 추가</CardTitle>
+        <Card className="mb-8 border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)]">
+          <CardHeader className="border-b border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                <Plus className="w-5 h-5 text-white" />
+              </div>
+              <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">새 매니저 추가</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="p-6">
@@ -298,14 +318,14 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       이름 <span className="text-red-500">*</span>
                     </label>
-                    <Input name="name" placeholder="홍길동" required className="w-full" />
+                    <Input name="name" placeholder="홍길동" required className="w-full border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] text-[#3B2F2F]" />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       이미지 <span className="text-red-500">*</span>
                     </label>
                     <Input 
@@ -313,59 +333,63 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                       type="file" 
                       accept="image/*" 
                       required 
-                      className="w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                      className="w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#E8F4FB] file:text-[#2D6A9F] hover:file:bg-[#D1E7F5] border-2 border-[#FADADD]/50" 
                     />
-                    <p className="mt-1 text-xs text-gray-500">JPG, PNG, GIF 형식의 이미지를 업로드하세요.</p>
+                    <p className="mt-1 text-xs text-[#7A6666] opacity-80">JPG, PNG, GIF 형식의 이미지를 업로드하세요.</p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       소개 한 줄
                     </label>
-                    <Input name="introduction" placeholder="예: 문학과 글쓰기를 사랑하는 매니저" className="w-full" />
+                    <Input name="introduction" placeholder="예: 문학과 글쓰기를 사랑하는 매니저" className="w-full border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] text-[#3B2F2F]" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       졸업
                     </label>
-                    <Input name="graduation" placeholder="예: 서울대학교 문학과" className="w-full" />
+                    <Input name="graduation" placeholder="예: 서울대학교 문학과" className="w-full border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] text-[#3B2F2F]" />
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       자격증 (쉼표 구분)
                     </label>
-                    <Input name="qualifications" placeholder="예: 국어교사 자격증, 문학치료사" className="w-full" />
+                    <Input name="qualifications" placeholder="예: 국어교사 자격증, 문학치료사" className="w-full border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] text-[#3B2F2F]" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       경력 (쉼표 구분)
                     </label>
-                    <Input name="career" placeholder="예: 작가, 문학 평론가, 강사" className="w-full" />
+                    <Input name="career" placeholder="예: 작가, 문학 평론가, 강사" className="w-full border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] text-[#3B2F2F]" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       전문 분야
                     </label>
-                    <Input name="specialty" placeholder="예: 에세이, 시, 소설" className="w-full" />
+                    <Input name="specialty" placeholder="예: 에세이, 시, 소설" className="w-full border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] text-[#3B2F2F]" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       상세 설명
                     </label>
-                    <Textarea name="description" placeholder="매니저에 대한 상세한 설명을 작성하세요." rows={3} className="w-full" />
+                    <Textarea name="description" placeholder="매니저에 대한 상세한 설명을 작성하세요." rows={3} className="w-full border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] text-[#3B2F2F]" />
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 border-t">
-                <Button type="submit" className="w-full md:w-auto">
+              <div className="pt-4 border-t border-[#FADADD]/30">
+                <Button 
+                  type="submit" 
+                  className="w-full md:w-auto text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:opacity-90"
+                  style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   매니저 추가
                 </Button>
@@ -376,31 +400,40 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
 
         {/* 매니저 목록 */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">매니저 목록</h2>
-            <Badge variant="outline">{managers.length}명</Badge>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <h2 className="text-2xl font-extrabold tracking-tight text-[#3B2F2F]">매니저 목록</h2>
+              <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                {managers.length}명
+              </Badge>
+            </div>
           </div>
 
           {managers.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <p className="text-gray-500 text-lg">등록된 매니저가 없습니다.</p>
+            <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)]">
+              <CardContent className="p-16 text-center">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #E8F4FB, #FFF0F5)' }}>
+                  <Users className="w-10 h-10" style={{ color: '#A8C5F8' }} />
+                </div>
+                <p className="text-[#3B2F2F] text-lg font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>등록된 매니저가 없습니다.</p>
+                <p className="text-[#7A6666] text-sm mt-2 opacity-80" style={{ lineHeight: '1.6' }}>새 매니저를 추가해보세요</p>
               </CardContent>
             </Card>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {managers.map(m => (
-                <Card key={m.id} className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-                  <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 border-b pb-3 flex-shrink-0">
-                    <div className="flex items-start justify-between">
+                <Card key={m.id} className="overflow-hidden hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 h-full flex flex-col border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] group">
+                  <CardHeader className="border-b border-[#FADADD]/30 pb-4 flex-shrink-0 relative overflow-hidden" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(168,197,248,0.1), rgba(243,195,230,0.1))' }}></div>
+                    <div className="flex items-start justify-between relative z-10">
                       <div className="flex-1">
-                        <CardTitle className="text-lg mb-2">{m.name}</CardTitle>
+                        <CardTitle className="text-lg mb-2 font-extrabold tracking-tight text-[#3B2F2F]" style={{ lineHeight: '1.6' }}>{m.name}</CardTitle>
                         {m.introduction && (
-                          <p className="text-sm text-gray-600">{m.introduction}</p>
+                          <p className="text-sm text-[#3B2F2F]/85" style={{ lineHeight: '1.6' }}>{m.introduction}</p>
                         )}
                       </div>
                       {m.imageUrl && (
-                        <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center ml-3 flex-shrink-0 overflow-hidden border-2 border-white shadow-md">
+                        <div className="w-20 h-20 rounded-2xl bg-gray-200 flex items-center justify-center ml-3 flex-shrink-0 overflow-hidden border-3 border-white shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                           <img 
                             src={m.imageUrl} 
                             alt={m.name}
@@ -413,36 +446,36 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                         </div>
                       )}
                       {!m.imageUrl && m.image && (
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-200 to-purple-200 flex items-center justify-center ml-3 flex-shrink-0 border-2 border-white shadow-md">
-                          <span className="text-xl font-bold text-gray-700">
+                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center ml-3 flex-shrink-0 border-3 border-white shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                          <span className="text-2xl font-bold text-white">
                             {m.name.charAt(0)}
                           </span>
                         </div>
                       )}
                     </div>
                   </CardHeader>
-                  <CardContent className="p-5 flex-1 flex flex-col space-y-4">
+                  <CardContent className="p-6 flex-1 flex flex-col space-y-4">
                     {/* 정보 표시 */}
-                    <div className="space-y-2 text-sm flex-1">
+                    <div className="space-y-3 text-sm flex-1">
                       {m.graduation && (
-                        <div>
-                          <span className="text-gray-500">졸업:</span> <span className="text-gray-700">{m.graduation}</span>
+                        <div className="p-3 rounded-lg border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
+                          <span className="text-[#7A6666] opacity-80 font-medium">졸업:</span> <span className="text-[#3B2F2F] font-extrabold tracking-tight">{m.graduation}</span>
                         </div>
                       )}
                       {m.specialty && (
-                        <div>
-                          <span className="text-gray-500">전문:</span> <span className="text-gray-700">{m.specialty}</span>
+                        <div className="p-3 rounded-lg border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)' }}>
+                          <span className="text-[#7A6666] opacity-80 font-medium">전문:</span> <span className="text-[#3B2F2F] font-extrabold tracking-tight">{m.specialty}</span>
                         </div>
                       )}
                       {m.qualifications && m.qualifications.length > 0 && (
-                        <div>
-                          <span className="text-gray-500">자격:</span> 
-                          <div className="flex flex-wrap gap-1 mt-1">
+                        <div className="p-3 rounded-lg border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
+                          <span className="text-[#7A6666] opacity-80 font-medium block mb-2">자격:</span> 
+                          <div className="flex flex-wrap gap-1.5">
                             {Array.isArray(m.qualifications) 
                               ? m.qualifications.map((q: string, i: number) => (
-                                  <Badge key={i} variant="secondary" className="text-xs">{q}</Badge>
+                                  <Badge key={i} className="text-xs bg-[#E8F4FB] text-[#2D6A9F] border-0">{q}</Badge>
                                 ))
-                              : <span className="text-gray-700">{m.qualifications}</span>
+                              : <span className="text-[#3B2F2F]">{m.qualifications}</span>
                             }
                           </div>
                         </div>
@@ -450,28 +483,28 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                     </div>
 
                     {/* 상태 배지 */}
-                    <div className="flex items-center gap-2 flex-wrap flex-shrink-0">
-                      <Badge variant={m.is_active ? "default" : "secondary"}>
+                    <div className="flex items-center gap-2 flex-wrap flex-shrink-0 pt-2">
+                      <Badge className={m.is_active ? "bg-green-500 text-white" : "bg-gray-400 text-white"}>
                         {m.is_active ? "활성" : "비활성"}
                       </Badge>
                       {m.is_representative && (
-                        <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">
-                          대표
+                        <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white border-0 shadow-md">
+                          ⭐ 대표
                         </Badge>
                       )}
                     </div>
 
                     {/* 액션 버튼 - 항상 하단 고정 */}
-                    <div className="pt-2 border-t mt-auto flex-shrink-0 space-y-2">
+                    <div className="pt-4 border-t border-[#FADADD]/30 mt-auto flex-shrink-0 space-y-2">
                       <div className="grid grid-cols-2 gap-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleEdit(m)}
-                          className="w-full text-xs"
+                          className="w-full text-xs border-2 border-[#FADADD] text-[#3B2F2F] hover:bg-[#E8F4FB] hover:border-[#A8C5F8] transition-all"
                           type="button"
                         >
-                          <Edit className="w-3 h-3 mr-1" />
+                          <Edit className="w-3.5 h-3.5 mr-1" />
                           수정
                         </Button>
                         <form method="post" className="w-full">
@@ -482,9 +515,9 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                             variant="outline" 
                             size="sm" 
                             type="submit"
-                            className="w-full text-xs"
+                            className="w-full text-xs border-2 border-[#FADADD] text-[#3B2F2F] hover:bg-[#FFF0F5] hover:border-[#F3C3E6] transition-all"
                           >
-                            {m.is_representative ? "대표해제" : "대표지정"}
+                            {m.is_representative ? "대표해제" : "⭐ 대표지정"}
                           </Button>
                         </form>
                       </div>
@@ -496,9 +529,9 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                             variant="destructive" 
                             size="sm" 
                             type="submit"
-                            className="w-full text-xs"
+                            className="w-full text-xs bg-red-500 hover:bg-red-600 shadow-md hover:shadow-lg transition-all text-white"
                           >
-                            <Trash2 className="w-3 h-3" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </Button>
                         </form>
                         <form method="post" className="w-full">
@@ -509,7 +542,11 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                             variant={m.is_active ? "destructive" : "default"} 
                             size="sm" 
                             type="submit"
-                            className="w-full text-xs"
+                            className={`w-full text-xs shadow-md hover:shadow-lg transition-all text-white ${
+                              m.is_active 
+                                ? "bg-orange-500 hover:bg-orange-600" 
+                                : "bg-green-500 hover:bg-green-600"
+                            }`}
                           >
                             {m.is_active ? "비활성" : "활성"}
                           </Button>
@@ -526,19 +563,26 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
 
       {/* 수정 모달 */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>매니저 정보 수정</DialogTitle>
-            <DialogDescription>
-              매니저의 정보를 수정할 수 있습니다.
-            </DialogDescription>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto border border-[#FADADD]/30 shadow-[0_10px_40px_rgba(0,0,0,0.08)] p-0 bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)]">
+          <DialogHeader className="p-6 border-b border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                <Edit className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <DialogTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">매니저 정보 수정</DialogTitle>
+                <DialogDescription className="text-[#7A6666] opacity-80 mt-1" style={{ lineHeight: '1.6' }}>
+                  매니저의 정보를 수정할 수 있습니다.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           {editingManager && (
             <form
               method="post"
               encType="multipart/form-data"
               onSubmit={() => setIsDialogOpen(false)}
-              className="space-y-6"
+              className="space-y-6 p-6"
             >
               <input type="hidden" name="intent" value="update" />
               <input type="hidden" name="id" value={editingManager.id} />
@@ -546,20 +590,20 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       이름 <span className="text-red-500">*</span>
                     </label>
                     <Input 
                       name="name" 
                       placeholder="홍길동" 
                       required 
-                      className="w-full"
+                      className="w-full border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] text-[#3B2F2F]"
                       defaultValue={editingManager.name}
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
                       이미지
                     </label>
                     {editingManager.imageUrl && (
@@ -567,18 +611,18 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                         <img 
                           src={editingManager.imageUrl} 
                           alt={editingManager.name}
-                          className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+                          className="w-24 h-24 rounded-full object-cover border-2 border-[#FADADD]/50"
                         />
-                        <p className="text-xs text-gray-500 mt-1">현재 이미지</p>
+                        <p className="text-xs text-[#7A6666] opacity-80 mt-1">현재 이미지</p>
                       </div>
                     )}
                     <Input 
                       name="image" 
                       type="file" 
                       accept="image/*" 
-                      className="w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                      className="w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#E8F4FB] file:text-[#2D6A9F] hover:file:bg-[#D1E7F5] border-2 border-[#FADADD]/50" 
                     />
-                    <p className="mt-1 text-xs text-gray-500">새 이미지를 선택하면 기존 이미지가 교체됩니다.</p>
+                    <p className="mt-1 text-xs text-[#7A6666] opacity-80">새 이미지를 선택하면 기존 이미지가 교체됩니다.</p>
                   </div>
 
                   <div>
@@ -666,15 +710,20 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                 </div>
               </div>
 
-              <DialogFooter>
+              <DialogFooter className="p-6 border-t border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #FDF6F0, #FFF7F5)' }}>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setIsDialogOpen(false)}
+                  className="border-2 border-[#FADADD] text-[#3B2F2F] hover:bg-[#E8F4FB]"
                 >
                   취소
                 </Button>
-                <Button type="submit">
+                <Button 
+                  type="submit"
+                  className="text-white shadow-lg hover:shadow-xl transition-all hover:opacity-90"
+                  style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}
+                >
                   수정 완료
                 </Button>
               </DialogFooter>
@@ -682,6 +731,7 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
           )}
         </DialogContent>
       </Dialog>
+
     </div>
   );
 }

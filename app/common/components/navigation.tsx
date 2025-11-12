@@ -70,22 +70,35 @@ export function Navigation() {
     const location = useLocation();
     const isHomePage = location.pathname === "/";
     
+    const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        // 홈페이지에 이미 있는 경우 클릭 방지 (깜빡임 방지)
+        if (isHomePage) {
+            e.preventDefault();
+            // 스크롤을 맨 위로 이동 (선택사항)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+    
     return (
         <nav className={cn(
-            "flex px-1 sm:px-4 lg:px-20 h-12 sm:h-14 lg:h-16 items-center fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+            "flex justify-between items-center px-4 sm:px-6 lg:px-8 h-14 sm:h-16 lg:h-18 fixed top-0 left-0 right-0 z-50 transition-all duration-300",
             isHomePage 
-                ? "bg-transparent backdrop-blur-sm" 
-                : "bg-white border-b border-gray-200 shadow-sm"
+                ? "bg-white/70 backdrop-blur-md shadow-sm" 
+                : "bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm"
         )}>
             <div className="flex items-center">
                 <Link 
                     to="/" 
+                    onClick={handleHomeClick}
                     className={cn(
-                        "font-bold text-sm sm:text-base lg:text-lg hover:text-blue-800 transition-colors",
-                        isHomePage ? "text-white" : "text-blue-600"
+                        "text-3xl font-extrabold tracking-tight transition-colors",
+                        isHomePage ? "" : ""
                     )}
                 >
-                    KOI
+                    <span className="bg-clip-text text-transparent bg-[linear-gradient(90deg,#A8C5F8,#F3C3E6,#FFE6C5)]">
+                        KOI
+                    </span>
+                    <span className="text-[#7B6E6E] font-medium ml-1">Creative Lab</span>
                 </Link>
                 <Separator 
                     orientation="vertical" 
@@ -102,10 +115,10 @@ export function Navigation() {
                                     <>
                                         <Link to={menu.to}>
                                             <NavigationMenuTrigger className={cn(
-                                                "text-xs sm:text-sm font-medium h-8 sm:h-9 px-1 sm:px-3 transition-colors bg-transparent hover:bg-transparent", // 모바일에서 px-2 → px-1로 줄임
+                                                "text-sm font-medium h-9 px-3 transition-colors bg-transparent hover:bg-transparent rounded-lg",
                                                 isHomePage 
-                                                    ? "text-white hover:text-white/80" 
-                                                    : "text-gray-900 hover:text-gray-900/80"
+                                                    ? "text-gray-700 hover:text-[#2D6A9F] hover:bg-[#E8F4FB]" 
+                                                    : "text-gray-600 hover:text-[#2D6A9F] hover:bg-[#E8F4FB]"
                                             )}>
                                                 {menu.name}
                                             </NavigationMenuTrigger>
@@ -142,10 +155,10 @@ export function Navigation() {
                                         <Link
                                             to={menu.to}
                                             className={cn(
-                                                "group inline-flex h-8 sm:h-9 w-max items-center justify-center rounded-md px-1 sm:px-3 py-1 text-xs sm:text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 whitespace-nowrap", // 모바일에서 px-2 → px-1로 줄임
+                                                "group inline-flex h-9 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap",
                                                 isHomePage 
-                                                    ? "bg-transparent text-white hover:text-white/80 hover:bg-white/10" 
-                                                    : "bg-background text-gray-900"
+                                                    ? "bg-transparent text-gray-700 hover:text-[#2D6A9F] hover:bg-[#E8F4FB]" 
+                                                    : "bg-transparent text-gray-600 hover:text-[#2D6A9F] hover:bg-[#E8F4FB]"
                                             )}
                                         >
                                             {menu.name}

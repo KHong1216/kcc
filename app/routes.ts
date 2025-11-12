@@ -25,10 +25,12 @@ export default [
         route("photo", "features/programs/photo/pages/photo-page.tsx"),
     ]),
     ...prefix("reservation", [
-        index("features/reservation/pages/reservation-page.tsx"),
+        index("features/reservation/pages/reservation-chat-page.tsx"),
         route("apply", "features/reservation/pages/reservation-apply-page.tsx")
     ]),
     route("join", "features/reservation/pages/qr-page.tsx"),
-    
+    route("/api/chat", "features/reservation/api-chat.tsx"),
+    route("/api/admin/report", "features/admin/api-admin-report.tsx"),
+    route("/easteregg", "features/programs/easteregg/pages/easter-egg-page.tsx"),
     
 ] satisfies RouteConfig
