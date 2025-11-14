@@ -14,7 +14,8 @@ import {
   Loader2,
   Sparkles,
   TrendingUp,
-  Activity
+  Activity,
+  Mail
 } from "lucide-react";
 import client from "../../../../lib/supa-client";
 import { getAdminStats } from "../queries";
@@ -52,14 +53,15 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   // 통계 데이터 처리
-  const [managerCountResult, reservationCountResult, communityCountResult] = statsResults;
+  const [managerCountResult, reservationCountResult, communityCountResult, contactCountResult] = statsResults;
 
   return {
     admin: session.user,
     stats: {
       managerCount: managerCountResult.count || 0,
       reservationCount: reservationCountResult.count || 0,
-      communityCount: communityCountResult.count || 0
+      communityCount: communityCountResult.count || 0,
+      contactCount: contactCountResult.count || 0
     }
   };
 }
@@ -80,7 +82,7 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function AdminPage({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
-  const { admin, stats } = loaderData as { admin: any; stats: { managerCount: number; reservationCount: number; communityCount: number } };
+  const { admin, stats } = loaderData as { admin: any; stats: { managerCount: number; reservationCount: number; communityCount: number; contactCount: number } };
   const [report, setReport] = useState<any>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -152,7 +154,7 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
       {/* 메인 콘텐츠 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* 통계 카드 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative">
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(168,197,248,0.1), rgba(243,195,230,0.1))' }}></div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
@@ -206,6 +208,25 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
               <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
                 <MessageSquare className="w-3.5 h-3.5" style={{ color: '#FB7185' }} />
                 커뮤니티 게시글 수
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative">
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(168,197,248,0.1), rgba(251,113,133,0.1))' }}></div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+              <CardTitle className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">문의</CardTitle>
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" style={{ background: 'linear-gradient(90deg, #A8C5F8, #FB7185)' }}>
+                <Mail className="h-7 w-7 text-white" />
+              </div>
+            </CardHeader>
+            <CardContent className="relative z-10">
+              <div className="text-5xl font-extrabold tracking-tight mb-2" style={{ background: 'linear-gradient(90deg, #A8C5F8, #FB7185)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                {stats.contactCount}
+              </div>
+              <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
+                <Mail className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
+                전체 문의 건수
               </p>
             </CardContent>
           </Card>
@@ -423,6 +444,32 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
               >
                 <Eye className="w-4 h-4 mr-1" />
                 게시글 관리
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* 문의 관리 */}
+          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
+            <CardHeader style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
+              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(90deg, #A8C5F8, #FB7185)' }}>
+                  <Mail className="w-5 h-5 text-white" />
+                </div>
+                문의 관리
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-6">
+              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
+                고객 문의 조회 및 답변 관리
+              </p>
+              <Button 
+                size="sm" 
+                className="w-full text-white shadow-md hover:shadow-lg transition-all" 
+                style={{ background: 'linear-gradient(90deg, #A8C5F8, #FB7185)' }}
+                onClick={() => navigate("/admin/contact")}
+              >
+                <Eye className="w-4 h-4 mr-1" />
+                문의 관리
               </Button>
             </CardContent>
           </Card>

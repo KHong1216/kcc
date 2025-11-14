@@ -13,11 +13,13 @@ export default [
         route("managers", "features/admin/manager/pages/admin-managers-page.tsx"),
         route("programs", "features/admin/programs/pages/admin-programs-page.tsx"),
         route("reservations", "features/admin/reservation/pages/admin-reservations-page.tsx"),
+        route("contact", "features/admin/contact/pages/admin-contact-page.tsx"),
     ]),
     ...prefix("community", [
         route("notice", "features/community/pages/notice-page.tsx"),
         route("review", "features/community/pages/review-page.tsx"),
-        route("free", "features/community/pages/free-page.tsx")
+        route("free", "features/community/pages/free-page.tsx"),
+        route("contact", "features/community/pages/contact-page.tsx")
     ]),
     ...prefix("programs", [
         route("essay", "features/programs/essay/pages/essay-page.tsx"),

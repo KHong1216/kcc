@@ -6,6 +6,7 @@ export interface AdminStats {
   managerCount: number;
   reservationCount: number;
   communityCount: number;
+  contactCount: number;
 }
 
 // ==================== 통계 관련 쿼리 ====================
@@ -42,6 +43,16 @@ export function getCommunityPostCount() {
 }
 
 /**
+ * 문의 수 조회
+ * @returns 카운트 결과 Promise
+ */
+export function getContactCount() {
+  return client
+    .from("contacts")
+    .select("*", { count: "exact", head: true });
+}
+
+/**
  * 관리자 통계 조회 (모든 통계를 한번에)
  * @returns 통계 데이터 Promise
  */
@@ -50,5 +61,6 @@ export function getAdminStats() {
     getActiveManagerCount(),
     getReservationCount(),
     getCommunityPostCount(),
+    getContactCount(),
   ]);
 }

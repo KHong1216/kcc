@@ -36,6 +36,28 @@ export interface CreateReviewInput {
   is_verified?: boolean;
 }
 
+export interface Contact {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  subject: string | null;
+  message: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+  admin_notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateContactInput {
+  name: string;
+  email: string;
+  phone?: string;
+  subject?: string;
+  message: string;
+  status?: 'pending' | 'in_progress' | 'completed' | 'cancelled';
+}
+
 // ==================== 공지사항 관련 쿼리 ====================
 
 /**
@@ -122,4 +144,24 @@ export function updateReviewLikes(id: string, likesCount: number) {
     .from("reviews")
     .update({ likes_count: likesCount })
     .eq("id", id);
+}
+
+// ==================== 문의 관련 쿼리 ====================
+
+/**
+ * 문의 생성
+ * @param input - 문의 생성 데이터
+ * @returns 생성 결과 Promise
+ */
+export function createContact(input: CreateContactInput) {
+  return client
+    .from("contacts")
+    .insert([{
+      name: input.name,
+      email: input.email,
+      phone: input.phone || null,
+      subject: input.subject || null,
+      message: input.message,
+      status: input.status || 'pending',
+    }]);
 }
