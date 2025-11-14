@@ -98,20 +98,41 @@ export function Navigation() {
                     ? "bg-white/70 backdrop-blur-md shadow-sm" 
                     : "bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm"
             )}>
+                {/* 모바일: 햄버거 버튼 (왼쪽) */}
+                <button
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className={cn(
+                        "md:hidden p-2 rounded-lg transition-colors absolute left-2",
+                        isHomePage 
+                            ? "text-gray-700 hover:bg-[#E8F4FB]" 
+                            : "text-gray-600 hover:bg-[#E8F4FB]"
+                    )}
+                    aria-label="메뉴 열기"
+                >
+                    {mobileMenuOpen ? (
+                        <X className="w-6 h-6" />
+                    ) : (
+                        <Menu className="w-6 h-6" />
+                    )}
+                </button>
+
                 {/* 로고 및 메뉴 영역 */}
-                <div className="flex items-center flex-1 min-w-0">
+                <div className="flex items-center flex-1 min-w-0 md:flex-initial">
+                    {/* 모바일: 로고 가운데 배치 */}
                     <Link 
                         to="/" 
                         onClick={handleHomeClick}
                         className={cn(
-                            "text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight transition-colors flex-shrink-0",
-                            isHomePage ? "" : ""
+                            "font-extrabold tracking-tight transition-colors flex-shrink-0",
+                            "text-xl sm:text-2xl md:text-xl lg:text-2xl xl:text-3xl",
+                            "md:flex-shrink-0",
+                            "mx-auto md:mx-0"
                         )}
                     >
                         <span className="bg-clip-text text-transparent bg-[linear-gradient(90deg,#A8C5F8,#F3C3E6,#FFE6C5)]">
                             KOI
                         </span>
-                        <span className="text-[#7B6E6E] font-medium ml-1 hidden sm:inline">Creative Lab</span>
+                        <span className="text-[#7B6E6E] font-medium ml-1">Creative Lab</span>
                     </Link>
                     <Separator 
                         orientation="vertical" 
@@ -188,23 +209,6 @@ export function Navigation() {
                     </div>
                 </div>
 
-                {/* 모바일 햄버거 메뉴 버튼 */}
-                <button
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    className={cn(
-                        "md:hidden p-2 rounded-lg transition-colors",
-                        isHomePage 
-                            ? "text-gray-700 hover:bg-[#E8F4FB]" 
-                            : "text-gray-600 hover:bg-[#E8F4FB]"
-                    )}
-                    aria-label="메뉴 열기"
-                >
-                    {mobileMenuOpen ? (
-                        <X className="w-6 h-6" />
-                    ) : (
-                        <Menu className="w-6 h-6" />
-                    )}
-                </button>
             </nav>
 
             {/* 모바일 메뉴 */}

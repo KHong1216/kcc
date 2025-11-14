@@ -1,6 +1,6 @@
 import OpenAI from "openai";
+import { getAllReservations, type Reservation } from "../reservation/queries";
 import type { Route } from "./+types/api-admin-report";
-import { getAllReservations, type Reservation } from "./reservation/queries";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

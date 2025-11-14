@@ -32,7 +32,8 @@ export default [
     ]),
     route("join", "features/reservation/pages/qr-page.tsx"),
     route("/api/chat", "features/reservation/api-chat.tsx"),
-    route("/api/admin/report", "features/admin/api-admin-report.tsx"),
+    route("/api/admin/report", "features/admin/common/api-admin-report.tsx"),
     route("/easteregg", "features/programs/easteregg/pages/easter-egg-page.tsx"),
+    route("/test", "features/test/test-page.tsx"),
     
 ] satisfies RouteConfig
