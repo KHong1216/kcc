@@ -25,20 +25,19 @@ const menus = [
         items: [
             {
                 name: "에세이",
-                description: "나의 한해를 기록하기",
+                description: "자기 이해를 통한 나의 이야기 발견",
                 to: "/programs/essay",
             },
             {
                 name: "연애경향성",
-                description: "나의 연애를 알아보는 시간",
+                description: "내가 바뀌면 관계 전체가 달라진다",
                 to: "/programs/love",
             },
             {
                 name: "사진",
-                description: "사진 프로젝트",
+                description: "외적·내적 균형을 갖춘 아름다움",
                 to: "/programs/photo",
             },
-            
         ]
     },
     {

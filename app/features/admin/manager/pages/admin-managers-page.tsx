@@ -1,4 +1,5 @@
 import type { MetaFunction } from "react-router";
+import { Form, useActionData } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/components/ui/card";
 import { Button } from "../../../../common/components/ui/button";
 import { Input } from "../../../../common/components/ui/input";
@@ -12,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../../../common/components/ui/dialog";
-import { Plus, Trash2, Edit, Users, Sparkles } from "lucide-react";
+import { Plus, Trash2, Edit, Users, Sparkles, CheckCircle2, XCircle } from "lucide-react";
 import { useState } from "react";
 import client from "../../../../lib/supa-client";
 import {
@@ -136,10 +137,7 @@ export async function action({ request }: Route.ActionArgs) {
         return { error: "매니저 추가에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "매니저가 성공적으로 추가되었습니다." };
     }
 
     if (intent === "update") {
@@ -193,10 +191,7 @@ export async function action({ request }: Route.ActionArgs) {
         return { error: "매니저 수정에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "매니저가 성공적으로 수정되었습니다." };
     }
 
     if (intent === "delete") {
@@ -218,10 +213,7 @@ export async function action({ request }: Route.ActionArgs) {
         await deleteManagerImage(imageResult.data.image);
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "매니저가 성공적으로 삭제되었습니다." };
     }
 
     if (intent === "toggle-active") {
@@ -235,10 +227,7 @@ export async function action({ request }: Route.ActionArgs) {
         return { error: "상태 변경에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "상태가 변경되었습니다." };
     }
 
     if (intent === "toggle-rep") {
@@ -252,10 +241,7 @@ export async function action({ request }: Route.ActionArgs) {
         return { error: "대표 지정 변경에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "대표 지정이 변경되었습니다." };
     }
 
     return { ok: true };
@@ -267,6 +253,7 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function AdminManagersPage({ loaderData }: Route.ComponentProps) {
   const { managers } = loaderData as { managers: ManagerWithImageUrl[] };
+  const actionData = useActionData<{ success?: boolean; error?: string; message?: string }>();
   const [editingManager, setEditingManager] = useState<ManagerWithImageUrl | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -285,6 +272,20 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+        {/* 성공/에러 메시지 */}
+        {actionData?.success && (
+          <div className="mb-6 p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-3 shadow-md">
+            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+            <p className="text-green-800 font-medium">{actionData.message}</p>
+          </div>
+        )}
+        {actionData?.error && (
+          <div className="mb-6 p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-3 shadow-md">
+            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+            <p className="text-red-800 font-medium">{actionData.error}</p>
+          </div>
+        )}
+
         {/* 헤더 */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
@@ -312,7 +313,7 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
             </div>
           </CardHeader>
           <CardContent className="p-6">
-            <form method="post" encType="multipart/form-data" className="space-y-6">
+            <Form method="post" encType="multipart/form-data" className="space-y-6">
               <input type="hidden" name="intent" value="add" />
               
               <div className="grid md:grid-cols-2 gap-6">
@@ -394,7 +395,7 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                   매니저 추가
                 </Button>
               </div>
-            </form>
+            </Form>
           </CardContent>
         </Card>
 
@@ -507,7 +508,7 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                           <Edit className="w-3.5 h-3.5 mr-1" />
                           수정
                         </Button>
-                        <form method="post" className="w-full">
+                        <Form method="post" className="w-full">
                           <input type="hidden" name="intent" value="toggle-rep" />
                           <input type="hidden" name="id" value={m.id} />
                           <input type="hidden" name="is_representative" value={String(m.is_representative)} />
@@ -519,10 +520,10 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                           >
                             {m.is_representative ? "대표해제" : "⭐ 대표지정"}
                           </Button>
-                        </form>
+                        </Form>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
-                        <form method="post" className="w-full">
+                        <Form method="post" className="w-full">
                           <input type="hidden" name="intent" value="delete" />
                           <input type="hidden" name="id" value={m.id} />
                           <Button 
@@ -533,8 +534,8 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </Button>
-                        </form>
-                        <form method="post" className="w-full">
+                        </Form>
+                        <Form method="post" className="w-full">
                           <input type="hidden" name="intent" value="toggle-active" />
                           <input type="hidden" name="id" value={m.id} />
                           <input type="hidden" name="is_active" value={String(m.is_active)} />
@@ -550,7 +551,7 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                           >
                             {m.is_active ? "비활성" : "활성"}
                           </Button>
-                        </form>
+                        </Form>
                       </div>
                     </div>
                   </CardContent>
@@ -578,7 +579,7 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
             </div>
           </DialogHeader>
           {editingManager && (
-            <form
+            <Form
               method="post"
               encType="multipart/form-data"
               onSubmit={() => setIsDialogOpen(false)}
@@ -727,7 +728,7 @@ export default function AdminManagersPage({ loaderData }: Route.ComponentProps) 
                   수정 완료
                 </Button>
               </DialogFooter>
-            </form>
+            </Form>
           )}
         </DialogContent>
       </Dialog>

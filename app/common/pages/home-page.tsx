@@ -2,6 +2,7 @@ import type { MetaFunction } from "react-router"
 import { HomeHeroSection } from "../components/home-hero-section";
 import { HomeAboutSection } from "../components/home-about-section";
 import { HomeValueSection } from "../components/home-value-section";
+import { Footer } from "../components/footer";
 
 export const meta: MetaFunction = () => {
     return [

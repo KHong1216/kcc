@@ -63,15 +63,6 @@ export function Footer({ className }: FooterProps) {
           {/* 문의 */}
           <div>
             <h4 className="font-semibold text-[#3B2F2F] mb-4">문의</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  to="/about"
-                  className="text-[#5A4A4A] hover:text-[#3B2F2F] transition-colors"
-                >
-                  About
-                </Link>
-              </li>
               <li>
                 <Link
                   to="/reservation"
@@ -80,15 +71,6 @@ export function Footer({ className }: FooterProps) {
                   예약하기
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="text-[#5A4A4A] hover:text-[#3B2F2F] transition-colors"
-                >
-                  Contact
-                </Link>
-              </li>
-            </ul>
           </div>
         </div>
 

@@ -1,10 +1,11 @@
 import type { MetaFunction } from "react-router";
+import { Form, useActionData } from "react-router";
 import type { Route } from "./+types/admin-reservations-page";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/components/ui/card";
 import { Button } from "../../../../common/components/ui/button";
 import { Input } from "../../../../common/components/ui/input";
 import { Badge } from "../../../../common/components/ui/badge";
-import { Calendar, Sparkles, User, Phone, Mail, Clock, Save, FileText, Briefcase } from "lucide-react";
+import { Calendar, Sparkles, User, Phone, Mail, Clock, Save, FileText, Briefcase, CheckCircle2 } from "lucide-react";
 import client from "../../../../lib/supa-client";
 import {
   getAllReservations,
@@ -81,13 +82,10 @@ export async function action({ request }: Route.ActionArgs) {
 
       if (result.error) {
         console.error("[action] update-status error:", result.error);
-        return { ok: false, message: result.error.message };
+        return { error: result.error.message || "상태 변경에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname }
-      });
+      return { success: true, message: "상태가 변경되었습니다." };
     }
 
     if (intent === "update-confirm") {
@@ -110,13 +108,10 @@ export async function action({ request }: Route.ActionArgs) {
 
       if (result.error) {
         console.error("[action] update-confirm error:", result.error);
-        return { ok: false, message: result.error.message };
+        return { error: result.error.message || "확정 일시 저장에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname }
-      });
+      return { success: true, message: "확정 일시가 저장되었습니다." };
     }
 
     return { ok: true };
@@ -151,6 +146,7 @@ const getStatusBadge = (status: string) => {
 
 export default function AdminReservationsPage({ loaderData }: Route.ComponentProps) {
   const { reservations } = loaderData as { reservations: any[] };
+  const actionData = useActionData<{ success?: boolean; error?: string; message?: string }>();
   const timeOptions = getTenMinuteTimes();
 
   return (
@@ -163,6 +159,20 @@ export default function AdminReservationsPage({ loaderData }: Route.ComponentPro
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+        {/* 성공/에러 메시지 */}
+        {actionData?.success && (
+          <div className="mb-6 p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-3 shadow-md">
+            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+            <p className="text-green-800 font-medium">{actionData.message}</p>
+          </div>
+        )}
+        {actionData?.error && (
+          <div className="mb-6 p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-3 shadow-md">
+            <CheckCircle2 className="w-5 h-5 text-red-600 flex-shrink-0" />
+            <p className="text-red-800 font-medium">{actionData.error}</p>
+          </div>
+        )}
+
         {/* 헤더 */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
@@ -307,7 +317,7 @@ export default function AdminReservationsPage({ loaderData }: Route.ComponentPro
                           <Calendar className="w-4 h-4" style={{ color: '#A8C5F8' }} />
                           <p className="text-xs font-extrabold tracking-tight text-[#3B2F2F] uppercase">상태 관리</p>
                         </div>
-                        <form method="post" className="space-y-3">
+                        <Form method="post" className="space-y-3">
                           <input type="hidden" name="intent" value="update-status" />
                           <input type="hidden" name="id" value={r.id} />
                           <div className="flex items-center gap-2">
@@ -333,7 +343,7 @@ export default function AdminReservationsPage({ loaderData }: Route.ComponentPro
                           <div className="pt-2">
                             {getStatusBadge(r.status || "pending")}
                           </div>
-                        </form>
+                        </Form>
                       </div>
 
                       {/* 최종 확정 일시 */}
@@ -342,7 +352,7 @@ export default function AdminReservationsPage({ loaderData }: Route.ComponentPro
                           <Clock className="w-4 h-4" style={{ color: '#F3C3E6' }} />
                           <p className="text-xs font-extrabold tracking-tight text-[#3B2F2F] uppercase">최종 확정 일시</p>
                         </div>
-                        <form method="post" className="space-y-3">
+                        <Form method="post" className="space-y-3">
                           <input type="hidden" name="intent" value="update-confirm" />
                           <input type="hidden" name="id" value={r.id} />
                           <div className="space-y-2">
@@ -372,7 +382,7 @@ export default function AdminReservationsPage({ loaderData }: Route.ComponentPro
                             <Save className="w-3.5 h-3.5 mr-1" />
                             저장
                           </Button>
-                        </form>
+                        </Form>
                       </div>
                     </div>
                   </div>

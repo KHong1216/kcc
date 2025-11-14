@@ -1,12 +1,13 @@
 // app/features/admin/pages/admin-community-page.tsx
 import type { MetaFunction } from "react-router";
+import { Form, useActionData } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/components/ui/card";
 import { Button } from "../../../../common/components/ui/button";
 import { Input } from "../../../../common/components/ui/input";
 import { Textarea } from "../../../../common/components/ui/textarea";
 import client from "../../../../lib/supa-client";
 import { Badge } from "../../../../common/components/ui/badge";
-import { Plus, Edit2, Trash2, Star, Heart, Calendar, User, MessageSquare, Sparkles, Bell } from "lucide-react";
+import { Plus, Edit2, Trash2, Star, Heart, Calendar, User, MessageSquare, Sparkles, Bell, CheckCircle2, XCircle } from "lucide-react";
 import {
   getAllNotices,
   getAllReviews,
@@ -95,10 +96,7 @@ export async function action({ request }: Route.ActionArgs) {
         return { error: "공지사항 작성에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "공지사항이 성공적으로 작성되었습니다." };
     }
 
     if (intent === "update-notice") {
@@ -115,10 +113,7 @@ export async function action({ request }: Route.ActionArgs) {
         return { error: "공지사항 수정에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "공지사항이 성공적으로 수정되었습니다." };
     }
 
     if (intent === "delete-notice") {
@@ -129,10 +124,7 @@ export async function action({ request }: Route.ActionArgs) {
         return { error: "공지사항 삭제에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "공지사항이 성공적으로 삭제되었습니다." };
     }
 
     if (intent === "delete-review") {
@@ -143,10 +135,7 @@ export async function action({ request }: Route.ActionArgs) {
         return { error: "리뷰 삭제에 실패했습니다." };
       }
 
-      return new Response(null, {
-        status: 302,
-        headers: { Location: new URL(request.url).pathname },
-      });
+      return { success: true, message: "리뷰가 성공적으로 삭제되었습니다." };
     }
 
     return { ok: true };
@@ -158,6 +147,7 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function AdminCommunityPage({ loaderData }: Route.ComponentProps) {
   const { notices, reviews } = loaderData as { notices: any[]; reviews: any[] };
+  const actionData = useActionData<{ success?: boolean; error?: string; message?: string }>();
 
   return (
     <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
@@ -169,6 +159,20 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+        {/* 성공/에러 메시지 */}
+        {actionData?.success && (
+          <div className="mb-6 p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-3 shadow-md">
+            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+            <p className="text-green-800 font-medium">{actionData.message}</p>
+          </div>
+        )}
+        {actionData?.error && (
+          <div className="mb-6 p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-3 shadow-md">
+            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+            <p className="text-red-800 font-medium">{actionData.error}</p>
+          </div>
+        )}
+
         {/* 헤더 */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
@@ -196,7 +200,7 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
             </div>
           </CardHeader>
           <CardContent className="p-6">
-            <form method="post" className="space-y-5">
+            <Form method="post" className="space-y-5">
               <input type="hidden" name="intent" value="create-notice" />
               <div>
                 <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
@@ -265,7 +269,7 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                   공지 등록
                 </Button>
               </div>
-            </form>
+            </Form>
           </CardContent>
         </Card>
 
@@ -327,7 +331,7 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                           <span>{n.created_at ? new Date(n.created_at).toLocaleDateString("ko-KR") : ""}</span>
                         </div>
                         <div className="pt-4 border-t space-y-3">
-                          <form method="post" className="space-y-3">
+                          <Form method="post" className="space-y-3">
                             <input type="hidden" name="intent" value="update-notice" />
                             <input type="hidden" name="id" value={n.id} />
                             <Input 
@@ -370,8 +374,8 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                                 수정
                               </Button>
                             </div>
-                          </form>
-                          <form method="post">
+                          </Form>
+                          <Form method="post">
                             <input type="hidden" name="intent" value="delete-notice" />
                             <input type="hidden" name="id" value={n.id} />
                             <Button 
@@ -383,7 +387,7 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                               <Trash2 className="w-3.5 h-3.5 mr-1" />
                               삭제
                             </Button>
-                          </form>
+                          </Form>
                         </div>
                       </CardContent>
                     </Card>
@@ -458,7 +462,7 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                           <span className="font-extrabold tracking-tight">{r.likes_count || 0}</span>
                         </div>
                         <div className="pt-3 border-t border-[#FADADD]/30">
-                          <form method="post">
+                          <Form method="post">
                             <input type="hidden" name="intent" value="delete-review" />
                             <input type="hidden" name="id" value={r.id} />
                             <Button 
@@ -470,7 +474,7 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                               <Trash2 className="w-3.5 h-3.5 mr-1" />
                               삭제
                             </Button>
-                          </form>
+                          </Form>
                         </div>
                       </CardContent>
                     </Card>

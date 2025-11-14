@@ -3,7 +3,7 @@ import client from "../../../lib/supa-client";
 // ==================== 타입 정의 ====================
 
 export interface Program {
-  id: number;
+  id: string;
   title: string;
   description: string | null;
   duration: string | null;
@@ -14,7 +14,7 @@ export interface Program {
 }
 
 export interface UpdateProgramInput {
-  id: number;
+  id: string;
   title: string;
   description: string;
   duration: string;
@@ -31,7 +31,7 @@ export interface UpdateProgramInput {
  */
 export function getAllPrograms() {
   return client
-    .from<Program>("programs")
+    .from("programs")
     .select("*")
     .order("id", { ascending: true });
 }
@@ -43,10 +43,22 @@ export function getAllPrograms() {
  */
 export function updateProgram(input: UpdateProgramInput) {
   const { id, ...updateData } = input;
+  
+  const cleanedData: any = {
+    title: updateData.title.trim(),
+    description: updateData.description?.trim() || null,
+    duration: updateData.duration?.trim() || null,
+    target_audience: updateData.target_audience?.trim() || null,
+    icon: updateData.icon?.trim() || null,
+    badge: updateData.badge?.trim() || null,
+  };
+  
   return client
     .from("programs")
-    .update(updateData)
-    .eq("id", id);
+    .update(cleanedData)
+    .eq("id", id)
+    .select()
+    .single();
 }
 
 /**
@@ -55,9 +67,11 @@ export function updateProgram(input: UpdateProgramInput) {
  * @param currentStatus - 현재 활성화 상태
  * @returns 업데이트 결과 Promise
  */
-export function toggleProgramActive(id: number, currentStatus: boolean) {
+export function toggleProgramActive(id: string, currentStatus: boolean) {
   return client
     .from("programs")
     .update({ is_active: !currentStatus })
-    .eq("id", id);
+    .eq("id", id)
+    .select()
+    .single();
 }
