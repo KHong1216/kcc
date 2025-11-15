@@ -428,7 +428,7 @@ export default function TestPage() {
   // STEP 0: 시작 화면
   if (step === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-6 pb-12 px-4 sm:pt-12">
+      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-12 px-4 sm:pt-24">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-sm font-medium text-[#3A556A] mb-2">KOI 감정 실험</h1>
@@ -474,7 +474,7 @@ export default function TestPage() {
       : null
 
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-6 pb-8 px-4 sm:pt-20">
+      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-8 px-4 sm:pt-24">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-sm font-medium text-[#3A556A]">KOI 감정 실험</h2>
@@ -530,7 +530,7 @@ export default function TestPage() {
     const details = formData.emotion ? emotionDetails[formData.emotion] : []
 
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-6 pb-8 px-4 sm:pt-20">
+      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-8 px-4 sm:pt-24">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-sm font-medium text-[#3A556A]">KOI 감정 실험</h2>
@@ -592,7 +592,7 @@ export default function TestPage() {
   // STEP 3: 공통 이유 선택
   if (step === 3) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-6 pb-8 px-4 sm:pt-20">
+      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-8 px-4 sm:pt-24">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-sm font-medium text-[#3A556A]">KOI 감정 실험</h2>
@@ -639,7 +639,7 @@ export default function TestPage() {
   // STEP 4: 개인정보 + 추가 질문
   if (step === 4) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-6 pb-8 px-4 sm:pt-20">
+      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-8 px-4 sm:pt-24">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-sm font-medium text-[#3A556A]">KOI 감정 실험</h2>
@@ -841,7 +841,7 @@ export default function TestPage() {
     }, {} as Record<string, { label: string; color: string }>)
 
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-6 pb-12 px-4 sm:pt-20">
+      <div className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-12 px-4 sm:pt-24">
         <div className="max-w-3xl mx-auto">
           <Card className="max-w-2xl mx-auto">
             <CardHeader className="text-center space-y-4">
