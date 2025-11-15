@@ -14,6 +14,7 @@ export default [
         route("programs", "features/admin/programs/pages/admin-programs-page.tsx"),
         route("reservations", "features/admin/reservation/pages/admin-reservations-page.tsx"),
         route("contact", "features/admin/contact/pages/admin-contact-page.tsx"),
+        route("test", "features/admin/common/test/pages/admin-test-page.tsx"),
     ]),
     ...prefix("community", [
         route("notice", "features/community/pages/notice-page.tsx"),

@@ -53,6 +53,16 @@ export function getContactCount() {
 }
 
 /**
+ * 감정 실험 응답 수 조회
+ * @returns 카운트 결과 Promise
+ */
+export function getEmotionTestCount() {
+  return client
+    .from("emotion_test_responses")
+    .select("*", { count: "exact", head: true });
+}
+
+/**
  * 관리자 통계 조회 (모든 통계를 한번에)
  * @returns 통계 데이터 Promise
  */
@@ -62,5 +72,6 @@ export function getAdminStats() {
     getReservationCount(),
     getCommunityPostCount(),
     getContactCount(),
+    getEmotionTestCount(),
   ]);
 }

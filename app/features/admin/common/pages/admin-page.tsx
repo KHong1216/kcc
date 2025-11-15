@@ -15,7 +15,8 @@ import {
   Sparkles,
   TrendingUp,
   Activity,
-  Mail
+  Mail,
+  Heart
 } from "lucide-react";
 import client from "../../../../lib/supa-client";
 import { getAdminStats } from "../queries";
@@ -53,7 +54,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   // 통계 데이터 처리
-  const [managerCountResult, reservationCountResult, communityCountResult, contactCountResult] = statsResults;
+  const [managerCountResult, reservationCountResult, communityCountResult, contactCountResult, testCountResult] = statsResults;
 
   return {
     admin: session.user,
@@ -61,7 +62,8 @@ export async function loader({ request }: Route.LoaderArgs) {
       managerCount: managerCountResult.count || 0,
       reservationCount: reservationCountResult.count || 0,
       communityCount: communityCountResult.count || 0,
-      contactCount: contactCountResult.count || 0
+      contactCount: contactCountResult.count || 0,
+      testCount: testCountResult.count || 0
     }
   };
 }
@@ -82,7 +84,7 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function AdminPage({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
-  const { admin, stats } = loaderData as { admin: any; stats: { managerCount: number; reservationCount: number; communityCount: number; contactCount: number } };
+  const { admin, stats } = loaderData as { admin: any; stats: { managerCount: number; reservationCount: number; communityCount: number; contactCount: number; testCount: number } };
   const [report, setReport] = useState<any>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -117,33 +119,36 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
       {/* 헤더 */}
       <header className="pt-14 sm:pt-16 lg:pt-[4.5rem] shadow-lg relative z-10 border-b border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-xl bg-white/30 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                <Activity className="w-7 h-7 text-white" />
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 py-4 sm:py-6">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-white/30 backdrop-blur-sm flex items-center justify-center shadow-lg flex-shrink-0">
+                <Activity className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
               </div>
-              <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-[#3B2F2F] drop-shadow-sm">관리자 대시보드</h1>
-                <p className="text-sm text-[#3B2F2F]/90 mt-1 flex items-center gap-2 font-medium">
-                  <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#2D6A9F' }}></span>
-                  코이창작소 관리 시스템
+              <div className="min-w-0 flex-1">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#3B2F2F] drop-shadow-sm truncate">관리자 대시보드</h1>
+                <p className="text-xs sm:text-sm text-[#3B2F2F]/90 mt-1 flex items-center gap-2 font-medium">
+                  <span className="w-2 h-2 rounded-full animate-pulse flex-shrink-0" style={{ backgroundColor: '#2D6A9F' }}></span>
+                  <span className="truncate">코이창작소 관리 시스템</span>
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <Badge className="bg-white/30 text-[#3B2F2F] border-white/40 backdrop-blur-sm px-3 py-1.5">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 w-full sm:w-auto justify-end">
+              <Badge 
+                className="bg-white/30 text-[#3B2F2F] border-white/40 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] sm:max-w-[250px] md:max-w-[300px]"
+                title={admin.email}
+              >
                 {admin.email}
               </Badge>
-              <form method="post">
+              <form method="post" className="flex-shrink-0">
                 <input type="hidden" name="intent" value="logout" />
                 <Button 
                   variant="secondary" 
                   size="sm" 
                   type="submit"
-                  className="bg-white/30 hover:bg-white/40 text-[#3B2F2F] border-white/40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="bg-white/30 hover:bg-white/40 text-[#3B2F2F] border-white/40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-200 text-xs sm:text-sm whitespace-nowrap"
                 >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  로그아웃
+                  <LogOut className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">로그아웃</span>
                 </Button>
               </form>
             </div>
@@ -154,7 +159,7 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
       {/* 메인 콘텐츠 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* 통계 카드 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative">
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(168,197,248,0.1), rgba(243,195,230,0.1))' }}></div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
@@ -227,6 +232,28 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
               <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
                 <Mail className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
                 전체 문의 건수
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative cursor-pointer"
+            onClick={() => navigate("/admin/test")}
+          >
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(243,195,230,0.1), rgba(255,230,197,0.1))' }}></div>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+              <CardTitle className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">감정 실험</CardTitle>
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                <Heart className="h-7 w-7 text-white" />
+              </div>
+            </CardHeader>
+            <CardContent className="relative z-10">
+              <div className="text-5xl font-extrabold tracking-tight mb-2" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                {stats.testCount}
+              </div>
+              <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
+                <Heart className="w-3.5 h-3.5" style={{ color: '#F3C3E6' }} />
+                전체 응답 수
               </p>
             </CardContent>
           </Card>
@@ -470,6 +497,32 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
               >
                 <Eye className="w-4 h-4 mr-1" />
                 문의 관리
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* 감정 실험 관리 */}
+          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
+            <CardHeader style={{ background: 'linear-gradient(90deg, #FFF0F5, #FFE5E5)' }}>
+              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                  <Heart className="w-5 h-5 text-white" />
+                </div>
+                감정 실험 관리
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-6">
+              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
+                감정 실험 응답 데이터 조회 및 상태 관리
+              </p>
+              <Button 
+                size="sm" 
+                className="w-full text-white shadow-md hover:shadow-lg transition-all" 
+                style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}
+                onClick={() => navigate("/admin/test")}
+              >
+                <Eye className="w-4 h-4 mr-1" />
+                실험 데이터 관리
               </Button>
             </CardContent>
           </Card>
