@@ -189,12 +189,11 @@ export default function TestPage() {
     }
   }
 
-  switch (step) {
-    case 0:
-      return <Step0Start participantCount={participantCount} onStart={() => goToStep(1)} />
-    
-    case 1:
-      return (
+  return (
+    <div key={step}>
+      {step === 0 && <Step0Start participantCount={participantCount} onStart={() => goToStep(1)} />}
+      
+      {step === 1 && (
         <Step1EmotionSelect
           step={step}
           formData={formData}
@@ -204,10 +203,9 @@ export default function TestPage() {
           progress={progress}
           emotionStats={emotionStats}
         />
-      )
-    
-    case 2:
-      return (
+      )}
+      
+      {step === 2 && (
         <Step2EmotionDetail
           step={step}
           formData={formData}
@@ -216,10 +214,9 @@ export default function TestPage() {
           totalSteps={totalSteps}
           progress={progress}
         />
-      )
-    
-    case 3:
-      return (
+      )}
+      
+      {step === 3 && (
         <Step3ReasonSelect
           step={step}
           formData={formData}
@@ -228,10 +225,9 @@ export default function TestPage() {
           totalSteps={totalSteps}
           progress={progress}
         />
-      )
-    
-    case 4:
-      return (
+      )}
+      
+      {step === 4 && (
         <Step4UserInfo
           step={step}
           formData={formData}
@@ -241,12 +237,9 @@ export default function TestPage() {
           progress={progress}
           isSubmitting={isSubmitting}
         />
-      )
-    
-    case 5:
-      return <Step5Complete participantCount={participantCount} chartData={chartData} />
-    
-    default:
-      return null
-  }
+      )}
+      
+      {step === 5 && <Step5Complete participantCount={participantCount} chartData={chartData} />}
+    </div>
+  )
 }
