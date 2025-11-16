@@ -40,9 +40,12 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   // 가장 최근 제출한 사용자의 레코드를 찾아서 업데이트 (30분 이내)
+  // RLS 정책과 일치하도록 30분 이내 조건을 직접 추가
+  const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString()
   const { data: latestResponse, error: findError } = await client
     .from("emotion_test_responses")
     .select("id, contact, created_at")
+    .gte("created_at", thirtyMinutesAgo)
     .order("created_at", { ascending: false })
     .limit(1)
     .single()
@@ -62,6 +65,7 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   // 경품 정보 업데이트
+  // RLS 정책과 일치하도록 30분 이내 조건 추가
   const updateData: Record<string, any> = {
     gift,
     preferred_day: preferredDay || null,
@@ -72,6 +76,7 @@ export async function action({ request }: Route.ActionArgs) {
     .from("emotion_test_responses")
     .update(updateData)
     .eq("id", latestResponse.id)
+    .gte("created_at", thirtyMinutesAgo)
     .select()
 
   if (updateError) {
