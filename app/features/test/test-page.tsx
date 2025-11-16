@@ -394,19 +394,8 @@ export default function TestPage() {
   }, [actionData])
 
   const handleStart = () => {
-    // step1로 이동할 때 formData 초기화하여 이전 선택값이 남지 않도록 함
-    setFormData({
-      emotion: null,
-      emotionDetails: [],
-      reason: null,
-      name: "",
-      age: "",
-      job: "",
-      contact: "",
-      day_mood: null,
-      need_type: null,
-      privacyAgreed: false
-    })
+    // step1로 이동할 때 step1의 값(emotion) 초기화
+    setFormData(prev => ({ ...prev, emotion: null }))
     setStep(1)
   }
 
@@ -423,11 +412,16 @@ export default function TestPage() {
         ? prev.emotionDetails.filter(d => d !== detail)
         : [...prev.emotionDetails, detail]
     }))
-    // 선택하면 자동으로 다음 단계로 이동
-    setTimeout(() => setStep(3), 300)
+    // 선택하면 자동으로 다음 단계로 이동 (step3로 이동할 때 step3의 값(reason) 초기화)
+    setTimeout(() => {
+      setFormData(prev => ({ ...prev, reason: null }))
+      setStep(3)
+    }, 300)
   }
 
   const handleSkipStep2 = () => {
+    // step3로 이동할 때 step3의 값(reason) 초기화
+    setFormData(prev => ({ ...prev, reason: null }))
     setStep(3)
   }
 
