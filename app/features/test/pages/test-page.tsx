@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react"
 import { useLoaderData, useActionData, useNavigation, type MetaFunction } from "react-router"
 import client from "~/lib/supa-client"
+import type { FormData, Step, Emotion, ReasonCategory, DayMood, NeedType, EmotionStats } from "../types"
+import { isValidDayMood, isValidNeedType } from "../utils"
+import Step0Start from "../components/Step0Start"
+import Step1EmotionSelect from "../components/Step1EmotionSelect"
+import Step2EmotionDetail from "../components/Step2EmotionDetail"
+import Step3ReasonSelect from "../components/Step3ReasonSelect"
+import Step4UserInfo from "../components/Step4UserInfo"
+import Step5Complete from "../components/Step5Complete"
 import type { Route } from "./+types/test-page"
-import type { FormData, Step, Emotion, ReasonCategory, DayMood, NeedType, EmotionStats } from "./types"
-import { isValidDayMood, isValidNeedType } from "./utils"
-import Step0Start from "./Step0Start"
-import Step1EmotionSelect from "./Step1EmotionSelect"
-import Step2EmotionDetail from "./Step2EmotionDetail"
-import Step3ReasonSelect from "./Step3ReasonSelect"
-import Step4UserInfo from "./Step4UserInfo"
-import Step5Complete from "./Step5Complete"
 
 export const meta: MetaFunction = () => [
   { title: "KOI 감정 실험 - 코이창작소" },

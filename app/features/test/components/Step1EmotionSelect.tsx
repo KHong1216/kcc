@@ -3,8 +3,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/com
 import { Button } from "~/common/components/ui/button"
 import { Progress } from "~/common/components/ui/progress"
 import { cn } from "~/lib/utils"
-import type { StepProps, Emotion, EmotionStats } from "./types"
-import { emotionEmojis } from "./types"
+import type { StepProps, Emotion, EmotionStats } from "../types"
+import { emotionEmojis } from "../types"
 
 interface Step1EmotionSelectProps extends StepProps {
   totalSteps: number

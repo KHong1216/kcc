@@ -1,7 +1,11 @@
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/common/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "~/common/components/ui/dialog"
+import { Button } from "~/common/components/ui/button"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/common/components/ui/chart"
 import { PieChart, Pie, Cell } from "recharts"
-import { CHART_COLORS } from "./types"
+import { CHART_COLORS } from "../types"
 
 interface Step5CompleteProps {
   participantCount: number
@@ -9,6 +13,18 @@ interface Step5CompleteProps {
 }
 
 export default function Step5Complete({ participantCount, chartData }: Step5CompleteProps) {
+  const navigate = useNavigate()
+  const [showModal, setShowModal] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const timer = setTimeout(() => {
+      setShowModal(true)
+    }, 2000)
+    return () => clearTimeout(timer)
+  }, [])
+
   const chartConfig = chartData.reduce((acc, item, index) => {
     acc[item.name] = {
       label: item.name,
@@ -67,6 +83,29 @@ export default function Step5Complete({ participantCount, chartData }: Step5Comp
           </CardContent>
         </Card>
       </div>
+
+      {mounted && (
+        <Dialog open={showModal} onOpenChange={setShowModal}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-center">🎉 축하드립니다!</DialogTitle>
+              <DialogDescription className="text-base leading-relaxed text-center pt-4">
+                감정 연구 실험 참여자 중 일부를 대상으로 작은 선물이 제공됩니다.
+                <br />
+                당신이 혜택 대상자로 선정되었습니다 :)
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-center pt-4">
+              <Button
+                onClick={() => navigate("/test/gift")}
+                className="bg-[#4A90E2] text-white hover:bg-[#E3ECF9] hover:text-[#3A556A]"
+              >
+                신청하기 →
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   )
 }

@@ -31,10 +31,13 @@ export default [
         index("features/reservation/pages/reservation-chat-page.tsx"),
         route("apply", "features/reservation/pages/reservation-apply-page.tsx")
     ]),
+    ...prefix("test", [
+        index("features/test/pages/test-page.tsx"),
+        route("gift", "features/test/pages/gift-page.tsx"),
+        route("gift/apply", "features/test/pages/gift-apply-page.tsx")
+    ]),
     route("join", "features/reservation/pages/qr-page.tsx"),
     route("/api/chat", "features/reservation/api-chat.tsx"),
     route("/api/admin/report", "features/admin/common/api-admin-report.tsx"),
     route("/easteregg", "features/programs/easteregg/pages/easter-egg-page.tsx"),
-    route("/test", "features/test/test-page.tsx"),
-    
 ] satisfies RouteConfig

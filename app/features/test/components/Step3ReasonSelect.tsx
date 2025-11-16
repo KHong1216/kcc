@@ -3,8 +3,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/com
 import { Button } from "~/common/components/ui/button"
 import { Progress } from "~/common/components/ui/progress"
 import { cn } from "~/lib/utils"
-import type { StepProps, ReasonCategory } from "./types"
-import { reasonCategories } from "./types"
+import type { StepProps, ReasonCategory } from "../types"
+import { reasonCategories } from "../types"
 
 interface Step3ReasonSelectProps extends StepProps {
   totalSteps: number

@@ -27,6 +27,9 @@ interface EmotionTestResponse {
   privacy_agreed: boolean;
   status: string | null;
   confirmed_date: string | null;
+  gift: string | null;
+  preferred_day: string | null;
+  preferred_time: string | null;
   created_at: string;
 }
 
@@ -41,7 +44,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const [profileResult, responsesResult] = await Promise.all([
     client.from("profiles").select("role").eq("email", session.user.email).single(),
-    client.from("emotion_test_responses").select("*").order("created_at", { ascending: false }),
+    client.from("emotion_test_responses")
+      .select("id, emotion, emotion_details, reason_category, name, age, job, contact, day_mood, need_type, privacy_agreed, status, confirmed_date, gift, preferred_day, preferred_time, created_at")
+      .order("created_at", { ascending: false }),
   ]);
 
   if (profileResult.error || profileResult.data?.role !== "admin") {
@@ -170,6 +175,25 @@ const needTypeLabels: { [key: string]: string } = {
   none: "없음",
 };
 
+const giftLabels: { [key: string]: string } = {
+  essay: "KOI 에세이 체험권",
+  "love-test": "연애 경향성 테스트",
+  photo: "KOI 컨셉 촬영 체험권",
+};
+
+const preferredDayLabels: { [key: string]: string } = {
+  weekday: "평일",
+  weekend: "주말",
+  any: "상관없음",
+};
+
+const preferredTimeLabels: { [key: string]: string } = {
+  morning: "오전",
+  afternoon: "오후",
+  evening: "저녁",
+  any: "상관없음",
+};
+
 export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
   const { responses } = loaderData as { responses: EmotionTestResponse[] };
   const actionData = useActionData<{ success?: boolean; error?: string; message?: string }>();
@@ -260,49 +284,81 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    {/* 기본 정보 */}
-                    <div className="lg:col-span-4 space-y-4">
-                      <div className="p-4 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
-                        <div className="flex items-center gap-2 mb-3">
-                          <User className="w-4 h-4" style={{ color: '#A8C5F8' }} />
-                          <p className="text-xs font-extrabold tracking-tight text-[#3B2F2F] uppercase">기본 정보</p>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* 왼쪽: 사용자 정보 + 경품 정보 */}
+                    <div className="space-y-4">
+                      {/* 기본 정보 */}
+                      <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
+                        <div className="flex items-center gap-2 mb-4">
+                          <User className="w-5 h-5" style={{ color: '#A8C5F8' }} />
+                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">기본 정보</p>
                         </div>
-                        <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs text-[#7A6666] opacity-80 mb-1">이름</p>
-                            <p className="font-extrabold tracking-tight text-[#3B2F2F]">{r.name || "-"}</p>
+                            <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">이름</p>
+                            <p className="text-base font-extrabold tracking-tight text-[#3B2F2F]">{r.name || "-"}</p>
                           </div>
                           <div>
-                            <p className="text-xs text-[#7A6666] opacity-80 mb-1">나이</p>
-                            <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">{r.age || "-"}</p>
+                            <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">나이</p>
+                            <p className="text-base font-extrabold tracking-tight text-[#3B2F2F]">{r.age ? `${r.age}세` : "-"}</p>
                           </div>
-                          <div>
-                            <p className="text-xs text-[#7A6666] opacity-80 mb-1">직업</p>
-                            <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">{r.job || "-"}</p>
+                          <div className="col-span-2">
+                            <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">직업</p>
+                            <p className="text-base font-extrabold tracking-tight text-[#3B2F2F]">{r.job || "-"}</p>
                           </div>
-                          <div>
-                            <p className="text-xs text-[#7A6666] opacity-80 mb-1 flex items-center gap-1">
-                              <Phone className="w-3 h-3" style={{ color: '#A8C5F8' }} />
+                          <div className="col-span-2">
+                            <p className="text-xs text-[#7A6666] opacity-80 mb-1.5 flex items-center gap-1">
+                              <Phone className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
                               연락처
                             </p>
-                            <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] break-all">{r.contact || "-"}</p>
+                            <p className="text-base font-extrabold tracking-tight text-[#3B2F2F] break-all">{r.contact || "-"}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 경품 정보 */}
+                      <div className="p-5 rounded-xl border-2 border-[#F3C3E6]/50" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.2)' }}>
+                        <div className="flex items-center gap-2 mb-4">
+                          <Sparkles className="w-5 h-5" style={{ color: '#F3C3E6' }} />
+                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">경품 정보</p>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="pb-3 border-b border-[#FADADD]/30">
+                            <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">선택한 경품</p>
+                            <p className="text-base font-extrabold tracking-tight text-[#3B2F2F]">
+                              {r.gift ? (giftLabels[r.gift] || r.gift) : "-"}
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">가능한 요일</p>
+                              <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
+                                {r.preferred_day ? (preferredDayLabels[r.preferred_day] || r.preferred_day) : "-"}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">가능한 시간</p>
+                              <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
+                                {r.preferred_time ? (preferredTimeLabels[r.preferred_time] || r.preferred_time) : "-"}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* 감정 정보 */}
-                    <div className="lg:col-span-5 space-y-4">
-                      <div className="p-4 rounded-xl border-2 border-[#FADADD]/50" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.15)' }}>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Heart className="w-4 h-4" style={{ color: '#F3C3E6' }} />
-                          <p className="text-xs font-extrabold tracking-tight text-[#3B2F2F] uppercase">감정 정보</p>
+                    {/* 오른쪽: 감정 정보 + 상태 관리 */}
+                    <div className="space-y-4">
+                      {/* 감정 정보 */}
+                      <div className="p-5 rounded-xl border-2 border-[#FADADD]/50" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.15)' }}>
+                        <div className="flex items-center gap-2 mb-4">
+                          <Heart className="w-5 h-5" style={{ color: '#F3C3E6' }} />
+                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">감정 정보</p>
                         </div>
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                           <div>
-                            <p className="text-xs text-[#7A6666] opacity-80 mb-1">선택한 감정</p>
-                            <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
+                            <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">선택한 감정</p>
+                            <p className="text-base font-extrabold tracking-tight text-[#3B2F2F]">
                               {r.emotion ? (emotionLabels[r.emotion] || r.emotion) : "-"}
                             </p>
                           </div>
@@ -311,102 +367,103 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                               <p className="text-xs text-[#7A6666] opacity-80 mb-2">세부 키워드</p>
                               <div className="flex flex-wrap gap-2">
                                 {r.emotion_details.map((detail, idx) => (
-                                  <Badge key={idx} className="bg-[#E8F4FB] text-[#2D6A9F] text-xs border-0">
+                                  <Badge key={idx} className="bg-[#E8F4FB] text-[#2D6A9F] text-xs border-0 px-2.5 py-1">
                                     {detail}
                                   </Badge>
                                 ))}
                               </div>
                             </div>
                           )}
-                          {r.reason_category && (
-                            <div>
-                              <p className="text-xs text-[#7A6666] opacity-80 mb-1">주요 요인</p>
-                              <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">{r.reason_category}</p>
-                            </div>
-                          )}
-                          {r.day_mood && (
-                            <div>
-                              <p className="text-xs text-[#7A6666] opacity-80 mb-1">하루 전반적 기분</p>
-                              <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
-                                {dayMoodLabels[r.day_mood] || r.day_mood}
-                              </p>
-                            </div>
-                          )}
-                          {r.need_type && (
-                            <div>
-                              <p className="text-xs text-[#7A6666] opacity-80 mb-1">가장 필요한 것</p>
-                              <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
-                                {needTypeLabels[r.need_type] || r.need_type}
-                              </p>
-                            </div>
-                          )}
+                          <div className="grid grid-cols-2 gap-4 pt-2 border-t border-[#FADADD]/30">
+                            {r.reason_category && (
+                              <div>
+                                <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">주요 요인</p>
+                                <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">{r.reason_category}</p>
+                              </div>
+                            )}
+                            {r.day_mood && (
+                              <div>
+                                <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">하루 기분</p>
+                                <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
+                                  {dayMoodLabels[r.day_mood] || r.day_mood}
+                                </p>
+                              </div>
+                            )}
+                            {r.need_type && (
+                              <div className={r.reason_category && r.day_mood ? "col-span-2" : ""}>
+                                <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">가장 필요한 것</p>
+                                <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
+                                  {needTypeLabels[r.need_type] || r.need_type}
+                                </p>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* 상태 및 확정 날짜 */}
-                    <div className="lg:col-span-3 space-y-4">
                       {/* 상태 관리 */}
-                      <div className="p-4 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Calendar className="w-4 h-4" style={{ color: '#A8C5F8' }} />
-                          <p className="text-xs font-extrabold tracking-tight text-[#3B2F2F] uppercase">상태 관리</p>
+                      <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
+                        <div className="flex items-center gap-2 mb-4">
+                          <Calendar className="w-5 h-5" style={{ color: '#A8C5F8' }} />
+                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">상태 관리</p>
                         </div>
-                        <Form method="post" className="space-y-3">
+                        <Form method="post" className="space-y-4">
                           <input type="hidden" name="intent" value="update-status" />
                           <input type="hidden" name="id" value={r.id} />
-                          <div className="flex items-center gap-2">
-                            <select 
-                              name="status" 
-                              defaultValue={r.status || "pending"} 
-                              className="flex-1 h-10 text-sm border-2 border-[#FADADD]/50 rounded-xl px-3 bg-white focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all text-[#3B2F2F]"
-                            >
-                              <option value="pending">대기</option>
-                              <option value="confirmed">확정</option>
-                              <option value="completed">완료</option>
-                              <option value="cancelled">취소</option>
-                            </select>
-                            <Button 
-                              type="submit" 
-                              size="sm" 
-                              className="h-10 text-white shadow-md hover:shadow-lg transition-all px-4 hover:opacity-90"
-                              style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}
-                            >
-                              변경
-                            </Button>
-                          </div>
-                          <div className="pt-2">
-                            {getStatusBadge(r.status)}
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <select 
+                                name="status" 
+                                defaultValue={r.status || "pending"} 
+                                className="flex-1 h-11 text-sm border-2 border-[#FADADD]/50 rounded-xl px-4 bg-white focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all text-[#3B2F2F] font-medium"
+                              >
+                                <option value="pending">대기</option>
+                                <option value="confirmed">확정</option>
+                                <option value="completed">완료</option>
+                                <option value="cancelled">취소</option>
+                              </select>
+                              <Button 
+                                type="submit" 
+                                size="sm" 
+                                className="h-11 text-white shadow-md hover:shadow-lg transition-all px-5 hover:opacity-90"
+                                style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}
+                              >
+                                변경
+                              </Button>
+                            </div>
+                            <div className="flex justify-center">
+                              {getStatusBadge(r.status)}
+                            </div>
                           </div>
                         </Form>
                       </div>
 
                       {/* 확정 날짜 */}
-                      <div className="p-4 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)' }}>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Clock className="w-4 h-4" style={{ color: '#F3C3E6' }} />
-                          <p className="text-xs font-extrabold tracking-tight text-[#3B2F2F] uppercase">확정 날짜</p>
+                      <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)' }}>
+                        <div className="flex items-center gap-2 mb-4">
+                          <Clock className="w-5 h-5" style={{ color: '#F3C3E6' }} />
+                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">확정 날짜</p>
                         </div>
-                        <Form method="post" className="space-y-3">
+                        <Form method="post" className="space-y-4">
                           <input type="hidden" name="intent" value="update-confirmed-date" />
                           <input type="hidden" name="id" value={r.id} />
                           <Input 
                             type="date" 
                             name="confirmed_date" 
                             defaultValue={r.confirmed_date ? String(r.confirmed_date).slice(0, 10) : ""} 
-                            className="h-10 text-sm w-full rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all text-[#3B2F2F]"
+                            className="h-11 text-sm w-full rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all text-[#3B2F2F]"
                           />
                           <Button 
                             type="submit" 
                             size="sm" 
-                            className="w-full text-white shadow-md hover:shadow-lg transition-all hover:opacity-90"
+                            className="w-full h-11 text-white shadow-md hover:shadow-lg transition-all hover:opacity-90"
                             style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}
                           >
-                            <Save className="w-3.5 h-3.5 mr-1" />
+                            <Save className="w-4 h-4 mr-2" />
                             저장
                           </Button>
                           {r.confirmed_date && (
-                            <p className="text-xs text-[#7A6666] opacity-80 text-center">
+                            <p className="text-xs text-[#7A6666] opacity-80 text-center pt-2">
                               {new Date(r.confirmed_date).toLocaleDateString('ko-KR')}
                             </p>
                           )}

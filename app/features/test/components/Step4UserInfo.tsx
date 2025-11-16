@@ -6,8 +6,8 @@ import { Label } from "~/common/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "~/common/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/common/components/ui/select"
 import { Progress } from "~/common/components/ui/progress"
-import type { StepProps, DayMood, NeedType } from "./types"
-import { jobOptions, dayMoodLabels, needTypeLabels, needOptions, dayMoodOptions } from "./types"
+import type { StepProps, DayMood, NeedType } from "../types"
+import { jobOptions, dayMoodLabels, needTypeLabels, needOptions, dayMoodOptions } from "../types"
 
 interface Step4UserInfoProps extends StepProps {
   totalSteps: number
