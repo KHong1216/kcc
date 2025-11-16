@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/common/components/ui/card"
 import { Button } from "~/common/components/ui/button"
 import { Progress } from "~/common/components/ui/progress"
@@ -20,6 +21,19 @@ export default function Step1EmotionSelect({
   progress,
   emotionStats
 }: Step1EmotionSelectProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const buttons = containerRef.current.querySelectorAll('button[type="button"]')
+      buttons.forEach((button) => {
+        const el = button as HTMLElement
+        el.classList.remove('bg-[#4A90E2]', 'text-white', 'border-[#4A90E2]')
+        el.classList.add('border-2', 'border-[#DCE7F5]', 'text-[#3A556A]')
+      })
+    }
+  }, [])
+
   const currentEmotionStats = formData.emotion 
     ? emotionStats.find(s => s.emotion === formData.emotion)?.percentage || 0
     : null
@@ -30,7 +44,7 @@ export default function Step1EmotionSelect({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-8 px-4 sm:pt-24">
+    <div ref={containerRef} className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-8 px-4 sm:pt-24">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-sm font-medium text-[#3A556A]">KOI 감정 실험</h2>
