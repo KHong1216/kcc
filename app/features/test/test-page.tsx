@@ -394,6 +394,19 @@ export default function TestPage() {
   }, [actionData])
 
   const handleStart = () => {
+    // step1로 이동할 때 formData 초기화하여 이전 선택값이 남지 않도록 함
+    setFormData({
+      emotion: null,
+      emotionDetails: [],
+      reason: null,
+      name: "",
+      age: "",
+      job: "",
+      contact: "",
+      day_mood: null,
+      need_type: null,
+      privacyAgreed: false
+    })
     setStep(1)
   }
 
@@ -415,10 +428,6 @@ export default function TestPage() {
   }
 
   const handleSkipStep2 = () => {
-    setStep(3)
-  }
-
-  const handleNextStep2 = () => {
     setStep(3)
   }
 
@@ -500,11 +509,11 @@ export default function TestPage() {
                   <div key={emotion} className="relative">
                     <Button
                       type="button"
-                      variant={formData.emotion === emotion ? "default" : "outline"}
+                      variant="outline"
                       className={cn(
                         "h-24 w-full flex-col gap-2 text-base",
                         formData.emotion === emotion 
-                          ? "bg-[#4A90E2] text-white hover:bg-[#E3ECF9] hover:text-[#3A556A]" 
+                          ? "bg-[#4A90E2] text-white border-[#4A90E2] hover:bg-[#E3ECF9] hover:text-[#3A556A]" 
                           : "border-2 border-[#DCE7F5] text-[#3A556A] hover:bg-[#E3ECF9] hover:border-[#4A90E2]"
                       )}
                       onClick={() => handleEmotionSelect(emotion)}
