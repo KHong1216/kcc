@@ -29,7 +29,6 @@ export default function Step5Complete({ participantCount, chartData }: Step5Comp
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* 통계 차트 */}
             {chartData.length > 0 && (
               <div className="space-y-4 pt-4 border-t">
                 <h3 className="text-lg font-semibold text-center text-[#3A556A]">
@@ -71,4 +70,3 @@ export default function Step5Complete({ participantCount, chartData }: Step5Comp
     </div>
   )
 }
-

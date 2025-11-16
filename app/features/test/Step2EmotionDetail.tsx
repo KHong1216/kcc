@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "~/common/components/ui/button"
 import { Progress } from "~/common/components/ui/progress"
 import { cn } from "~/lib/utils"
-import type { StepProps, Emotion } from "./types"
+import type { StepProps } from "./types"
 import { emotionDetails } from "./types"
 
 interface Step2EmotionDetailProps extends StepProps {
@@ -11,6 +11,7 @@ interface Step2EmotionDetailProps extends StepProps {
 }
 
 export default function Step2EmotionDetail({
+  step,
   formData,
   updateFormData,
   goNext,
@@ -26,15 +27,12 @@ export default function Step2EmotionDetail({
     
     updateFormData({ emotionDetails: newDetails })
     
-    // 선택하면 자동으로 다음 단계로 이동
     setTimeout(() => {
-      updateFormData({ reason: null })
       goNext()
     }, 300)
   }
 
   const handleSkip = () => {
-    updateFormData({ reason: null })
     goNext()
   }
 
@@ -65,7 +63,7 @@ export default function Step2EmotionDetail({
                 variant="outline"
                 className={cn(
                   "w-full justify-start h-auto py-3 px-4 text-left",
-                  formData.emotionDetails.includes(detail) 
+                  (step === 2 && formData.emotionDetails.includes(detail))
                     ? "bg-[#4A90E2] text-white border-[#4A90E2] hover:bg-[#E3ECF9] hover:text-[#3A556A]" 
                     : "border-2 border-[#DCE7F5] text-[#3A556A] hover:bg-[#E3ECF9] hover:border-[#4A90E2]"
                 )}
@@ -90,4 +88,3 @@ export default function Step2EmotionDetail({
     </div>
   )
 }
-

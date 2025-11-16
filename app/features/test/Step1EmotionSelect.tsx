@@ -12,6 +12,7 @@ interface Step1EmotionSelectProps extends StepProps {
 }
 
 export default function Step1EmotionSelect({
+  step,
   formData,
   updateFormData,
   goNext,
@@ -56,7 +57,7 @@ export default function Step1EmotionSelect({
                     variant="outline"
                     className={cn(
                       "h-24 w-full flex-col gap-2 text-base",
-                      formData.emotion === emotion 
+                      (step === 1 && formData.emotion === emotion)
                         ? "bg-[#4A90E2] text-white border-[#4A90E2] hover:bg-[#E3ECF9] hover:text-[#3A556A]" 
                         : "border-2 border-[#DCE7F5] text-[#3A556A] hover:bg-[#E3ECF9] hover:border-[#4A90E2]"
                     )}
@@ -65,7 +66,7 @@ export default function Step1EmotionSelect({
                     <span className="text-2xl">{emotionEmojis[emotion]}</span>
                     <span>{emotion}</span>
                   </Button>
-                  {formData.emotion === emotion && currentEmotionStats !== null && (
+                  {(step === 1 && formData.emotion === emotion && currentEmotionStats !== null) && (
                     <p className="text-xs text-[#3A556A] mt-2 text-center opacity-70">
                       현재 이 감정을 선택한 참여자 {currentEmotionStats}%
                     </p>
@@ -79,4 +80,3 @@ export default function Step1EmotionSelect({
     </div>
   )
 }
-

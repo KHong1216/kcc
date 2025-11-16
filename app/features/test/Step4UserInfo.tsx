@@ -16,6 +16,7 @@ interface Step4UserInfoProps extends StepProps {
 }
 
 export default function Step4UserInfo({
+  step,
   formData,
   updateFormData,
   totalSteps,
@@ -45,14 +46,12 @@ export default function Step4UserInfo({
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Hidden inputs for form data */}
               <input type="hidden" name="emotion" value={formData.emotion || ""} />
               <input type="hidden" name="emotionDetails" value={JSON.stringify(formData.emotionDetails)} />
               <input type="hidden" name="reason" value={formData.reason || ""} />
               {formData.day_mood && <input type="hidden" name="day_mood" value={formData.day_mood} />}
               {formData.need_type && <input type="hidden" name="need_type" value={formData.need_type} />}
               
-              {/* 필수 입력 */}
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">이름 *</Label>
@@ -129,7 +128,6 @@ export default function Step4UserInfo({
                 </div>
               </div>
 
-              {/* 연구 변수 (선택 항목) */}
               <div className="space-y-4 pt-4 border-t">
                 <p className="text-xs text-[#3A556A] opacity-70 mb-4">
                   아래 문항은 감정 반응의 문맥을 이해하기 위한 기초 연구 변수입니다. (선택)
@@ -178,7 +176,6 @@ export default function Step4UserInfo({
                 </div>
               </div>
 
-              {/* 개인정보 동의 */}
               <div className="flex items-start space-x-2 pt-4 border-t">
                 <input
                   type="checkbox"
@@ -211,4 +208,3 @@ export default function Step4UserInfo({
     </div>
   )
 }
-

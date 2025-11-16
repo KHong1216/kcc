@@ -16,7 +16,6 @@ export const meta: MetaFunction = () => [
   { name: "description", content: "20대의 감정 반응 패턴을 이해하기 위한 연구 실험에 참여해주세요." }
 ]
 
-// Loader: 통계 데이터 로드
 export async function loader({ request }: Route.LoaderArgs) {
   const { data, error } = await client
     .from("emotion_test_responses")
@@ -70,11 +69,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 }
 
-// Action: 폼 제출 처리
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData()
 
-  // 필수 필드 파싱
   const name = formData.get("name")?.toString().trim() ?? ""
   const age = formData.get("age")?.toString().trim() ?? ""
   const job = formData.get("job")?.toString().trim() ?? ""
@@ -82,7 +79,6 @@ export async function action({ request }: Route.ActionArgs) {
   const emotion = formData.get("emotion")?.toString().trim() as Emotion | null
   const privacyAgreed = formData.get("privacyAgreed") === "on"
 
-  // 선택 필드 파싱
   const emotionDetailsStr = formData.get("emotionDetails")?.toString() ?? "[]"
   let emotionDetails: string[] = []
   if (emotionDetailsStr !== "[]") {
@@ -94,17 +90,14 @@ export async function action({ request }: Route.ActionArgs) {
   }
   const reason = formData.get("reason")?.toString().trim() as ReasonCategory | null
   
-  // day_mood: 타입 가드로 확실하게 검증 (빈 문자열도 null로 처리)
   const dayMoodRaw = formData.get("day_mood")
   const dayMoodStr = dayMoodRaw?.toString().trim()
   const day_mood: DayMood | null = isValidDayMood(dayMoodStr) ? (dayMoodStr as DayMood) : null
   
-  // need_type: 타입 가드로 확실하게 검증 (빈 문자열도 null로 처리)
   const needTypeRaw = formData.get("need_type")
   const needTypeStr = needTypeRaw?.toString().trim()
   const need_type: NeedType | null = isValidNeedType(needTypeStr) ? (needTypeStr as NeedType) : null
 
-  // 필수 필드 검증
   if (!name) return { error: "이름을 입력해주세요." }
   if (!age) return { error: "나이를 입력해주세요." }
   if (!job) return { error: "직업을 선택해주세요." }
@@ -112,7 +105,6 @@ export async function action({ request }: Route.ActionArgs) {
   if (!emotion) return { error: "감정을 선택해주세요." }
   if (!privacyAgreed) return { error: "개인정보 동의에 체크해주세요." }
 
-  // Supabase에 전송할 데이터 준비 - 명시적으로 null 설정
   const insertData: Record<string, any> = {
     emotion,
     emotion_details: emotionDetails.length > 0 ? emotionDetails : null,
@@ -124,7 +116,6 @@ export async function action({ request }: Route.ActionArgs) {
     privacy_agreed: privacyAgreed,
   }
 
-  // day_mood와 need_type은 명시적으로 null 또는 유효한 값만 설정
   insertData.day_mood = day_mood !== null && day_mood !== undefined ? day_mood : null
   insertData.need_type = need_type !== null && need_type !== undefined ? need_type : null
 
@@ -159,7 +150,6 @@ export default function TestPage() {
     privacyAgreed: false
   })
 
-  // loader에서 가져온 통계 데이터 사용
   const participantCount = loaderData?.participantCount || 0
   const emotionStats = loaderData?.emotionStats || []
   const chartData = loaderData?.chartData || []
@@ -167,51 +157,49 @@ export default function TestPage() {
   const totalSteps = 4
   const progress = step > 0 ? ((step / totalSteps) * 100) : 0
 
-  // action 성공 시 완료 화면으로 이동
   useEffect(() => {
     if (actionData?.success) {
-      setStep(5)
+      goToStep(5)
     } else if (actionData?.error) {
       alert(actionData.error)
     }
   }, [actionData])
 
-  // formData 업데이트 함수
   const updateFormData = (newValues: Partial<FormData>) => {
     setFormData(prev => ({ ...prev, ...newValues }))
   }
 
-  // step 이동 함수들
-  const goToStep1 = () => {
-    updateFormData({ emotion: null })
-    setStep(1)
+  const goToStep = (nextStep: Step) => {
+    setStep(nextStep)
+
+    if (nextStep === 1) {
+      setFormData(prev => ({ ...prev, emotion: null, emotionDetails: [], reason: null }))
+    }
+
+    if (nextStep === 2) {
+      setFormData(prev => ({ ...prev, emotionDetails: [], reason: null }))
+    }
+
+    if (nextStep === 3) {
+      setFormData(prev => ({ ...prev, reason: null }))
+    }
+
+    if (nextStep === 4) {
+      setFormData(prev => ({ ...prev, day_mood: null, need_type: null }))
+    }
   }
 
-  const goToStep2 = () => {
-    updateFormData({ emotionDetails: [] })
-    setStep(2)
-  }
-
-  const goToStep3 = () => {
-    updateFormData({ reason: null })
-    setStep(3)
-  }
-
-  const goToStep4 = () => {
-    setStep(4)
-  }
-
-  // STEP 컴포넌트 렌더링
   switch (step) {
     case 0:
-      return <Step0Start participantCount={participantCount} onStart={goToStep1} />
+      return <Step0Start participantCount={participantCount} onStart={() => goToStep(1)} />
     
     case 1:
       return (
         <Step1EmotionSelect
+          step={step}
           formData={formData}
           updateFormData={updateFormData}
-          goNext={goToStep2}
+          goNext={() => goToStep(2)}
           totalSteps={totalSteps}
           progress={progress}
           emotionStats={emotionStats}
@@ -221,9 +209,10 @@ export default function TestPage() {
     case 2:
       return (
         <Step2EmotionDetail
+          step={step}
           formData={formData}
           updateFormData={updateFormData}
-          goNext={goToStep3}
+          goNext={() => goToStep(3)}
           totalSteps={totalSteps}
           progress={progress}
         />
@@ -232,9 +221,10 @@ export default function TestPage() {
     case 3:
       return (
         <Step3ReasonSelect
+          step={step}
           formData={formData}
           updateFormData={updateFormData}
-          goNext={goToStep4}
+          goNext={() => goToStep(4)}
           totalSteps={totalSteps}
           progress={progress}
         />
@@ -243,6 +233,7 @@ export default function TestPage() {
     case 4:
       return (
         <Step4UserInfo
+          step={step}
           formData={formData}
           updateFormData={updateFormData}
           goNext={() => {}}

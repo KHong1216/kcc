@@ -55,6 +55,7 @@ export interface EmotionStats {
 }
 
 export interface StepProps {
+  step: Step
   formData: FormData
   updateFormData: (newValues: Partial<FormData>) => void
   goNext: () => void

@@ -11,6 +11,7 @@ interface Step3ReasonSelectProps extends StepProps {
 }
 
 export default function Step3ReasonSelect({
+  step,
   formData,
   updateFormData,
   goNext,
@@ -50,7 +51,7 @@ export default function Step3ReasonSelect({
                   variant="outline"
                   className={cn(
                     "h-20 text-base",
-                    formData.reason === reason 
+                    (step === 3 && formData.reason === reason)
                       ? "bg-[#4A90E2] text-white border-[#4A90E2] hover:bg-[#E3ECF9] hover:text-[#3A556A]" 
                       : "border-2 border-[#DCE7F5] text-[#3A556A] hover:bg-[#E3ECF9] hover:border-[#4A90E2]"
                   )}
@@ -66,4 +67,3 @@ export default function Step3ReasonSelect({
     </div>
   )
 }
-
