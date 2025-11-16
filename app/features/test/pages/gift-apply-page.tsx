@@ -1,4 +1,4 @@
-import { Form, type MetaFunction } from "react-router"
+import { Form, Link, type MetaFunction } from "react-router"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "~/common/components/ui/card"
 import { Button } from "~/common/components/ui/button"
 import { Label } from "~/common/components/ui/label"
@@ -113,6 +113,13 @@ export default function GiftApplyPage({ loaderData, actionData }: Route.Componen
                 {actionData && "message" in actionData ? actionData.message : "신청이 완료되었습니다!\n담당 KOI 매니저가 곧 연락드릴게요 :)"}
               </p>
             </CardContent>
+            <CardFooter className="flex justify-center pt-6">
+              <Link to="/test">
+                <Button variant="outline">
+                  다시하기
+                </Button>
+              </Link>
+            </CardFooter>
           </Card>
         </div>
       </div>
