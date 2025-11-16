@@ -410,6 +410,8 @@ export default function TestPage() {
         ? prev.emotionDetails.filter(d => d !== detail)
         : [...prev.emotionDetails, detail]
     }))
+    // 선택하면 자동으로 다음 단계로 이동
+    setTimeout(() => setStep(3), 300)
   }
 
   const handleSkipStep2 = () => {
@@ -553,11 +555,11 @@ export default function TestPage() {
                 <Button
                   key={index}
                   type="button"
-                  variant={formData.emotionDetails.includes(detail) ? "default" : "outline"}
+                  variant="outline"
                   className={cn(
                     "w-full justify-start h-auto py-3 px-4 text-left",
                     formData.emotionDetails.includes(detail) 
-                      ? "bg-[#4A90E2] text-white hover:bg-[#E3ECF9] hover:text-[#3A556A]" 
+                      ? "bg-[#4A90E2] text-white border-[#4A90E2] hover:bg-[#E3ECF9] hover:text-[#3A556A]" 
                       : "border-2 border-[#DCE7F5] text-[#3A556A] hover:bg-[#E3ECF9] hover:border-[#4A90E2]"
                   )}
                   onClick={() => handleEmotionDetailToggle(detail)}
@@ -566,21 +568,14 @@ export default function TestPage() {
                 </Button>
               ))}
             </CardContent>
-            <CardFooter className="flex gap-3">
+            <CardFooter>
               <Button
                 type="button"
                 variant="ghost"
-                className="flex-1 hover:bg-[#E3ECF9] hover:text-[#3A556A]"
+                className="w-full hover:bg-[#E3ECF9] hover:text-[#3A556A]"
                 onClick={handleSkipStep2}
               >
                 건너뛰기
-              </Button>
-              <Button
-                type="button"
-                className="flex-1 bg-[#4A90E2] text-white hover:bg-[#E3ECF9] hover:text-[#3A556A]"
-                onClick={handleNextStep2}
-              >
-                다음
               </Button>
             </CardFooter>
           </Card>
