@@ -137,6 +137,7 @@ export default function TestPage() {
   
   const isSubmitting = navigation.state === "submitting"
   const [step, setStep] = useState<Step>(0)
+  const [stepKey, setStepKey] = useState(0)
   const [formData, setFormData] = useState<FormData>({
     emotion: null,
     emotionDetails: [],
@@ -170,6 +171,7 @@ export default function TestPage() {
   }
 
   const goToStep = (nextStep: Step) => {
+    setStepKey(Date.now())
     setStep(nextStep)
 
     if (nextStep === 1) {
@@ -190,7 +192,7 @@ export default function TestPage() {
   }
 
   return (
-    <div key={step}>
+    <div key={`step-${step}-${stepKey}`}>
       {step === 0 && <Step0Start participantCount={participantCount} onStart={() => goToStep(1)} />}
       
       {step === 1 && (

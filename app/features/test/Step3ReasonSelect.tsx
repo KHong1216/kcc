@@ -46,7 +46,7 @@ export default function Step3ReasonSelect({
             <div className="grid grid-cols-2 gap-3">
               {reasonCategories.map((reason) => (
                 <Button
-                  key={reason}
+                  key={`step3-${step}-${reason}`}
                   type="button"
                   variant="outline"
                   className={cn(

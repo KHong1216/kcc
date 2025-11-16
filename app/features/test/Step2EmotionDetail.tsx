@@ -58,7 +58,7 @@ export default function Step2EmotionDetail({
           <CardContent className="space-y-3">
             {details.map((detail, index) => (
               <Button
-                key={index}
+                key={`step2-${step}-${index}-${detail}`}
                 type="button"
                 variant="outline"
                 className={cn(

@@ -51,7 +51,7 @@ export default function Step1EmotionSelect({
           <CardContent>
             <div className="grid grid-cols-3 gap-4">
               {(Object.keys(emotionEmojis) as Emotion[]).map((emotion) => (
-                <div key={emotion} className="relative">
+                <div key={`step1-${step}-${emotion}`} className="relative">
                   <Button
                     type="button"
                     variant="outline"
