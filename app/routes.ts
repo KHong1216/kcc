@@ -33,8 +33,7 @@ export default [
     ]),
     ...prefix("test", [
         index("features/test/pages/test-page.tsx"),
-        route("gift", "features/test/pages/gift-page.tsx"),
-        route("gift/apply", "features/test/pages/gift-apply-page.tsx")
+        route("gift", "features/test/pages/gift-page.tsx")
     ]),
     route("join", "features/reservation/pages/qr-page.tsx"),
     route("/api/chat", "features/reservation/api-chat.tsx"),

@@ -3,11 +3,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "~/common/components/ui/button"
 import { Input } from "~/common/components/ui/input"
 import { Label } from "~/common/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "~/common/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/common/components/ui/select"
 import { Progress } from "~/common/components/ui/progress"
-import type { StepProps, DayMood, NeedType } from "../types"
-import { jobOptions, dayMoodLabels, needTypeLabels, needOptions, dayMoodOptions } from "../types"
+import type { StepProps } from "../types"
+import { jobOptions } from "../types"
 
 interface Step4UserInfoProps extends StepProps {
   totalSteps: number
@@ -49,8 +48,6 @@ export default function Step4UserInfo({
               <input type="hidden" name="emotion" value={formData.emotion || ""} />
               <input type="hidden" name="emotionDetails" value={JSON.stringify(formData.emotionDetails)} />
               <input type="hidden" name="reason" value={formData.reason || ""} />
-              {formData.day_mood && <input type="hidden" name="day_mood" value={formData.day_mood} />}
-              {formData.need_type && <input type="hidden" name="need_type" value={formData.need_type} />}
               
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -125,54 +122,6 @@ export default function Step4UserInfo({
                     }}
                     onKeyDown={(e) => e.stopPropagation()}
                   />
-                </div>
-              </div>
-
-              <div className="space-y-4 pt-4 border-t">
-                <p className="text-xs text-[#3A556A] opacity-70 mb-4">
-                  아래 문항은 감정 반응의 문맥을 이해하기 위한 기초 연구 변수입니다. (선택)
-                </p>
-                
-                <div className="space-y-3">
-                  <Label>오늘 하루 전반적으로 어땠나요? (선택)</Label>
-                  <RadioGroup
-                    value={formData.day_mood || ""}
-                    onValueChange={(value) => {
-                      const validValue = dayMoodOptions.includes(value as DayMood) ? (value as DayMood) : null
-                      updateFormData({ day_mood: validValue })
-                    }}
-                  >
-                    {dayMoodOptions.map((mood) => (
-                      <div key={mood} className="flex items-center space-x-2">
-                        <RadioGroupItem value={mood} id={`mood-${mood}`} />
-                        <Label htmlFor={`mood-${mood}`} className="cursor-pointer font-normal">
-                          {dayMoodLabels[mood]}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-
-                <div className="space-y-3">
-                  <Label>지금 가장 필요한 것은 무엇인가요? (선택)</Label>
-                  <Select
-                    value={formData.need_type || ""}
-                    onValueChange={(value) => {
-                      const validValue = needOptions.includes(value as NeedType) ? (value as NeedType) : null
-                      updateFormData({ need_type: validValue })
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="선택해주세요" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {needOptions.map((need) => (
-                        <SelectItem key={need} value={need}>
-                          {needTypeLabels[need]}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
 

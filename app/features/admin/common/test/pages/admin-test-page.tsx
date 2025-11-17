@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/common/components/ui
 import { Button } from "~/common/components/ui/button";
 import { Input } from "~/common/components/ui/input";
 import { Badge } from "~/common/components/ui/badge";
-import { Calendar, Sparkles, User, Phone, Mail, Clock, Save, FileText, Heart, CheckCircle2 } from "lucide-react";
+import { Calendar, Sparkles, User, Phone, Mail, FileText, Heart, CheckCircle2 } from "lucide-react";
 import client from "~/lib/supa-client";
 
 export const meta: MetaFunction = () => [
@@ -26,10 +26,7 @@ interface EmotionTestResponse {
   need_type: string | null;
   privacy_agreed: boolean;
   status: string | null;
-  confirmed_date: string | null;
   gift: string | null;
-  preferred_day: string | null;
-  preferred_time: string | null;
   created_at: string;
 }
 
@@ -45,7 +42,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const [profileResult, responsesResult] = await Promise.all([
     client.from("profiles").select("role").eq("email", session.user.email).single(),
     client.from("emotion_test_responses")
-      .select("id, emotion, emotion_details, reason_category, name, age, job, contact, day_mood, need_type, privacy_agreed, status, confirmed_date, gift, preferred_day, preferred_time, created_at")
+      .select("id, emotion, emotion_details, reason_category, name, age, job, contact, day_mood, need_type, privacy_agreed, status, gift, created_at")
       .order("created_at", { ascending: false }),
   ]);
 
@@ -105,28 +102,6 @@ export async function action({ request }: Route.ActionArgs) {
       return { success: true, message: "상태가 변경되었습니다." };
     }
 
-    if (intent === "update-confirmed-date") {
-      const id = String(form.get("id") || "");
-      const dateRaw = form.get("confirmed_date");
-
-      if (!id) {
-        return { error: "ID가 필요합니다." };
-      }
-
-      const confirmed_date = dateRaw && String(dateRaw).trim() ? String(dateRaw).trim() : null;
-
-      const { error } = await client
-        .from("emotion_test_responses")
-        .update({ confirmed_date })
-        .eq("id", id);
-
-      if (error) {
-        console.error("[action] update-confirmed-date error:", error);
-        return { error: error.message || "확정 날짜 저장에 실패했습니다." };
-      }
-
-      return { success: true, message: "확정 날짜가 저장되었습니다." };
-    }
 
     return { ok: true };
   } catch (error) {
@@ -179,19 +154,6 @@ const giftLabels: { [key: string]: string } = {
   essay: "KOI 에세이 체험권",
   "love-test": "연애 경향성 테스트",
   photo: "KOI 컨셉 촬영 체험권",
-};
-
-const preferredDayLabels: { [key: string]: string } = {
-  weekday: "평일",
-  weekend: "주말",
-  any: "상관없음",
-};
-
-const preferredTimeLabels: { [key: string]: string } = {
-  morning: "오전",
-  afternoon: "오후",
-  evening: "저녁",
-  any: "상관없음",
 };
 
 export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
@@ -286,14 +248,14 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                 <CardContent className="p-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* 왼쪽: 사용자 정보 + 경품 정보 */}
-                    <div className="space-y-4">
+                    <div className="flex flex-col gap-4">
                       {/* 기본 정보 */}
-                      <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
+                      <div className="p-5 rounded-xl border border-[#FADADD]/30 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
                         <div className="flex items-center gap-2 mb-4">
                           <User className="w-5 h-5" style={{ color: '#A8C5F8' }} />
                           <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">기본 정보</p>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-4 flex-1">
                           <div>
                             <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">이름</p>
                             <p className="text-base font-extrabold tracking-tight text-[#3B2F2F]">{r.name || "-"}</p>
@@ -317,45 +279,31 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                       </div>
 
                       {/* 경품 정보 */}
-                      <div className="p-5 rounded-xl border-2 border-[#F3C3E6]/50" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.2)' }}>
+                      <div className="p-5 rounded-xl border-2 border-[#F3C3E6]/50 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.2)' }}>
                         <div className="flex items-center gap-2 mb-4">
                           <Sparkles className="w-5 h-5" style={{ color: '#F3C3E6' }} />
                           <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">경품 정보</p>
                         </div>
-                        <div className="space-y-3">
-                          <div className="pb-3 border-b border-[#FADADD]/30">
+                        <div className="space-y-3 flex-1 flex flex-col justify-center">
+                          <div>
                             <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">선택한 경품</p>
                             <p className="text-base font-extrabold tracking-tight text-[#3B2F2F]">
                               {r.gift ? (giftLabels[r.gift] || r.gift) : "-"}
                             </p>
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">가능한 요일</p>
-                              <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
-                                {r.preferred_day ? (preferredDayLabels[r.preferred_day] || r.preferred_day) : "-"}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">가능한 시간</p>
-                              <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">
-                                {r.preferred_time ? (preferredTimeLabels[r.preferred_time] || r.preferred_time) : "-"}
-                              </p>
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     {/* 오른쪽: 감정 정보 + 상태 관리 */}
-                    <div className="space-y-4">
+                    <div className="flex flex-col gap-4">
                       {/* 감정 정보 */}
-                      <div className="p-5 rounded-xl border-2 border-[#FADADD]/50" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.15)' }}>
+                      <div className="p-5 rounded-xl border-2 border-[#FADADD]/50 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.15)' }}>
                         <div className="flex items-center gap-2 mb-4">
                           <Heart className="w-5 h-5" style={{ color: '#F3C3E6' }} />
                           <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">감정 정보</p>
                         </div>
-                        <div className="space-y-4">
+                        <div className="space-y-4 flex-1">
                           <div>
                             <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">선택한 감정</p>
                             <p className="text-base font-extrabold tracking-tight text-[#3B2F2F]">
@@ -402,12 +350,12 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                       </div>
 
                       {/* 상태 관리 */}
-                      <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
+                      <div className="p-5 rounded-xl border border-[#FADADD]/30 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
                         <div className="flex items-center gap-2 mb-4">
                           <Calendar className="w-5 h-5" style={{ color: '#A8C5F8' }} />
                           <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">상태 관리</p>
                         </div>
-                        <Form method="post" className="space-y-4">
+                        <Form method="post" className="space-y-4 flex-1 flex flex-col justify-center">
                           <input type="hidden" name="intent" value="update-status" />
                           <input type="hidden" name="id" value={r.id} />
                           <div>
@@ -438,37 +386,6 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                         </Form>
                       </div>
 
-                      {/* 확정 날짜 */}
-                      <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)' }}>
-                        <div className="flex items-center gap-2 mb-4">
-                          <Clock className="w-5 h-5" style={{ color: '#F3C3E6' }} />
-                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">확정 날짜</p>
-                        </div>
-                        <Form method="post" className="space-y-4">
-                          <input type="hidden" name="intent" value="update-confirmed-date" />
-                          <input type="hidden" name="id" value={r.id} />
-                          <Input 
-                            type="date" 
-                            name="confirmed_date" 
-                            defaultValue={r.confirmed_date ? String(r.confirmed_date).slice(0, 10) : ""} 
-                            className="h-11 text-sm w-full rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all text-[#3B2F2F]"
-                          />
-                          <Button 
-                            type="submit" 
-                            size="sm" 
-                            className="w-full h-11 text-white shadow-md hover:shadow-lg transition-all hover:opacity-90"
-                            style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}
-                          >
-                            <Save className="w-4 h-4 mr-2" />
-                            저장
-                          </Button>
-                          {r.confirmed_date && (
-                            <p className="text-xs text-[#7A6666] opacity-80 text-center pt-2">
-                              {new Date(r.confirmed_date).toLocaleDateString('ko-KR')}
-                            </p>
-                          )}
-                        </Form>
-                      </div>
                     </div>
                   </div>
                 </CardContent>

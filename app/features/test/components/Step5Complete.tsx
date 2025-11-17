@@ -21,7 +21,7 @@ export default function Step5Complete({ participantCount, chartData }: Step5Comp
     setMounted(true)
     const timer = setTimeout(() => {
       setShowModal(true)
-    }, 2000)
+    }, 1500)
     return () => clearTimeout(timer)
   }, [])
 
@@ -90,9 +90,9 @@ export default function Step5Complete({ participantCount, chartData }: Step5Comp
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold text-center">🎉 축하드립니다!</DialogTitle>
               <DialogDescription className="text-base leading-relaxed text-center pt-4">
-                감정 연구 실험 참여자 중 일부를 대상으로 작은 선물이 제공됩니다.
+                감정 연구 실험 참여 기념 경품 추첨에 당첨되셨습니다!
                 <br />
-                당신이 혜택 대상자로 선정되었습니다 :)
+                아래 버튼을 눌러 경품을 선택해주세요 :)
               </DialogDescription>
             </DialogHeader>
             <div className="flex justify-center pt-4">
