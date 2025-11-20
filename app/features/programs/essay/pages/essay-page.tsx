@@ -434,5 +434,6 @@ export default function EssayPage() {
                 </div>
             </section>
         </div>
+        </>
     )
 }

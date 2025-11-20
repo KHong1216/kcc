@@ -249,5 +249,6 @@ export default function ReviewPage({ loaderData }: Route.ComponentProps) {
                 )}
             </div>
         </div>
+        </>
     );
 }
