@@ -7,9 +7,18 @@ import type { Route } from "./+types/notice-page";
 import { getNotices } from "../queries";
 
 export const meta: MetaFunction = () => {
+  const url = "https://www.koicreativelab.com/community/notice";
   return [
     { title: "공지사항 - 코이창작소" },
-    { name: "description", content: "코이창작소 공지사항 및 소식" }
+    { name: "description", content: "코이창작소 공지사항 및 소식. 프로그램 일정, 이벤트, 중요 안내사항을 확인하세요." },
+    { name: "keywords", content: "공지사항, 코이창작소소식, 프로그램일정, 이벤트" },
+    { name: "robots", content: "index, follow" },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: url },
+    { property: "og:title", content: "공지사항 - 코이창작소" },
+    { property: "og:description", content: "코이창작소 공지사항 및 소식. 프로그램 일정, 이벤트, 중요 안내사항을 확인하세요." },
+    { name: "twitter:card", content: "summary" },
+    { rel: "canonical", href: url },
   ];
 };
 

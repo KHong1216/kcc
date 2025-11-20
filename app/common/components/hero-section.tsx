@@ -86,6 +86,8 @@ export function HeroSection() {
             src={image.src}
             alt={image.alt}
             className="w-full h-full object-cover"
+            width={1920}
+            height={1080}
             fetchPriority="high"
             loading="eager"
             decoding="async"
@@ -205,6 +207,8 @@ export function HeroSection() {
                   src={image.src}
                   alt={image.alt}
                   className="w-full h-full object-cover"
+                  width={1920}
+                  height={1080}
                   loading="lazy"
                   decoding="async"
                   style={{ imageRendering: 'auto' }}

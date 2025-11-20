@@ -4,21 +4,51 @@ import { Badge } from "../../../../common/components/ui/badge";
 import { Button } from "../../../../common/components/ui/button";
 
 export const meta: MetaFunction = () => {
+    const url = "https://www.koicreativelab.com/programs/essay";
     return [
       { title: "KOI 에세이 캠프 - 자기 이해를 통한 나의 이야기 발견 | 코이창작소" },
       { name: "description", content: "에세이는 '쓰기'보다 '자기 이해'가 먼저입니다. KOI 에세이 캠프는 대화를 기반으로 나의 패턴·취향·성향을 이해하고 삶의 경험을 언어로 정리하는 과정을 안내합니다." },
       { name: "keywords", content: "에세이쓰기, 자기이해, 글쓰기캠프, 자기탐색, 에세이집제작, 글쓰기상담, 코이창작소" },
+      { name: "robots", content: "index, follow" },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: url },
       { property: "og:title", content: "KOI 에세이 캠프 - 자기 이해를 통한 나의 이야기 발견" },
       { property: "og:description", content: "에세이는 '쓰기'보다 '자기 이해'가 먼저입니다. 대화를 기반으로 나의 패턴·취향·성향을 이해하고 삶의 경험을 언어로 정리하는 과정을 안내합니다." },
       { property: "og:image", content: "https://www.koicreativelab.com/og-essay.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { rel: "canonical", href: url },
     ];
   };
 
 export default function EssayPage() {
     const navigate = useNavigate();
     
+    const serviceSchema = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "에세이 캠프",
+        "name": "KOI 에세이 캠프",
+        "description": "에세이는 '쓰기'보다 '자기 이해'가 먼저입니다. 대화를 기반으로 나의 패턴·취향·성향을 이해하고 삶의 경험을 언어로 정리하는 과정을 안내합니다.",
+        "provider": {
+            "@type": "Organization",
+            "name": "코이창작소",
+            "url": "https://www.koicreativelab.com"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "대한민국"
+        }
+    };
+    
     return (
-        <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif', lineHeight: '1.6' }}>
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+            />
+            <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif', lineHeight: '1.6' }}>
             {/* 헤더 섹션 */}
             <section className="py-24 px-4 sm:px-6 lg:px-8 min-h-[80vh] flex items-center" style={{ background: 'linear-gradient(180deg, #FFFBF8, #FFF5EC)' }}>
                 <div className="max-w-5xl mx-auto text-center">

@@ -17,6 +17,10 @@ export function HomeHeroSection() {
           src="/hero-koi.webp" 
           alt="KOI Creative Lab Illustration" 
           className="absolute inset-0 w-full h-full object-cover opacity-75 mix-blend-multiply"
+          width={1920}
+          height={1080}
+          fetchPriority="high"
+          decoding="async"
           onError={(e) => {
             // 이미지가 없으면 숨김
             (e.target as HTMLImageElement).style.display = 'none';
@@ -37,6 +41,7 @@ export function HomeHeroSection() {
           className="mt-8 bg-[linear-gradient(90deg,#A8C5F8,#F3C3E6,#FFE6C5)] text-[#3B2F2F] font-semibold px-8 py-3 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.05)] hover:brightness-95 transition-all duration-300"
           size="lg"
           onClick={() => navigate("/about/representative")}
+          aria-label="대표 소개 페이지로 이동"
         >
           함께 이야기해요
         </Button>

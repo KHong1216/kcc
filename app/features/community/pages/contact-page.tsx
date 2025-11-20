@@ -6,22 +6,30 @@ import { Textarea } from "../../../common/components/ui/textarea";
 import { Label } from "../../../common/components/ui/label";
 import { Mail, Phone, MessageSquare, CheckCircle2, XCircle } from "lucide-react";
 import { createContact } from "../queries";
-import { useActionData } from "react-router";
 import { useEffect } from "react";
+import type { Route } from "./+types/contact-page";
 
 export const meta: MetaFunction = () => {
+  const url = "https://www.koicreativelab.com/community/contact";
   return [
     { title: "문의하기 - 코이창작소" },
     { name: "description", content: "코이창작소에 문의사항을 남겨주세요. 빠르게 답변드리겠습니다." },
     { name: "keywords", content: "문의하기, 상담문의, 코이창작소, 연락처" },
+    { name: "robots", content: "index, follow" },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: url },
+    { property: "og:title", content: "문의하기 - 코이창작소" },
+    { property: "og:description", content: "코이창작소에 문의사항을 남겨주세요. 빠르게 답변드리겠습니다." },
+    { name: "twitter:card", content: "summary" },
+    { rel: "canonical", href: url },
   ];
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   return {};
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
 
   try {
@@ -65,9 +73,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export default function ContactPage() {
-  const actionData = useActionData<typeof action>();
-
+export default function ContactPage({ actionData }: Route.ComponentProps) {
   // 성공 시 폼 초기화 및 스크롤
   useEffect(() => {
     if (actionData?.success) {

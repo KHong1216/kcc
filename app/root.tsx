@@ -21,10 +21,27 @@ export const links: Route.LinksFunction = () => [
     crossOrigin: "anonymous",
   },
   {
+    rel: "preconnect",
+    href: "https://cdn.jsdelivr.net",
+    crossOrigin: "anonymous",
+  },
+  {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  // Pretendard 폰트 preload (LCP 개선)
+  {
+    rel: "preload",
+    href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css",
+    as: "style",
+  },
   // 첫 번째 히어로 이미지 preload (LCP 개선)
+  {
+    rel: "preload",
+    href: "/hero-koi.webp",
+    as: "image",
+    fetchPriority: "high",
+  },
   {
     rel: "preload",
     href: "/1.webp",
@@ -37,10 +54,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
   Settings.defaultLocale = "ko";
   Settings.defaultZone = "Asia/Seoul";
   return (
-    <html lang="en">
+    <html lang="ko">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#FDF6F0" />
         <Meta />
         <Links />
       </head>

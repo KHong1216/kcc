@@ -5,9 +5,18 @@ import { Button } from "../../../common/components/ui/button";
 import { Brain, Clock, ArrowRight } from "lucide-react";
 
 export const meta: MetaFunction = () => {
+  const url = "https://www.koicreativelab.com/community/free";
   return [
     { title: "무료 심리테스트 - 코이창작소" },
-    { name: "description", content: "MBTI 무료 심리테스트로 나를 더 깊이 알아보세요" }
+    { name: "description", content: "MBTI 무료 심리테스트로 나를 더 깊이 알아보세요. 코이창작소에서 제공하는 다양한 무료 심리테스트를 경험해보세요." },
+    { name: "keywords", content: "무료심리테스트, MBTI, 성격유형검사, 코이창작소" },
+    { name: "robots", content: "index, follow" },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: url },
+    { property: "og:title", content: "무료 심리테스트 - 코이창작소" },
+    { property: "og:description", content: "MBTI 무료 심리테스트로 나를 더 깊이 알아보세요" },
+    { name: "twitter:card", content: "summary" },
+    { rel: "canonical", href: url },
   ];
 };
 

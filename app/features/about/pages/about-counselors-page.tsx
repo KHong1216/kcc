@@ -8,13 +8,22 @@ import { getManagers } from "../queries";
 import type { Route } from "./+types/about-counselors-page";
 
 export const meta: MetaFunction = () => {
+    const url = "https://www.koicreativelab.com/about/counselors";
     return [
         { title: "코이매니저 소개 | 코이창작소" },
         { name: "description", content: "코이창작소의 전문 매니저들을 소개합니다. 함께 성장하는 여정을 시작해보세요." },
         { name: "keywords", content: "코이매니저, 상담사소개, 청년상담, 전문상담사, 코이창작소" },
+        { name: "robots", content: "index, follow" },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
         { property: "og:title", content: "코이매니저 소개 | 코이창작소" },
         { property: "og:description", content: "코이창작소의 전문 매니저들을 소개합니다. 함께 성장하는 여정을 시작해보세요." },
         { property: "og:image", content: "https://www.koicreativelab.com/og-counselors.jpg" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "코이매니저 소개 | 코이창작소" },
+        { rel: "canonical", href: url },
     ];
 }
 
@@ -103,6 +112,10 @@ export default function AboutCounselorsPage({loaderData}: Route.ComponentProps) 
                                         src={manager.image}
                                         alt={manager.name}
                                         className="w-full h-100 object-cover transition-transform"
+                                        width={400}
+                                        height={500}
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </div>
 

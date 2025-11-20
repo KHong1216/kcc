@@ -5,13 +5,21 @@ import { Button } from "../../../../common/components/ui/button";
 import { Camera, Sparkles } from "lucide-react";
 
 export const meta: MetaFunction = () => {
+  const url = "https://www.koicreativelab.com/programs/photo";
   return [
     { title: "KOI 사진 프로젝트 - 외적·내적 균형을 갖춘 아름다움 | 코이창작소" },
     { name: "description", content: "외적으로 꾸민 나의 모습을 사진으로 담아내며, 동시에 내면의 나를 발견하고 표현하는 특별한 경험. KOI 사진 프로젝트는 외적 변화와 내적 성장을 함께 가져가는 진짜 아름다움을 만들어갑니다." },
     { name: "keywords", content: "사진촬영, 포트폴리오, 자기발견, 사진상담, 프로필사진, 코이창작소" },
+    { name: "robots", content: "index, follow" },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: url },
     { property: "og:title", content: "KOI 사진 프로젝트 - 외적·내적 균형을 갖춘 아름다움" },
     { property: "og:description", content: "외적으로 꾸민 나의 모습을 사진으로 담아내며, 동시에 내면의 나를 발견하고 표현하는 특별한 경험" },
     { property: "og:image", content: "https://www.koicreativelab.com/og-photo.jpg" },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { rel: "canonical", href: url },
   ];
 };
 

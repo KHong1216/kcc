@@ -10,9 +10,18 @@ import { getReviews, createReview } from "../queries";
 import type { Route } from "./+types/review-page";
 
 export const meta: MetaFunction = () => {
+    const url = "https://www.koicreativelab.com/community/review";
     return [
         { title: "리뷰 - 코이창작소" },
-        { name: "description", content: "코이창작소 프로그램 참여자들의 생생한 후기" }
+        { name: "description", content: "코이창작소 프로그램 참여자들의 생생한 후기. 에세이 캠프, 연애 캠프, 사진 프로젝트 참여자들의 솔직한 리뷰를 확인하세요." },
+        { name: "keywords", content: "코이창작소리뷰, 프로그램후기, 참여자후기, 에세이캠프후기" },
+        { name: "robots", content: "index, follow" },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { property: "og:title", content: "리뷰 - 코이창작소" },
+        { property: "og:description", content: "코이창작소 프로그램 참여자들의 생생한 후기" },
+        { name: "twitter:card", content: "summary" },
+        { rel: "canonical", href: url },
     ];
 };
 
@@ -70,8 +79,37 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function ReviewPage({ loaderData }: Route.ComponentProps) {
     const { reviews } = loaderData;
+    
+    const reviewSchemas = reviews.slice(0, 5).map((review) => ({
+        "@context": "https://schema.org",
+        "@type": "Review",
+        "author": {
+            "@type": "Person",
+            "name": review.user_name
+        },
+        "itemReviewed": {
+            "@type": "Service",
+            "name": `코이창작소 ${review.program_id} 프로그램`
+        },
+        "reviewBody": review.content,
+        "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": review.rating,
+            "bestRating": 5
+        },
+        "datePublished": review.created_at
+    }));
+    
     return (
-        <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif', lineHeight: '1.6' }}>
+        <>
+            {reviewSchemas.map((schema, index) => (
+                <script
+                    key={index}
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                />
+            ))}
+            <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif', lineHeight: '1.6' }}>
             {/* 헤더 섹션 */}
             <section className="pt-14 sm:pt-16 lg:pt-[4.5rem] pb-24 px-4 sm:px-6 lg:px-8 min-h-[300px] flex items-center" style={{ background: 'linear-gradient(180deg, #F5F0ED 0%, #FFF5F0 50%, #FDF9F7 70%, #FDF6F0 100%)' }}>
                 <div className="max-w-6xl mx-auto text-center">

@@ -25,7 +25,7 @@ export default {
 				'koi-soft': 'linear-gradient(135deg, #E8F4FB 0%, #FFF0F5 100%)',
 				'koi-soft-horizontal': 'linear-gradient(90deg, #E8F4FB 0%, #FFF0F5 100%)',
 				'koi-warm': 'linear-gradient(135deg, #FFF0F5 0%, #FFE6C5 30%, #F3C3E6 100%)',
-				'koi-sky': 'linear-gradient(135deg, #A8C5F8 0%, #E8F4FB 100%)',
+				'koi-sky':	 'linear-gradient(135deg, #A8C5F8 0%, #E8F4FB 100%)',
 				'koi-pink': 'linear-gradient(135deg, #F3C3E6 0%, #FFF0F5 100%)',
 				// Hero, Card, Footer 배경 (더 밝고 부드러운 톤)
 				'koi-hero': 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)',

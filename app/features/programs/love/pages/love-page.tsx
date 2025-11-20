@@ -4,13 +4,21 @@ import { Badge } from "../../../../common/components/ui/badge";
 import { Button } from "../../../../common/components/ui/button";
 
 export const meta: MetaFunction = () => {
+    const url = "https://www.koicreativelab.com/programs/love";
     return [
       { title: "KOI 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다 | 코이창작소" },
       { name: "description", content: "연애에서 가장 자주 벌어지는 갈등은 '소통 문제'에서 비롯됩니다. KOI 연애 캠프는 나의 감정 패턴, 말하기 습관, 상처의 근원, 표현 방식을 객관적으로 이해할 수 있는 기회를 제공합니다." },
       { name: "keywords", content: "연애상담, 관계상담, 소통문제, 연애패턴, 연애캠프, 코이창작소" },
+      { name: "robots", content: "index, follow" },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: url },
       { property: "og:title", content: "KOI 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
       { property: "og:description", content: "연애에서 가장 자주 벌어지는 갈등은 '소통 문제'에서 비롯됩니다. 나의 감정 패턴, 말하기 습관, 상처의 근원, 표현 방식을 객관적으로 이해할 수 있는 기회를 제공합니다." },
       { property: "og:image", content: "https://www.koicreativelab.com/og-love.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { rel: "canonical", href: url },
     ];
   };
 

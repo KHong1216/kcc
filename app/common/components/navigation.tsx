@@ -107,7 +107,9 @@ export function Navigation() {
                             ? "text-gray-700 hover:bg-[#E8F4FB]" 
                             : "text-gray-600 hover:bg-[#E8F4FB]"
                     )}
-                    aria-label="메뉴 열기"
+                    aria-label={mobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+                    aria-expanded={mobileMenuOpen}
+                    aria-controls="mobile-menu"
                 >
                     {mobileMenuOpen ? (
                         <X className="w-6 h-6" />
@@ -128,6 +130,7 @@ export function Navigation() {
                             "md:flex-shrink-0",
                             "mx-auto md:mx-0"
                         )}
+                        aria-label="코이창작소 홈으로 이동"
                     >
                         <span className="bg-clip-text text-transparent bg-[linear-gradient(90deg,#A8C5F8,#F3C3E6,#FFE6C5)]">
                             KOI
@@ -213,7 +216,7 @@ export function Navigation() {
 
             {/* 모바일 메뉴 */}
             {mobileMenuOpen && (
-                <div className="fixed inset-0 top-14 md:hidden z-40 bg-white/95 backdrop-blur-md">
+                <div id="mobile-menu" className="fixed inset-0 top-14 md:hidden z-40 bg-white/95 backdrop-blur-md" role="menu" aria-label="메인 네비게이션">
                     <div className="px-4 py-6 space-y-4 overflow-y-auto h-full">
                         {menus.map((menu) => (
                             <div key={menu.name} className="space-y-2">

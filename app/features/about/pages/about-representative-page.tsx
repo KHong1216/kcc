@@ -6,13 +6,23 @@ import type { Route } from "./+types/about-representative-page";
 import { getRepresentativeFromManagers } from "../queries";
 
 export const meta: MetaFunction = () => {
+    const url = "https://www.koicreativelab.com/about/representative";
     return [
       { title: "대표 소개 | 코이창작소" },
       { name: "description", content: "코이창작소 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
       { name: "keywords", content: "코이창작소대표, 청년상담사, 대표소개, 코이창작소" },
+      { name: "robots", content: "index, follow" },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: url },
       { property: "og:title", content: "대표 소개 | 코이창작소" },
       { property: "og:description", content: "코이창작소 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
       { property: "og:image", content: "https://www.koicreativelab.com/og-representative.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "대표 소개 | 코이창작소" },
+      { name: "twitter:description", content: "코이창작소 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
+      { rel: "canonical", href: url },
     ];
   };
 
@@ -58,6 +68,9 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
                                     src={representative.image}
                                     alt={representative.name}
                                     className="w-full h-full object-cover object-center"
+                                    width={400}
+                                    height={500}
+                                    loading="lazy"
                                     decoding="async"
                                 />
                             </div>
