@@ -1,5 +1,6 @@
 // app/routes/api.chat.tsx
 import OpenAI from "openai";
+import { validateAndNormalizePhone } from "../../lib/validation";
 import type { Route } from "./+types/api-chat";
 
 const openai = new OpenAI({
@@ -96,7 +97,7 @@ export async function action({ request }: Route.ActionArgs) {
             },
             user_phone: {
               type: "string",
-              description: "연락처 (010-XXXX-XXXX 형식)"
+              description: "연락처 (010-XXXX-XXXX 형식). 사용자가 실제로 제공한 연락처만 추출하고, 예시 번호(예: 010-1234-5678)는 절대 추출하지 마세요."
             },
             available_time_text: {
               type: "string",
@@ -156,7 +157,29 @@ export async function action({ request }: Route.ActionArgs) {
                 extractedData.user_age = Number(functionArgs.user_age);
               }
               if (functionArgs.user_job) extractedData.user_job = functionArgs.user_job;
-              if (functionArgs.user_phone) extractedData.user_phone = functionArgs.user_phone;
+              // 연락처 검증 및 정규화
+              if (functionArgs.user_phone) {
+                // 예시 번호인지 확인 (010-1234-5678, 010-0000-0000 등)
+                const phoneStr = String(functionArgs.user_phone).trim();
+                const isExampleNumber = /010[-.\s]?(1234|0000|1111|2222|3333|4444|5555|6666|7777|8888|9999)[-.\s]?(5678|0000|1111|2222|3333|4444|5555|6666|7777|8888|9999)/.test(phoneStr) ||
+                                      phoneStr === '010-1234-5678' ||
+                                      phoneStr === '01012345678' ||
+                                      phoneStr === '010 1234 5678';
+                
+                if (isExampleNumber) {
+                  console.log("예시 번호로 인식하여 연락처 추출 제외:", phoneStr);
+                  extractedData.user_phone = null;
+                } else {
+                  const phoneValidation = validateAndNormalizePhone(functionArgs.user_phone);
+                  if (phoneValidation.isValid && phoneValidation.normalized) {
+                    extractedData.user_phone = phoneValidation.normalized;
+                  } else {
+                    // 검증 실패 시 null로 설정하여 AI가 다시 물어보도록 함
+                    extractedData.user_phone = null;
+                    console.log("연락처 검증 실패:", phoneValidation.error);
+                  }
+                }
+              }
               // available_time_text는 사용자가 실제로 입력한 경우에만 업데이트
               // 예시 문구나 빈 값은 제외
               if (functionArgs.available_time_text && 
@@ -339,6 +362,28 @@ export async function action({ request }: Route.ActionArgs) {
         // 추출 실패해도 계속 진행
       }
   
+      // 연락처 검증 (최종 검증)
+      let phoneValidationError: string | null = null;
+      if (extractedData?.user_phone) {
+        const phoneValidation = validateAndNormalizePhone(extractedData.user_phone);
+        if (!phoneValidation.isValid) {
+          // 검증 실패 시 null로 설정하여 다시 물어보도록 함
+          extractedData.user_phone = null;
+          phoneValidationError = phoneValidation.error || "연락처 형식이 올바르지 않습니다.";
+          console.log("최종 연락처 검증 실패:", phoneValidationError);
+          
+          // AI 응답에 연락처 재입력 요청 추가
+          if (!chatMessage || chatMessage.length < 10) {
+            chatMessage = `죄송합니다. 연락처 형식이 올바르지 않습니다.\n\n연락처는 010-xxxx-xxxx 형식으로 입력해주세요.\n예: 010-1234-5678\n\n다시 입력해주시겠어요?`;
+          } else if (!chatMessage.includes('연락처') && !chatMessage.includes('010-')) {
+            chatMessage = `${chatMessage}\n\n참고로, 연락처는 010-xxxx-xxxx 형식으로 입력해주세요. (예: 010-1234-5678)`;
+          }
+        } else if (phoneValidation.normalized) {
+          // 검증 성공 시 정규화된 형식으로 업데이트
+          extractedData.user_phone = phoneValidation.normalized;
+        }
+      }
+
       // 누락된 필드 정보 계산
       let missingFields: string[] = [];
       if (!shouldSave) {
@@ -348,7 +393,10 @@ export async function action({ request }: Route.ActionArgs) {
           missingFields.push('나이');
         }
         if (!extractedData?.user_job) missingFields.push('직업/학교');
-        if (!extractedData?.user_phone) missingFields.push('연락처');
+        // 연락처 검증 실패도 누락으로 처리
+        if (!extractedData?.user_phone || phoneValidationError) {
+          missingFields.push('연락처');
+        }
         if (!extractedData?.selected_dates && !extractedData?.available_time_text) {
           missingFields.push('가능한 시간');
         }
@@ -607,47 +655,109 @@ function extractInfoFromConversation(messages: any[], programs: any[], collected
     }
   }
 
-  // 연락처 추출 (최신 메시지 우선, 기존 데이터 덮어쓰기 가능)
+  // 연락처 추출 (사용자 메시지에서만 추출 - AI 응답의 예시 문구 제외)
+  // 사용자 메시지만 사용 (AI 응답에서 추출하지 않음)
+  const userMessagesOnly = messages.filter(m => m.role === 'user').map(m => m.content);
+  const userConversationForPhone = userMessagesOnly.join('\n');
+  
+  // 예시 문구 패턴 (이런 문구가 포함된 경우 제외)
+  const examplePatterns = [
+    /예\s*[:：]\s*010/i,
+    /예를\s*들어/i,
+    /예시/i,
+    /예\s*를/i,
+    /같은\s*형식/i,
+    /형식으로/i,
+    /\(예\s*[:：]\s*010/i,
+    /예\s*를\s*들어/i
+  ];
+  
   const phonePatterns = [
     /(?:연락처|전화|핸드폰|번호)[은는]?\s*[:：]\s*(010[-.\s]?\d{4}[-.\s]?\d{4})/i,
     /-?\s*연락처[은는]?\s*[:：]\s*(010[-.\s]?\d{4}[-.\s]?\d{4})/i,
     /연락처[은는]?\s*[:：]\s*(010[-.\s]?\d{4}[-.\s]?\d{4})/i,
     /연락처\s*[:：]\s*(010[-.\s]?\d{4}[-.\s]?\d{4})/i,
-    // 전화번호만 직접 입력한 경우
+    // 전화번호만 직접 입력한 경우 (예시 문구 제외)
     /(010[-.\s]?\d{4}[-.\s]?\d{4})/i,
     // 하이픈 없는 형식
     /(010\d{8})/i
   ];
   
-  // 최신 메시지에서 먼저 찾기 (기존 데이터가 있어도 최신 정보로 업데이트)
+  // 최신 사용자 메시지에서 먼저 찾기
   let foundPhoneInLatest = false;
   for (const pattern of phonePatterns) {
     for (const msg of latestUserMessages) {
+      // 예시 문구가 포함된 메시지는 제외
+      const isExample = examplePatterns.some(expPattern => expPattern.test(msg));
+      if (isExample) {
+        console.log("예시 문구로 인식하여 연락처 추출 제외:", msg);
+        continue;
+      }
+      
       const match = msg.match(pattern);
       if (match && match[1]) {
+        // 매칭된 부분의 앞뒤 문맥 확인 (예시 문구가 있는지)
+        const matchIndex = msg.indexOf(match[0]);
+        const contextBefore = msg.substring(Math.max(0, matchIndex - 20), matchIndex);
+        const isContextExample = examplePatterns.some(expPattern => expPattern.test(contextBefore));
+        
+        if (isContextExample) {
+          console.log("문맥에서 예시 문구 감지하여 연락처 추출 제외:", msg);
+          continue;
+        }
+        
         const phone = match[1].replace(/[-.\s]/g, '');
         // 010으로 시작하고 11자리인지 확인
         if (phone.startsWith('010') && phone.length === 11) {
-          extracted.user_phone = phone.slice(0, 3) + '-' + phone.slice(3, 7) + '-' + phone.slice(7);
-          foundPhoneInLatest = true;
-          break;
+          const normalizedPhone = phone.slice(0, 3) + '-' + phone.slice(3, 7) + '-' + phone.slice(7);
+          // zod로 검증
+          const phoneValidation = validateAndNormalizePhone(normalizedPhone);
+          if (phoneValidation.isValid && phoneValidation.normalized) {
+            extracted.user_phone = phoneValidation.normalized;
+            foundPhoneInLatest = true;
+            console.log("사용자 메시지에서 연락처 추출 성공:", normalizedPhone);
+            break;
+          } else {
+            console.log("연락처 검증 실패 (최신 메시지):", phoneValidation.error);
+          }
         }
       }
     }
     if (foundPhoneInLatest) break;
   }
   
-  // 최신 메시지에서 못 찾았고 기존 데이터도 없으면 전체 대화에서 찾기
+  // 최신 메시지에서 못 찾았고 기존 데이터도 없으면 전체 사용자 대화에서 찾기
   if (!foundPhoneInLatest && !extracted.user_phone) {
     for (const pattern of phonePatterns) {
-      const match = conversation.match(pattern);
-      if (match && match[1]) {
-        const phone = match[1].replace(/[-.\s]/g, '');
-        if (phone.startsWith('010') && phone.length === 11) {
-          extracted.user_phone = phone.slice(0, 3) + '-' + phone.slice(3, 7) + '-' + phone.slice(7);
-          break;
+      let match;
+      while ((match = pattern.exec(userConversationForPhone)) !== null) {
+        // 예시 문구가 포함된 경우 제외
+        const matchIndex = match.index;
+        const contextBefore = userConversationForPhone.substring(Math.max(0, matchIndex - 30), matchIndex);
+        const isContextExample = examplePatterns.some(expPattern => expPattern.test(contextBefore));
+        
+        if (isContextExample) {
+          console.log("문맥에서 예시 문구 감지하여 연락처 추출 제외 (전체 대화):", match[0]);
+          continue;
+        }
+        
+        if (match && match[1]) {
+          const phone = match[1].replace(/[-.\s]/g, '');
+          if (phone.startsWith('010') && phone.length === 11) {
+            const normalizedPhone = phone.slice(0, 3) + '-' + phone.slice(3, 7) + '-' + phone.slice(7);
+            // zod로 검증
+            const phoneValidation = validateAndNormalizePhone(normalizedPhone);
+            if (phoneValidation.isValid && phoneValidation.normalized) {
+              extracted.user_phone = phoneValidation.normalized;
+              console.log("사용자 대화에서 연락처 추출 성공:", normalizedPhone);
+              break;
+            } else {
+              console.log("연락처 검증 실패 (전체 대화):", phoneValidation.error);
+            }
+          }
         }
       }
+      if (extracted.user_phone) break;
     }
   }
 

@@ -7,6 +7,7 @@ import { Input } from "../../../common/components/ui/input";
 import { Send, Bot, User, Loader2, Sparkles, MessageCircle } from "lucide-react";
 import { getPrograms } from "../queries";
 import { createReservation } from "../queries";
+import { validateAndNormalizePhone } from "../../../lib/validation";
 import type { Route } from "./+types/reservation-chat-page";
 
 export const meta: MetaFunction = () => [
@@ -47,7 +48,23 @@ export async function action({ request }: Route.ActionArgs) {
                 missingFields.push('나이');
             }
             if (!user_job) missingFields.push('직업/학교');
-            if (!user_phone) missingFields.push('연락처');
+            
+            // 연락처 검증 및 정규화
+            let normalizedPhone = user_phone;
+            if (!user_phone) {
+                missingFields.push('연락처');
+            } else {
+                const phoneValidation = validateAndNormalizePhone(user_phone);
+                if (!phoneValidation.isValid) {
+                    console.error("연락처 검증 실패:", phoneValidation.error);
+                    return {
+                        success: false,
+                        error: phoneValidation.error || "연락처 형식이 올바르지 않습니다. 010-xxxx-xxxx 형식으로 입력해주세요."
+                    };
+                }
+                normalizedPhone = phoneValidation.normalized!;
+            }
+            
             if (!program_id) missingFields.push('프로그램');
             
             if (missingFields.length > 0) {
@@ -73,7 +90,7 @@ export async function action({ request }: Route.ActionArgs) {
                 user_name,
                 user_age: parseInt(user_age),
                 user_job,
-                user_phone,
+                user_phone: normalizedPhone, // 검증 및 정규화된 연락처 사용
                 program_id: program_id as 'love' | 'photo' | 'essay',
                 selected_dates,
                 notes: notes || undefined,
@@ -801,7 +818,10 @@ function getSystemPrompt(programs: any[]) {
   2. 이름
   3. 나이 (숫자)
   4. 직업/대학교명
-  5. 연락처 (010-XXXX-XXXX 형식)
+  5. 연락처 (반드시 010-xxxx-xxxx 형식으로 입력받아야 함)
+     - 형식이 맞지 않으면 반드시 다시 입력해달라고 요청해야 함
+     - 하이픈 없이 입력해도 자동으로 변환되지만, 최종적으로는 010-xxxx-xxxx 형식으로 저장됨
+     - ⚠️ 매우 중요: 예시 번호(예: 010-1234-5678)는 절대 실제 데이터로 추출하지 마세요. 사용자가 실제로 제공한 연락처만 추출해야 합니다.
   6. 가능한 시간 (상세하게, 예: "평일 오후 19시 이후", "월화 18시 전" 등)
   
   대화 스타일:
@@ -816,6 +836,7 @@ function getSystemPrompt(programs: any[]) {
   - 누락된 정보가 있으면 반드시 먼저 물어봐야 합니다 (프로그램 > 이름 > 나이 > 직업/학교 > 연락처 > 시간 순서)
   - 모든 정보가 수집되면 "예약 정보가 모두 수집되었습니다"라고 말하세요
   - 이메일은 수집하지 않습니다
+  - ⚠️ 연락처 추출 시 주의사항: 예시 번호(예: 010-1234-5678)나 설명 문구에 포함된 번호는 절대 추출하지 마세요. 사용자가 실제로 입력하거나 말한 연락처만 추출해야 합니다.
   
   필수 정보 확인 (매우 중요):
   - 매 응답마다 모든 필수 필드(프로그램, 이름, 나이, 직업/학교, 연락처, 가능한 시간)가 채워졌는지 확인하세요

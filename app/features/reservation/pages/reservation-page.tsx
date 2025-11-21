@@ -5,7 +5,7 @@ import { Badge } from "../../../common/components/ui/badge";
 import { Button } from "../../../common/components/ui/button";
 import { Clock, Users } from "lucide-react";
 import { getPrograms } from "../queries";
-import type { Route } from "./+types/reservation-page";
+import type { Route } from "../+types/reservation-page";
 import { cn } from "../../../lib/utils";
 
 export const meta: MetaFunction = () => {
