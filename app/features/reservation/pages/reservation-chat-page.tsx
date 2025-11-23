@@ -27,8 +27,10 @@ export async function loader() {
 }
 
 export async function action({ request }: Route.ActionArgs) {
+    console.log("[action] 예약 저장 요청 수신");
     const formData = await request.formData();
     const intent = formData.get("intent") as string;
+    console.log("[action] intent:", intent);
 
     if (intent === "save-reservation") {
         try {
@@ -40,6 +42,16 @@ export async function action({ request }: Route.ActionArgs) {
             const program_id = formData.get("program_id") as string;
             const selected_dates_str = formData.get("selected_dates") as string;
             const notes = formData.get("notes") as string;
+            
+            console.log("[action] 받은 데이터:", {
+                user_name,
+                user_age,
+                user_job,
+                user_phone,
+                program_id,
+                selected_dates_str,
+                notes
+            });
 
             // 필수 필드 검증
             const missingFields: string[] = [];
@@ -97,16 +109,23 @@ export async function action({ request }: Route.ActionArgs) {
                 status: 'pending' as const
             };
 
-            console.log("예약 데이터 저장 시도:", reservationData);
+            console.log("[action] 예약 데이터 저장 시도:", reservationData);
 
             const result = await createReservation(reservationData);
 
             if (result.error) {
-                console.error("예약 저장 오류:", result.error);
-                return { success: false, error: result.error.message };
+                console.error("[action] 예약 저장 오류:", result.error);
+                console.error("[action] 오류 상세:", {
+                    code: result.error.code,
+                    message: result.error.message,
+                    details: result.error.details,
+                    hint: result.error.hint
+                });
+                return { success: false, error: result.error.message || "예약 저장 중 오류가 발생했습니다." };
             }
 
-            console.log("예약 저장 성공:", result.data);
+            console.log("[action] 예약 저장 성공:", result.data);
+            console.log("[action] 저장된 예약 ID:", result.data?.id);
             return { success: true, reservationId: result.data?.id };
         } catch (error: any) {
             console.error("예약 저장 예외:", error);
@@ -484,15 +503,79 @@ export default function ReservationChatPage({ loaderData, actionData }: Route.Co
                     console.log("AI가 질문 중이므로 누락된 필드 메시지는 다음 응답 후에 표시됩니다.");
                 }
             } else if (data.shouldSave && hasAllFields) {
-                // shouldSave가 true여도 자동 저장하지 않고, 사용자가 "예/네"로 확인할 때만 저장
-                // 여기서는 저장하지 않고 메시지만 표시
-                console.log("모든 정보 수집 완료, 사용자 확인 대기 중");
+                // shouldSave가 true이고 모든 필드가 있을 때, 사용자 입력이 "예/네"인지 확인
+                const confirmKeywords = ["예", "네", "yes", "ok", "확인", "신청", "저장", "맞아", "맞습니다"];
+                const isConfirm = confirmKeywords.some(keyword => 
+                    userMessage.content.toLowerCase() === keyword.toLowerCase() || 
+                    userMessage.content.toLowerCase().includes(keyword.toLowerCase())
+                );
+                
+                if (isConfirm) {
+                    // 사용자가 "예/네"로 확인했고, 모든 필드가 있으면 저장
+                    console.log("사용자 확인 및 저장 시작:", mergedData);
+                    await saveReservation(mergedData);
+                } else {
+                    // 사용자가 "예/네"를 입력하지 않았을 때 안내 메시지 표시
+                    // AI 응답에 이미 안내가 포함되어 있는지 확인
+                    const hasConfirmPrompt = responseText.includes('예 또는 네') || 
+                                          responseText.includes('예/네') ||
+                                          responseText.includes('신청하시겠습니까') ||
+                                          responseText.includes('저장하시겠습니까');
+                    
+                    if (!hasConfirmPrompt) {
+                        setMessages(prev => [...prev, {
+                            role: "assistant",
+                            content: "예약을 신청하시려면 '예' 또는 '네'를 입력해주세요. 😊",
+                            timestamp: new Date()
+                        }]);
+                    }
+                    console.log("모든 정보 수집 완료, 사용자 확인 대기 중");
+                }
             } else if (responseText.includes("예약 정보가 모두 수집되었습니다") || 
                        responseText.includes("모든 정보를 요약") ||
                        responseText.includes("저장하시겠습니까")) {
                 // AI가 요약을 했는데 저장이 안 된 경우
-                // hasAllFields가 true여도 자동 저장하지 않음 (사용자 확인 필요)
-                if (hasAllFields) {
+                // 사용자 입력이 "예/네"인지 확인
+                const confirmKeywords = ["예", "네", "yes", "ok", "확인", "신청", "저장", "맞아", "맞습니다"];
+                const isConfirm = confirmKeywords.some(keyword => 
+                    userMessage.content.toLowerCase() === keyword.toLowerCase() || 
+                    userMessage.content.toLowerCase().includes(keyword.toLowerCase())
+                );
+                
+                if (hasAllFields && isConfirm) {
+                    // 모든 필드가 있고 사용자가 "예/네"로 확인했으면 저장
+                    console.log("AI 요약 후 사용자 확인 및 저장 시작:", mergedData);
+                    await saveReservation(mergedData);
+                } else if (hasAllFields) {
+                    // 모든 필드가 있지만 사용자가 "예/네"를 입력하지 않았을 때
+                    // AI 응답에 확인 요청이 없으면 강제로 추가
+                    const hasConfirmPrompt = responseText.includes('예 또는 네') || 
+                                          responseText.includes('예/네') ||
+                                          responseText.includes('신청하시겠습니까') ||
+                                          responseText.includes('저장하시겠습니까') ||
+                                          responseText.includes('입력해주세요');
+                    
+                    if (!hasConfirmPrompt) {
+                        // AI 응답을 수정하여 확인 요청 추가
+                        setMessages(prev => {
+                            const lastMessage = prev[prev.length - 1];
+                            if (lastMessage && lastMessage.role === "assistant") {
+                                // 마지막 메시지에 확인 요청 추가
+                                const updatedMessages = [...prev];
+                                updatedMessages[updatedMessages.length - 1] = {
+                                    ...lastMessage,
+                                    content: lastMessage.content + `\n\n위 내용으로 예약을 확정하시겠습니까? '예' 또는 '네'를 입력해주세요. 😊`
+                                };
+                                return updatedMessages;
+                            }
+                            // 마지막 메시지가 없거나 assistant가 아니면 새 메시지 추가
+                            return [...prev, {
+                                role: "assistant",
+                                content: "위 내용으로 예약을 확정하시겠습니까? '예' 또는 '네'를 입력해주세요. 😊",
+                                timestamp: new Date()
+                            }];
+                        });
+                    }
                     console.log("AI가 요약 완료, 사용자 확인 대기 중");
                 } else {
                     console.log("AI가 요약했지만 필수 필드가 누락됨:", {
@@ -603,12 +686,14 @@ export default function ReservationChatPage({ loaderData, actionData }: Route.Co
             });
 
             // useFetcher를 사용하여 저장 (actionData 자동 업데이트)
+            // action: "/reservation"은 현재 페이지의 action을 호출합니다
+            console.log("예약 저장 요청 전송 시작 - action: /reservation");
             fetcher.submit(formData, {
                 method: "POST",
                 action: "/reservation"
             });
             
-            console.log("예약 저장 요청 전송");
+            console.log("예약 저장 요청 전송 완료, fetcher.state:", fetcher.state);
         } catch (error) {
             console.error("예약 저장 오류:", error);
             setMessages(prev => [...prev, {

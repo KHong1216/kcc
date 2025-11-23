@@ -159,12 +159,15 @@ export async function action({ request }: Route.ActionArgs) {
               if (functionArgs.user_job) extractedData.user_job = functionArgs.user_job;
               // 연락처 검증 및 정규화
               if (functionArgs.user_phone) {
-                // 예시 번호인지 확인 (010-1234-5678, 010-0000-0000 등)
                 const phoneStr = String(functionArgs.user_phone).trim();
-                const isExampleNumber = /010[-.\s]?(1234|0000|1111|2222|3333|4444|5555|6666|7777|8888|9999)[-.\s]?(5678|0000|1111|2222|3333|4444|5555|6666|7777|8888|9999)/.test(phoneStr) ||
-                                      phoneStr === '010-1234-5678' ||
-                                      phoneStr === '01012345678' ||
-                                      phoneStr === '010 1234 5678';
+                
+                // 예시 번호 패턴을 더 엄격하게 체크 (시스템 프롬프트나 AI 응답의 예시 문구에서만 제외)
+                // 사용자가 직접 입력한 번호는 예시로 간주하지 않음
+                const isExampleNumber = 
+                  // 명확한 예시 문구와 함께 나온 경우만 제외
+                  (phoneStr === '010-1234-5678' && functionArgs.user_phone.includes('예')) ||
+                  (phoneStr === '01012345678' && functionArgs.user_phone.includes('예')) ||
+                  (phoneStr === '010 1234 5678' && functionArgs.user_phone.includes('예'));
                 
                 if (isExampleNumber) {
                   console.log("예시 번호로 인식하여 연락처 추출 제외:", phoneStr);
