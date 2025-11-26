@@ -26,18 +26,18 @@ const menus = [
         to: "/programs/essay",
         items: [
             {
-                name: "에세이",
-                description: "자기 이해를 통한 나의 이야기 발견",
+                name: "아무, 말",
+                description: "",
                 to: "/programs/essay",
             },
             {
-                name: "연애경향성",
-                description: "내가 바뀌면 관계 전체가 달라진다",
+                name: "연애의 발견",
+                description: "",
                 to: "/programs/love",
             },
             {
-                name: "사진",
-                description: "외적·내적 균형을 갖춘 아름다움",
+                name: "클릭무드",
+                description: "",
                 to: "/programs/photo",
             },
         ]

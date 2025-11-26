@@ -31,11 +31,11 @@ export interface CreateResponsePayload {
   givenJelly: JellyId;
 }
 
-export interface CreateReservationPayload {
-  recordId: string;
+export interface CreateLovePotionReservationInput {
   userName: string;
+  userAge: number;
   userPhone: string;
-  privacyAgreed: boolean;
+  notes: string;
 }
 
 export const jellyList: LovePotionJelly[] = [
@@ -149,32 +149,29 @@ export async function getLovePotionResponse(id: string) {
 }
 
 export async function createLovePotionReservation({
-  recordId,
   userName,
+  userAge,
   userPhone,
-}: CreateReservationPayload) {
-  const { data: response, error: responseError } = await client
-    .from("love_potion_responses")
-    .select("received_jelly, given_jelly")
-    .eq("id", recordId)
+  notes,
+}: CreateLovePotionReservationInput) {
+  const { data, error } = await client
+    .from("reservations")
+    .insert({
+      user_name: userName,
+      user_age: userAge,
+      user_job: "미입력",
+      user_phone: userPhone,
+      program_id: "love",
+      notes,
+      status: "pending",
+    })
+    .select("id, user_name, user_age, user_phone, notes, status, created_at")
     .single();
-
-  if (responseError || !response) {
-    throw responseError ?? new Error("포션 정보를 불러올 수 없습니다.");
-  }
-
-  const { error } = await client.from("love_potion_reservations").insert({
-    response_id: recordId,
-    user_name: userName,
-    user_phone: userPhone,
-    received_jelly: response.received_jelly,
-    given_jelly: response.given_jelly,
-  });
 
   if (error) {
     throw error;
   }
 
-  return { success: true };
+  return data;
 }
 
