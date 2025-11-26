@@ -489,19 +489,19 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
           return (
       <div className="h-full bg-transparent relative overflow-auto" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 relative z-10 pt-4 md:pt-14 lg:pt-[4.5rem]">
         {/* 헤더 */}
-        <header className="mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
-          <div className="px-6 py-5">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm">
-                <Activity className="w-7 h-7 text-white drop-shadow-sm" />
+        <header className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
+          <div className="px-4 py-4 sm:px-6 sm:py-5">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm flex-shrink-0">
+                <Activity className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow-sm" />
               </div>
-              <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>대시보드</h1>
-                <p className="text-white/90 flex items-center gap-2 text-sm" style={{ lineHeight: '1.6' }}>
-                  <Sparkles className="w-4 h-4" />
-                  코이창작소 관리 시스템
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>대시보드</h1>
+                <p className="text-white/90 flex items-center gap-2 text-xs sm:text-sm" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="truncate">코이창작소 관리 시스템</span>
                 </p>
               </div>
             </div>
@@ -509,38 +509,38 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
         </header>
 
         {/* 메인 콘텐츠 */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* 통계 카드 */}
           <StatsCards stats={stats} />
 
           {/* 최근 활동 */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* 최근 예약 */}
             <Card className="border border-gray-200 shadow-sm bg-white">
-              <CardHeader className="border-b border-gray-100 bg-gray-50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                      <Calendar className="w-5 h-5 text-white" />
+              <CardHeader className="border-b border-gray-100 bg-gray-50 p-4 sm:p-6">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                      <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">최근 예약</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl font-extrabold tracking-tight text-[#3B2F2F] truncate">최근 예약</CardTitle>
                   </div>
-                  <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                  <Badge className="text-white px-2 py-1 sm:px-3 text-xs sm:text-sm flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
                     {recentReservations.length}개
                   </Badge>
                 </div>
               </CardHeader>
-              <CardContent className="p-5">
+              <CardContent className="p-4 sm:p-5">
                 {recentReservations.length === 0 ? (
                   <div className="text-center py-8">
                     <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                     <p className="text-[#7A6666] text-sm opacity-80">최근 예약이 없습니다</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {recentReservations.map((reservation) => (
-                      <div key={reservation.id} className="p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all bg-white">
-                        <div className="flex items-start justify-between gap-3">
+                      <div key={reservation.id} className="p-3 sm:p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all bg-white">
+                        <div className="flex items-start justify-between gap-2 sm:gap-3">
                           <div className="flex-1 min-w-0">
                             <p className="font-extrabold tracking-tight text-[#3B2F2F] mb-1 truncate">
                               {reservation.user_name || "이름 없음"}
@@ -579,30 +579,30 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
 
             {/* 최근 문의 */}
             <Card className="border border-gray-200 shadow-sm bg-white">
-              <CardHeader className="border-b border-gray-100 bg-gray-50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
-                      <MessageSquare className="w-5 h-5 text-white" />
+              <CardHeader className="border-b border-gray-100 bg-gray-50 p-4 sm:p-6">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                      <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">최근 문의</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl font-extrabold tracking-tight text-[#3B2F2F] truncate">최근 문의</CardTitle>
                   </div>
-                  <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                  <Badge className="text-white px-2 py-1 sm:px-3 text-xs sm:text-sm flex-shrink-0" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
                     {recentContacts.length}개
                   </Badge>
                 </div>
               </CardHeader>
-              <CardContent className="p-5">
+              <CardContent className="p-4 sm:p-5">
                 {recentContacts.length === 0 ? (
                   <div className="text-center py-8">
                     <MessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                     <p className="text-[#7A6666] text-sm opacity-80">최근 문의가 없습니다</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {recentContacts.map((contact) => (
-                      <div key={contact.id} className="p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all bg-white">
-                        <div className="flex items-start justify-between gap-3">
+                      <div key={contact.id} className="p-3 sm:p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all bg-white">
+                        <div className="flex items-start justify-between gap-2 sm:gap-3">
                           <div className="flex-1 min-w-0">
                             <p className="font-extrabold tracking-tight text-[#3B2F2F] mb-1 truncate">
                               {contact.name || "이름 없음"}

@@ -31,43 +31,43 @@ export function ContactContent({ contacts, actionData, loaderError }: ContactCon
   return (
     <div className="h-full bg-transparent relative overflow-auto" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 relative z-10 pt-4 md:pt-14 lg:pt-[4.5rem]">
         {/* 성공/에러 메시지 */}
         {actionData?.success && (
-          <div className="mb-6 p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-3 shadow-md">
-            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-            <p className="text-green-800 font-medium">{actionData.message}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-2 sm:gap-3 shadow-md">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+            <p className="text-green-800 font-medium text-sm sm:text-base">{actionData.message}</p>
           </div>
         )}
         {actionData?.error && (
-          <div className="mb-6 p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-3 shadow-md">
-            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-red-800 font-medium">{actionData.error}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-2 sm:gap-3 shadow-md">
+            <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" />
+            <p className="text-red-800 font-medium text-sm sm:text-base">{actionData.error}</p>
           </div>
         )}
         {loaderError && (
-          <div className="mb-6 p-4 rounded-xl bg-yellow-50 border-2 border-yellow-200 flex items-center gap-3 shadow-md">
-            <XCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
-            <div>
-              <p className="text-yellow-800 font-medium">문의 조회 오류</p>
-              <p className="text-yellow-700 text-sm mt-1">{loaderError}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-yellow-50 border-2 border-yellow-200 flex items-start gap-2 sm:gap-3 shadow-md">
+            <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div className="min-w-0 flex-1">
+              <p className="text-yellow-800 font-medium text-sm sm:text-base">문의 조회 오류</p>
+              <p className="text-yellow-700 text-xs sm:text-sm mt-1">{loaderError}</p>
               <p className="text-yellow-600 text-xs mt-2">RLS 정책을 확인해주세요. 관리자 권한이 올바르게 설정되어 있는지 확인하세요.</p>
             </div>
           </div>
         )}
 
         {/* 헤더 */}
-        <header className="mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
-          <div className="px-6 py-5">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm">
-                <Mail className="w-7 h-7 text-white drop-shadow-sm" />
+        <header className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
+          <div className="px-4 py-4 sm:px-6 sm:py-5">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm flex-shrink-0">
+                <Mail className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow-sm" />
               </div>
-              <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>문의 관리</h1>
-                <p className="text-white/90 flex items-center gap-2 text-sm" style={{ lineHeight: '1.6' }}>
-                  <Sparkles className="w-4 h-4" />
-                  고객 문의를 관리하세요
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>문의 관리</h1>
+                <p className="text-white/90 flex items-center gap-2 text-xs sm:text-sm" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="truncate">고객 문의를 관리하세요</span>
                 </p>
               </div>
             </div>
@@ -75,37 +75,37 @@ export function ContactContent({ contacts, actionData, loaderError }: ContactCon
         </header>
 
           {/* 통계 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-4 sm:mt-6">
             <Card className="border border-[#FADADD]/30 shadow-md bg-white">
-              <CardContent className="p-4">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-[#3B2F2F]/60 mb-1">대기중</p>
-                    <p className="text-2xl font-bold text-yellow-600">{pendingCount}</p>
+                    <p className="text-xs sm:text-sm text-[#3B2F2F]/60 mb-1">대기중</p>
+                    <p className="text-xl sm:text-2xl font-bold text-yellow-600">{pendingCount}</p>
                   </div>
-                  <Clock className="w-8 h-8 text-yellow-400" />
+                  <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400 flex-shrink-0" />
                 </div>
               </CardContent>
             </Card>
             <Card className="border border-[#FADADD]/30 shadow-md bg-white">
-              <CardContent className="p-4">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-[#3B2F2F]/60 mb-1">처리중</p>
-                    <p className="text-2xl font-bold text-blue-600">{inProgressCount}</p>
+                    <p className="text-xs sm:text-sm text-[#3B2F2F]/60 mb-1">처리중</p>
+                    <p className="text-xl sm:text-2xl font-bold text-blue-600">{inProgressCount}</p>
                   </div>
-                  <Loader2 className="w-8 h-8 text-blue-400" />
+                  <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 flex-shrink-0" />
                 </div>
               </CardContent>
             </Card>
             <Card className="border border-[#FADADD]/30 shadow-md bg-white">
-              <CardContent className="p-4">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-[#3B2F2F]/60 mb-1">완료</p>
-                    <p className="text-2xl font-bold text-green-600">{completedCount}</p>
+                    <p className="text-xs sm:text-sm text-[#3B2F2F]/60 mb-1">완료</p>
+                    <p className="text-xl sm:text-2xl font-bold text-green-600">{completedCount}</p>
                   </div>
-                  <CheckCircle className="w-8 h-8 text-green-400" />
+                  <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-400 flex-shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -113,21 +113,21 @@ export function ContactContent({ contacts, actionData, loaderError }: ContactCon
 
         {/* 문의 목록 */}
         <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardHeader className="border-b border-gray-100 bg-gray-50">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                  <MessageSquare className="w-5 h-5 text-white" />
+          <CardHeader className="border-b border-gray-100 bg-gray-50 p-4 sm:p-6">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                  <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">문의 목록</CardTitle>
+                <CardTitle className="text-lg sm:text-xl font-extrabold tracking-tight text-[#3B2F2F] truncate">문의 목록</CardTitle>
               </div>
-              <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+              <Badge className="text-white px-2 py-1 sm:px-3 text-xs sm:text-sm flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
                 {contacts.length}개
               </Badge>
             </div>
           </CardHeader>
-          <CardContent className="p-5">
-            <div className="space-y-6">
+          <CardContent className="p-4 sm:p-5">
+            <div className="space-y-4 sm:space-y-6">
               {contacts.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gray-100">
@@ -138,17 +138,17 @@ export function ContactContent({ contacts, actionData, loaderError }: ContactCon
               ) : (
                 contacts.map((contact) => (
                   <Card key={contact.id} className="border border-gray-200 shadow-sm bg-white hover:shadow-md transition-all">
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="space-y-3 sm:space-y-4">
                         {/* 헤더 */}
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <User className="w-5 h-5 text-[#3B2F2F]/60" />
-                              <span className="font-semibold text-[#3B2F2F]">{contact.name}</span>
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
+                              <User className="w-4 h-4 sm:w-5 sm:h-5 text-[#3B2F2F]/60 flex-shrink-0" />
+                              <span className="font-semibold text-[#3B2F2F] text-sm sm:text-base">{contact.name}</span>
                               {getStatusBadge(contact.status)}
                             </div>
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-[#3B2F2F]/70">
+                            <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-[#3B2F2F]/70">
                               <div className="flex items-center gap-1">
                                 <Mail className="w-4 h-4" />
                                 <span>{contact.email}</span>
@@ -206,8 +206,8 @@ export function ContactContent({ contacts, actionData, loaderError }: ContactCon
                         </div>
 
                         {/* 액션 버튼 */}
-                        <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-[#FADADD]/30">
-                                <Form method="post" className="inline">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2 pt-3 sm:pt-4 border-t border-[#FADADD]/30">
+                                <Form method="post" className="inline w-full sm:w-auto">
                                   <input type="hidden" name="intent" value="contact-update-status" />
                                   <input type="hidden" name="id" value={contact.id} />
                             <select
@@ -217,7 +217,7 @@ export function ContactContent({ contacts, actionData, loaderError }: ContactCon
                                 const form = e.target.closest('form') as HTMLFormElement;
                                 form?.requestSubmit();
                               }}
-                              className="h-9 px-3 rounded-lg border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all bg-white text-[#3B2F2F] text-sm"
+                              className="w-full sm:w-auto h-9 px-3 rounded-lg border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all bg-white text-[#3B2F2F] text-sm"
                             >
                               <option value="pending">대기중</option>
                               <option value="in_progress">처리중</option>
@@ -225,14 +225,14 @@ export function ContactContent({ contacts, actionData, loaderError }: ContactCon
                               <option value="cancelled">취소</option>
                             </select>
                           </Form>
-                          <Form method="post" className="inline">
+                          <Form method="post" className="inline w-full sm:w-auto">
                             <input type="hidden" name="intent" value="delete-contact" />
                             <input type="hidden" name="id" value={contact.id} />
                             <Button
                               type="submit"
                               variant="destructive"
                               size="sm"
-                              className="shadow-md hover:shadow-lg transition-all"
+                              className="w-full sm:w-auto shadow-md hover:shadow-lg transition-all"
                             >
                               <Trash2 className="w-4 h-4 mr-1" />
                               삭제

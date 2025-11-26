@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router";
 import { Button } from "~/common/components/ui/button";
 import {
   Users,
@@ -11,15 +12,19 @@ import {
   ChevronRight,
   BarChart3,
   Menu,
+  X,
+  Home,
 } from "lucide-react";
 import clsx from "clsx";
 
 interface AdminSidebarProps {
   currentPage: string;
   onPageChange: (page: string) => void;
+  isMobile?: boolean;
+  onClose?: () => void;
 }
 
-export function AdminSidebar({ currentPage, onPageChange }: AdminSidebarProps) {
+export function AdminSidebar({ currentPage, onPageChange, isMobile = false, onClose }: AdminSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   const menuGroups = [
@@ -47,16 +52,19 @@ export function AdminSidebar({ currentPage, onPageChange }: AdminSidebarProps) {
   // 모든 메뉴 아이템을 평탄화 (collapsed 모드용)
   const allMenuItems = menuGroups.flatMap(group => group.items);
 
+  // 모바일에서는 항상 확장된 상태로 표시
+  const isExpanded = isMobile ? true : !collapsed;
+
   return (
     <div
       className={clsx(
-        "relative bg-[#FDF6F0] border-r border-gray-200/60 transition-all duration-300 flex flex-col z-10",
-        collapsed ? "w-16" : "w-80"
+        "relative bg-[#FDF6F0] border-r border-gray-200/60 transition-all duration-300 flex flex-col h-full w-full",
+        isMobile ? "w-80 shadow-2xl" : collapsed ? "w-16" : "w-80"
       )}
     >
       {/* 헤더 */}
       <div className="p-4 border-b border-gray-200/40 flex items-center justify-between bg-white/50 backdrop-blur-sm">
-        {!collapsed && (
+        {isExpanded && (
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(90deg, #A8C5F8, #F3C3E6)" }}>
               <Menu className="w-4 h-4 text-white" />
@@ -64,82 +72,137 @@ export function AdminSidebar({ currentPage, onPageChange }: AdminSidebarProps) {
             <h2 className="text-lg font-extrabold text-[#3B2F2F]">관리자</h2>
           </div>
         )}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setCollapsed(!collapsed)}
-          className="ml-auto"
-        >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </Button>
+        {isMobile ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="ml-auto"
+            aria-label="메뉴 닫기"
+          >
+            <X className="w-5 h-5 text-[#3B2F2F]" />
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setCollapsed(!collapsed)}
+            className="ml-auto"
+          >
+            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </Button>
+        )}
       </div>
 
       {/* 콘텐츠 영역 */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {collapsed ? (
-          <div className="space-y-2">
-            {allMenuItems.map((item, index) => {
-              const Icon = item.icon;
-              const isActive = currentPage === item.id;
-              // 그룹의 첫 번째 아이템이면 위에 Divider 추가 (첫 번째 그룹 제외)
-              const showDivider = index > 0 && menuGroups.some((group, groupIndex) => {
-                const prevGroupEndIndex = menuGroups.slice(0, groupIndex).reduce((sum, g) => sum + g.items.length, 0);
-                return index === prevGroupEndIndex;
-              });
-              
-              return (
-                <div key={item.id}>
-                  {showDivider && <div className="my-2 border-t border-gray-200" />}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onPageChange(item.id)}
-                    className={clsx(
-                      "w-full justify-center transition-colors rounded-lg",
-                      isActive ? "text-white" : "text-[#3B2F2F] hover:bg-white/60"
-                    )}
-                    style={isActive ? { background: "linear-gradient(90deg, #A8C5F8, #F3C3E6)" } : {}}
-                    title={item.label}
-                  >
-                    <Icon className="w-4 h-4" />
-                  </Button>
+      <div className="flex-1 overflow-y-auto p-4 flex flex-col">
+        <div className="flex-1">
+          {!isExpanded ? (
+            <div className="space-y-2">
+              {allMenuItems.map((item, index) => {
+                const Icon = item.icon;
+                const isActive = currentPage === item.id;
+                // 그룹의 첫 번째 아이템이면 위에 Divider 추가 (첫 번째 그룹 제외)
+                const showDivider = index > 0 && menuGroups.some((group, groupIndex) => {
+                  const prevGroupEndIndex = menuGroups.slice(0, groupIndex).reduce((sum, g) => sum + g.items.length, 0);
+                  return index === prevGroupEndIndex;
+                });
+                
+                return (
+                  <div key={item.id}>
+                    {showDivider && <div className="my-2 border-t border-gray-200" />}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        onPageChange(item.id);
+                        if (isMobile && onClose) {
+                          onClose();
+                        }
+                      }}
+                      className={clsx(
+                        "w-full justify-center transition-colors rounded-lg",
+                        isActive ? "text-white" : "text-[#3B2F2F] hover:bg-white/60"
+                      )}
+                      style={isActive ? { background: "linear-gradient(90deg, #A8C5F8, #F3C3E6)" } : {}}
+                      title={item.label}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {menuGroups.map((group, groupIndex) => (
+                <div key={groupIndex}>
+                  {groupIndex > 0 && (
+                    <div className="my-3 border-t border-gray-200" />
+                  )}
+                  <div className="space-y-1">
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = currentPage === item.id;
+                      return (
+                        <Button
+                          key={item.id}
+                          variant="ghost"
+                          size="lg"
+                          onClick={() => {
+                            onPageChange(item.id);
+                            if (isMobile && onClose) {
+                              onClose();
+                            }
+                          }}
+                          className={clsx(
+                            "w-full justify-start gap-3 transition-colors rounded-lg",
+                            isActive ? "text-white" : "text-[#3B2F2F] hover:bg-white/60"
+                          )}
+                          style={isActive ? { background: "linear-gradient(90deg, #A8C5F8, #F3C3E6)" } : {}}
+                        >
+                          <Icon className="w-5 h-5" />
+                          <span>{item.label}</span>
+                        </Button>
+                      );
+                    })}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="space-y-1">
-            {menuGroups.map((group, groupIndex) => (
-              <div key={groupIndex}>
-                {groupIndex > 0 && (
-                  <div className="my-3 border-t border-gray-200" />
-                )}
-                <div className="space-y-1">
-                  {group.items.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = currentPage === item.id;
-                    return (
-                      <Button
-                        key={item.id}
-                        variant="ghost"
-                        size="lg"
-                        onClick={() => onPageChange(item.id)}
-                        className={clsx(
-                          "w-full justify-start gap-3 transition-colors rounded-lg",
-                          isActive ? "text-white" : "text-[#3B2F2F] hover:bg-white/60"
-                        )}
-                        style={isActive ? { background: "linear-gradient(90deg, #A8C5F8, #F3C3E6)" } : {}}
-                      >
-                        <Icon className="w-5 h-5" />
-                        <span>{item.label}</span>
-                      </Button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 홈으로 가기 링크 */}
+        <div className="mt-auto pt-4 border-t border-gray-200/60">
+          {!isExpanded ? (
+            <Link
+              to="/"
+              onClick={() => {
+                if (isMobile && onClose) {
+                  onClose();
+                }
+              }}
+              className="flex items-center justify-center w-full p-2 rounded-lg text-[#3B2F2F] hover:bg-white/60 transition-colors"
+              title="홈으로 가기"
+            >
+              <Home className="w-4 h-4" />
+            </Link>
+          ) : (
+            <Link
+              to="/"
+              onClick={() => {
+                if (isMobile && onClose) {
+                  onClose();
+                }
+              }}
+              className="flex items-center gap-3 w-full p-3 rounded-lg text-[#3B2F2F] hover:bg-white/60 transition-colors"
+            >
+              <Home className="w-5 h-5" />
+              <span className="font-medium">홈으로 가기</span>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

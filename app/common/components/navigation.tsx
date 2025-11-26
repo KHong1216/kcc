@@ -76,6 +76,7 @@ export function Navigation() {
     const location = useLocation();
     const isHomePage = location.pathname === "/";
     const isEmotionPage = location.pathname === "/test/emotion";
+    const isAdminPage = location.pathname.startsWith("/admin");
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     
     const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -91,8 +92,8 @@ export function Navigation() {
         setMobileMenuOpen(false);
     };
     
-    // emotion 페이지에서는 네비게이션 숨기기
-    if (isEmotionPage) {
+    // emotion 페이지 또는 admin 페이지에서는 네비게이션 숨기기
+    if (isEmotionPage || isAdminPage) {
         return null;
     }
     

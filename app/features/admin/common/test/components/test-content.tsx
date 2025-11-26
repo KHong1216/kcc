@@ -92,33 +92,33 @@ export function TestContent({ responses, actionData }: TestContentProps) {
   return (
     <div className="h-full bg-transparent relative overflow-auto" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 relative z-10 pt-4 md:pt-14 lg:pt-[4.5rem]">
         {/* 성공/에러 메시지 */}
         {actionData?.success && (
-          <div className="mb-6 p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-3 shadow-md">
-            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-            <p className="text-green-800 font-medium">{actionData.message}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-2 sm:gap-3 shadow-md">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+            <p className="text-green-800 font-medium text-sm sm:text-base">{actionData.message}</p>
           </div>
         )}
         {actionData?.error && (
-          <div className="mb-6 p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-3 shadow-md">
-            <CheckCircle2 className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-red-800 font-medium">{actionData.error}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-2 sm:gap-3 shadow-md">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" />
+            <p className="text-red-800 font-medium text-sm sm:text-base">{actionData.error}</p>
           </div>
         )}
 
         {/* 헤더 */}
-        <header className="mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
-          <div className="px-6 py-5">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm">
-                <Heart className="w-7 h-7 text-white drop-shadow-sm" />
+        <header className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
+          <div className="px-4 py-4 sm:px-6 sm:py-5">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm flex-shrink-0">
+                <Heart className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow-sm" />
               </div>
-              <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>감정 실험 관리</h1>
-                <p className="text-white/90 flex items-center gap-2 text-sm" style={{ lineHeight: '1.6' }}>
-                  <Sparkles className="w-4 h-4" />
-                  감정 실험 응답 데이터를 확인하고 관리하세요
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>감정 실험 관리</h1>
+                <p className="text-white/90 flex items-center gap-2 text-xs sm:text-sm" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="truncate">감정 실험 응답 데이터를 확인하고 관리하세요</span>
                 </p>
               </div>
             </div>
@@ -127,28 +127,28 @@ export function TestContent({ responses, actionData }: TestContentProps) {
 
         {responses.length === 0 ? (
           <Card className="border border-gray-200 shadow-sm bg-white">
-            <CardContent className="p-16 text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center bg-gray-100">
-                <Heart className="w-10 h-10 text-gray-400" />
+            <CardContent className="p-8 sm:p-16 text-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-full flex items-center justify-center bg-gray-100">
+                <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
               </div>
-              <p className="text-[#3B2F2F] text-lg font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>응답 데이터가 없습니다.</p>
-              <p className="text-[#7A6666] text-sm mt-2 opacity-80" style={{ lineHeight: '1.6' }}>새로운 응답이 등록되면 여기에 표시됩니다</p>
+              <p className="text-[#3B2F2F] text-base sm:text-lg font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>응답 데이터가 없습니다.</p>
+              <p className="text-[#7A6666] text-xs sm:text-sm mt-2 opacity-80" style={{ lineHeight: '1.6' }}>새로운 응답이 등록되면 여기에 표시됩니다</p>
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {responses.map((r) => {
               const testType = getTestType(r);
               return (
               <Card key={r.id} className="overflow-hidden border border-gray-200 shadow-sm bg-white hover:shadow-md transition-all duration-300">
-                <CardHeader className="border-b border-gray-100 pb-4 bg-gray-50">
-                  <div className="flex items-center justify-between flex-wrap gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                        <User className="w-6 h-6 text-white" />
+                <CardHeader className="border-b border-gray-100 pb-3 sm:pb-4 bg-gray-50 p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                        <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
-                      <div>
-                        <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]" style={{ lineHeight: '1.6' }}>
+                      <div className="min-w-0 flex-1">
+                        <CardTitle className="text-lg sm:text-xl font-extrabold tracking-tight text-[#3B2F2F] truncate" style={{ lineHeight: '1.6' }}>
                           {r.name || "이름 없음"}
                         </CardTitle>
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -162,7 +162,7 @@ export function TestContent({ responses, actionData }: TestContentProps) {
                         </div>
                       </div>
                     </div>
-                    <div className="text-xs text-[#7A6666] opacity-80">
+                    <div className="text-xs text-[#7A6666] opacity-80 flex-shrink-0">
                       {r.created_at ? new Date(r.created_at).toLocaleDateString('ko-KR', { 
                         year: 'numeric', 
                         month: 'long', 
@@ -173,15 +173,15 @@ export function TestContent({ responses, actionData }: TestContentProps) {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-5">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <CardContent className="p-4 sm:p-5">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     {/* 왼쪽: 사용자 정보 + 경품 정보 */}
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-3 sm:gap-4">
                       {/* 기본 정보 */}
-                      <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                      <div className="p-3 sm:p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
                         <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
-                          <User className="w-5 h-5 text-gray-500" />
-                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">기본 정보</p>
+                          <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
+                          <p className="text-xs sm:text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">기본 정보</p>
                         </div>
                         <div className="grid grid-cols-2 gap-4 flex-1">
                           <div>
@@ -208,10 +208,10 @@ export function TestContent({ responses, actionData }: TestContentProps) {
 
                       {/* 경품 정보 (감정 연구 실험만) */}
                       {testType === "emotion-research" && (
-                        <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                        <div className="p-3 sm:p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
                           <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
-                            <Sparkles className="w-5 h-5 text-gray-500" />
-                            <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">경품 정보</p>
+                            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
+                            <p className="text-xs sm:text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">경품 정보</p>
                           </div>
                           <div className="space-y-3 flex-1 flex flex-col justify-center">
                             <div>
@@ -226,10 +226,10 @@ export function TestContent({ responses, actionData }: TestContentProps) {
 
                       {/* 세션 예약 정보 (KOI 캐릭터 테스트만) */}
                       {testType === "koi-character" && (
-                        <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                        <div className="p-3 sm:p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
                           <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
-                            <Calendar className="w-5 h-5 text-gray-500" />
-                            <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">세션 예약 정보</p>
+                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
+                            <p className="text-xs sm:text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">세션 예약 정보</p>
                           </div>
                           <div className="space-y-3 flex-1 flex flex-col justify-center">
                             <div>
@@ -258,12 +258,12 @@ export function TestContent({ responses, actionData }: TestContentProps) {
                     </div>
 
                     {/* 오른쪽: 감정 정보 + 상태 관리 */}
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-3 sm:gap-4">
                       {/* 감정 정보 */}
-                      <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                      <div className="p-3 sm:p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
                         <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
-                          <Heart className="w-5 h-5 text-gray-500" />
-                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">감정 정보</p>
+                          <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
+                          <p className="text-xs sm:text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">감정 정보</p>
                         </div>
                         <div className="space-y-4 flex-1">
                           <div>
@@ -325,20 +325,20 @@ export function TestContent({ responses, actionData }: TestContentProps) {
                       </div>
 
                       {/* 상태 관리 */}
-                      <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                      <div className="p-3 sm:p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
                         <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
-                          <Calendar className="w-5 h-5 text-gray-500" />
-                          <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">상태 관리</p>
+                          <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 flex-shrink-0" />
+                          <p className="text-xs sm:text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">상태 관리</p>
                         </div>
-                        <Form method="post" className="space-y-4 flex-1 flex flex-col justify-center">
+                        <Form method="post" className="space-y-3 sm:space-y-4 flex-1 flex flex-col justify-center">
                           <input type="hidden" name="intent" value="test-update-status" />
                           <input type="hidden" name="id" value={r.id} />
                           <div>
-                            <div className="flex items-center gap-2 mb-3">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-3">
                               <select 
                                 name="status" 
                                 defaultValue={r.status || "pending"} 
-                                className="flex-1 h-11 text-sm border-2 border-[#FADADD]/50 rounded-xl px-4 bg-white focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all text-[#3B2F2F] font-medium"
+                                className="flex-1 h-10 sm:h-11 text-sm border-2 border-[#FADADD]/50 rounded-xl px-3 sm:px-4 bg-white focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all text-[#3B2F2F] font-medium"
                               >
                                 <option value="pending">대기</option>
                                 <option value="confirmed">확정</option>
@@ -348,7 +348,7 @@ export function TestContent({ responses, actionData }: TestContentProps) {
                               <Button 
                                 type="submit" 
                                 size="sm" 
-                                className="h-11 text-white shadow-md hover:shadow-lg transition-all px-5 hover:opacity-90"
+                                className="h-10 sm:h-11 text-white shadow-md hover:shadow-lg transition-all px-4 sm:px-5 hover:opacity-90 w-full sm:w-auto"
                                 style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}
                               >
                                 변경

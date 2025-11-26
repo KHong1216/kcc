@@ -39,33 +39,33 @@ export function CommunityContent({ notices, reviews, actionData }: CommunityCont
   return (
     <div className="h-full bg-transparent relative overflow-auto" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 relative z-10 pt-4 md:pt-14 lg:pt-[4.5rem]">
         {/* 성공/에러 메시지 */}
         {actionData?.success && (
-          <div className="mb-6 p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-3 shadow-md">
-            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-            <p className="text-green-800 font-medium">{actionData.message}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-2 sm:gap-3 shadow-md">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+            <p className="text-green-800 font-medium text-sm sm:text-base">{actionData.message}</p>
           </div>
         )}
         {actionData?.error && (
-          <div className="mb-6 p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-3 shadow-md">
-            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-red-800 font-medium">{actionData.error}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-2 sm:gap-3 shadow-md">
+            <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" />
+            <p className="text-red-800 font-medium text-sm sm:text-base">{actionData.error}</p>
           </div>
         )}
 
         {/* 헤더 */}
-        <header className="mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
-          <div className="px-6 py-5">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm">
-                <MessageSquare className="w-7 h-7 text-white drop-shadow-sm" />
+        <header className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
+          <div className="px-4 py-4 sm:px-6 sm:py-5">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm flex-shrink-0">
+                <MessageSquare className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow-sm" />
               </div>
-              <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>커뮤니티 관리</h1>
-                <p className="text-white/90 flex items-center gap-2 text-sm" style={{ lineHeight: '1.6' }}>
-                  <Sparkles className="w-4 h-4" />
-                  공지사항과 리뷰를 관리하세요
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>커뮤니티 관리</h1>
+                <p className="text-white/90 flex items-center gap-2 text-xs sm:text-sm" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="truncate">공지사항과 리뷰를 관리하세요</span>
                 </p>
               </div>
             </div>
@@ -73,17 +73,17 @@ export function CommunityContent({ notices, reviews, actionData }: CommunityCont
         </header>
 
         {/* 공지 작성 폼 */}
-        <Card className="mb-6 border border-gray-200 shadow-sm bg-white">
-          <CardHeader className="border-b border-gray-100 bg-gray-50">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                <Bell className="w-5 h-5 text-white" />
+        <Card className="mb-4 sm:mb-6 border border-gray-200 shadow-sm bg-white">
+          <CardHeader className="border-b border-gray-100 bg-gray-50 p-4 sm:p-6">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">새 공지 작성</CardTitle>
+              <CardTitle className="text-lg sm:text-xl font-extrabold tracking-tight text-[#3B2F2F]">새 공지 작성</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="p-5">
-            <Form method="post" className="space-y-5" replace>
+          <CardContent className="p-4 sm:p-5">
+            <Form method="post" className="space-y-4 sm:space-y-5" replace>
               <input type="hidden" name="intent" value="create-notice" />
               <div>
                 <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
@@ -93,7 +93,7 @@ export function CommunityContent({ notices, reviews, actionData }: CommunityCont
                   name="title" 
                   placeholder="공지 제목을 입력하세요" 
                   required 
-                  className="w-full h-11 rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white text-[#3B2F2F]"
+                  className="w-full h-10 sm:h-11 rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white text-[#3B2F2F]"
                 />
               </div>
               <div>
@@ -103,12 +103,12 @@ export function CommunityContent({ notices, reviews, actionData }: CommunityCont
                 <Textarea 
                   name="content" 
                   placeholder="공지 내용을 입력하세요" 
-                  rows={5} 
+                  rows={4}
                   required 
                   className="w-full rounded-xl border-2 border-[#FADADD]/50 focus:border-[#A8C5F8] focus:ring-2 focus:ring-[#E8F4FB] transition-all duration-200 bg-white resize-none text-[#3B2F2F]"
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">카테고리</label>
                   <select 
@@ -157,23 +157,23 @@ export function CommunityContent({ notices, reviews, actionData }: CommunityCont
         </Card>
 
         {/* 공지사항 및 리뷰 목록 */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {/* 공지사항 */}
           <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-md transition-all duration-300">
-            <CardHeader className="border-b border-gray-100 bg-gray-50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                    <Bell className="w-5 h-5 text-white" />
+            <CardHeader className="border-b border-gray-100 bg-gray-50 p-4 sm:p-6">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                    <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">공지사항</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl font-extrabold tracking-tight text-[#3B2F2F] truncate">공지사항</CardTitle>
                 </div>
-                <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                <Badge className="text-white px-2 py-1 sm:px-3 text-xs sm:text-sm flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
                   {notices.length}개
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-5">
+            <CardContent className="p-4 sm:p-5">
               <div className="space-y-4">
                 {notices.length === 0 ? (
                   <div className="text-center py-12">
@@ -283,20 +283,20 @@ export function CommunityContent({ notices, reviews, actionData }: CommunityCont
 
           {/* 리뷰 */}
           <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-md transition-all duration-300">
-            <CardHeader className="border-b border-gray-100 bg-gray-50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
-                    <Star className="w-5 h-5 text-white" />
+            <CardHeader className="border-b border-gray-100 bg-gray-50 p-4 sm:p-6">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                    <Star className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">리뷰</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl font-extrabold tracking-tight text-[#3B2F2F] truncate">리뷰</CardTitle>
                 </div>
-                <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                <Badge className="text-white px-2 py-1 sm:px-3 text-xs sm:text-sm flex-shrink-0" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
                   {reviews.length}개
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-5">
+            <CardContent className="p-4 sm:p-5">
               <div className="space-y-4">
                 {reviews.length === 0 ? (
                   <div className="text-center py-12">

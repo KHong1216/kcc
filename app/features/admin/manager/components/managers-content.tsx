@@ -33,33 +33,33 @@ export function ManagersContent({ managers, actionData }: ManagersContentProps) 
   return (
     <div className="h-full bg-transparent relative overflow-auto" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 relative z-10 pt-4 md:pt-14 lg:pt-[4.5rem]">
         {/* 성공/에러 메시지 */}
         {actionData?.success && (
-          <div className="mb-6 p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-3 shadow-md">
-            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-            <p className="text-green-800 font-medium">{actionData.message}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-green-50 border-2 border-green-200 flex items-center gap-2 sm:gap-3 shadow-md">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+            <p className="text-green-800 font-medium text-sm sm:text-base">{actionData.message}</p>
           </div>
         )}
         {actionData?.error && (
-          <div className="mb-6 p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-3 shadow-md">
-            <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-red-800 font-medium">{actionData.error}</p>
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-2 sm:gap-3 shadow-md">
+            <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" />
+            <p className="text-red-800 font-medium text-sm sm:text-base">{actionData.error}</p>
           </div>
         )}
 
         {/* 헤더 */}
-        <header className="mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
-          <div className="px-6 py-5">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm">
-                <Users className="w-7 h-7 text-white drop-shadow-sm" />
+        <header className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
+          <div className="px-4 py-4 sm:px-6 sm:py-5">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm flex-shrink-0">
+                <Users className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow-sm" />
               </div>
-              <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>매니저 관리</h1>
-                <p className="text-white/90 flex items-center gap-2 text-sm" style={{ lineHeight: '1.6' }}>
-                  <Sparkles className="w-4 h-4" />
-                  매니저 정보를 추가하고 활성화 상태를 관리하세요
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>매니저 관리</h1>
+                <p className="text-white/90 flex items-center gap-2 text-xs sm:text-sm" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="truncate">매니저 정보를 추가하고 활성화 상태를 관리하세요</span>
                 </p>
               </div>
             </div>
@@ -67,20 +67,20 @@ export function ManagersContent({ managers, actionData }: ManagersContentProps) 
         </header>
 
         {/* 매니저 추가 폼 */}
-        <Card className="mb-6 border border-gray-200 shadow-sm bg-white">
-          <CardHeader className="border-b border-gray-100 bg-gray-50">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                <Plus className="w-5 h-5 text-white" />
+        <Card className="mb-4 sm:mb-6 border border-gray-200 shadow-sm bg-white">
+          <CardHeader className="border-b border-gray-100 bg-gray-50 p-4 sm:p-6">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">새 매니저 추가</CardTitle>
+              <CardTitle className="text-lg sm:text-xl font-extrabold tracking-tight text-[#3B2F2F]">새 매니저 추가</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="p-5">
-            <Form method="post" encType="multipart/form-data" className="space-y-6">
+          <CardContent className="p-4 sm:p-5">
+            <Form method="post" encType="multipart/form-data" className="space-y-4 sm:space-y-6">
               <input type="hidden" name="intent" value="add" />
               
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-semibold text-[#3B2F2F] mb-2">
@@ -165,10 +165,10 @@ export function ManagersContent({ managers, actionData }: ManagersContentProps) 
 
         {/* 매니저 목록 */}
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-extrabold tracking-tight text-[#3B2F2F]">매니저 목록</h2>
-              <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+          <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#3B2F2F] truncate">매니저 목록</h2>
+              <Badge className="text-white px-2 py-1 sm:px-3 text-xs sm:text-sm flex-shrink-0" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
                 {managers.length}명
               </Badge>
             </div>
@@ -176,29 +176,29 @@ export function ManagersContent({ managers, actionData }: ManagersContentProps) 
 
           {managers.length === 0 ? (
             <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardContent className="p-16 text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center bg-gray-100">
-                    <Users className="w-10 h-10 text-gray-400" />
+                <CardContent className="p-8 sm:p-16 text-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-full flex items-center justify-center bg-gray-100">
+                    <Users className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
                   </div>
-                  <p className="text-[#3B2F2F] text-lg font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>등록된 매니저가 없습니다.</p>
-                  <p className="text-[#7A6666] text-sm mt-2 opacity-80" style={{ lineHeight: '1.6' }}>새 매니저를 추가해보세요</p>
+                  <p className="text-[#3B2F2F] text-base sm:text-lg font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>등록된 매니저가 없습니다.</p>
+                  <p className="text-[#7A6666] text-xs sm:text-sm mt-2 opacity-80" style={{ lineHeight: '1.6' }}>새 매니저를 추가해보세요</p>
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {managers.map(m => (
                   <Card key={m.id} className="overflow-hidden hover:shadow-md transition-all duration-300 h-full flex flex-col border border-gray-200 shadow-sm bg-white group">
-                    <CardHeader className="border-b border-gray-100 pb-4 flex-shrink-0 relative overflow-hidden bg-gray-50">
+                    <CardHeader className="border-b border-gray-100 pb-3 sm:pb-4 flex-shrink-0 relative overflow-hidden bg-gray-50 p-4 sm:p-6">
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(168,197,248,0.1), rgba(243,195,230,0.1))' }}></div>
-                    <div className="flex items-start justify-between relative z-10">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg mb-2 font-extrabold tracking-tight text-[#3B2F2F]" style={{ lineHeight: '1.6' }}>{m.name}</CardTitle>
+                    <div className="flex items-start justify-between relative z-10 gap-3">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-base sm:text-lg mb-2 font-extrabold tracking-tight text-[#3B2F2F]" style={{ lineHeight: '1.6' }}>{m.name}</CardTitle>
                         {m.introduction && (
-                          <p className="text-sm text-[#3B2F2F]/85" style={{ lineHeight: '1.6' }}>{m.introduction}</p>
+                          <p className="text-xs sm:text-sm text-[#3B2F2F]/85 line-clamp-2" style={{ lineHeight: '1.6' }}>{m.introduction}</p>
                         )}
                       </div>
                       {m.imageUrl && (
-                        <div className="w-20 h-20 rounded-2xl bg-gray-200 flex items-center justify-center ml-3 flex-shrink-0 overflow-hidden border-3 border-white shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden border-3 border-white shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                           <img 
                             src={m.imageUrl} 
                             alt={m.name}
@@ -211,15 +211,15 @@ export function ManagersContent({ managers, actionData }: ManagersContentProps) 
                         </div>
                       )}
                       {!m.imageUrl && m.image && (
-                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center ml-3 flex-shrink-0 border-3 border-white shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                          <span className="text-2xl font-bold text-white">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center flex-shrink-0 border-3 border-white shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                          <span className="text-xl sm:text-2xl font-bold text-white">
                             {m.name.charAt(0)}
                           </span>
                         </div>
                       )}
                     </div>
                   </CardHeader>
-                  <CardContent className="p-6 flex-1 flex flex-col space-y-4">
+                  <CardContent className="p-4 sm:p-6 flex-1 flex flex-col space-y-3 sm:space-y-4">
                     {/* 정보 표시 */}
                     <div className="space-y-3 text-sm flex-1">
                       {m.graduation && (
@@ -260,7 +260,7 @@ export function ManagersContent({ managers, actionData }: ManagersContentProps) 
                     </div>
 
                     {/* 액션 버튼 - 항상 하단 고정 */}
-                    <div className="pt-4 border-t border-[#FADADD]/30 mt-auto flex-shrink-0 space-y-2">
+                    <div className="pt-3 sm:pt-4 border-t border-[#FADADD]/30 mt-auto flex-shrink-0 space-y-2">
                       <div className="grid grid-cols-2 gap-2">
                         <Button
                           variant="outline"
