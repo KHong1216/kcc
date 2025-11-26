@@ -38,7 +38,7 @@ export function Footer({ className }: FooterProps) {
                   to="/programs/essay"
                   className="text-[#5A4A4A] hover:text-[#3B2F2F] transition-colors"
                 >
-                  에세이 캠프
+                  아무, 말
                 </Link>
               </li>
               <li>
@@ -46,7 +46,7 @@ export function Footer({ className }: FooterProps) {
                   to="/programs/love"
                   className="text-[#5A4A4A] hover:text-[#3B2F2F] transition-colors"
                 >
-                  연애 캠프
+                  연애의 발견
                 </Link>
               </li>
               <li>
@@ -54,7 +54,7 @@ export function Footer({ className }: FooterProps) {
                   to="/programs/photo"
                   className="text-[#5A4A4A] hover:text-[#3B2F2F] transition-colors"
                 >
-                  사진 프로젝트
+                  클릭무드
                 </Link>
               </li>
             </ul>

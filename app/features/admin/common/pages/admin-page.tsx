@@ -22,6 +22,20 @@ import client from "../../../../lib/supa-client";
 import { getAdminStats } from "../queries";
 import type { Route } from "./+types/admin-page";
 import { useState } from "react";
+import { AdminLayout } from "../components/admin-layout";
+import { StatsCards } from "../components/stats-cards";
+import { getAllManagers, type ManagerWithImageUrl, createManager, updateManager, deleteManager, toggleManagerActive, toggleManagerRepresentative, uploadManagerImage, deleteManagerImage, getManagerImagePath, generateImageFileName } from "../../manager/queries";
+import { getAllReservations, updateReservationStatus, updateReservationConfirm } from "../../reservation/queries";
+import { getAllNotices, getAllReviews, createNotice, updateNotice, deleteNotice, deleteReview } from "../../community/queries";
+import { getAllContacts, updateContact, deleteContact } from "../../contact/queries";
+import { getAllPrograms, updateProgram, toggleProgramActive } from "../../programs/queries";
+import { ManagersContent } from "../../manager/components/managers-content";
+import { ReservationsContent } from "../../reservation/components/reservations-content";
+import { CommunityContent } from "../../community/components/community-content";
+import { ContactContent } from "../../contact/components/contact-content";
+import { ProgramsContent } from "../../programs/components/programs-content";
+import { TestContent } from "../test/components/test-content";
+import { useActionData } from "react-router";
 
 export const meta: MetaFunction = () => [
   { title: "관리자 대시보드 | 코이창작소" },
@@ -39,13 +53,9 @@ export async function loader({ request }: Route.LoaderArgs) {
     });
   }
 
-  // Promise.all로 병렬 처리
-  const [profileResult, statsResults] = await Promise.all([
-    client.from("profiles").select("role").eq("email", session.user.email).single(),
-    getAdminStats(),
-  ]);
-
   // 관리자 권한 확인
+  const profileResult = await client.from("profiles").select("role").eq("email", session.user.email).single();
+
   if (profileResult.error || profileResult.data?.role !== "admin") {
     return new Response(null, {
       status: 302,
@@ -53,25 +63,91 @@ export async function loader({ request }: Route.LoaderArgs) {
     });
   }
 
+  // 모든 데이터를 병렬로 로드
+  const [
+    statsResults,
+    managersResult,
+    reservationsResult,
+    noticesResult,
+    reviewsResult,
+    contactsResult,
+    programsResult,
+    testResponsesResult,
+  ] = await Promise.all([
+    getAdminStats(),
+    getAllManagers(),
+    getAllReservations(),
+    getAllNotices(),
+    getAllReviews(),
+    getAllContacts(session),
+    getAllPrograms(),
+    client.from("emotion_test_responses")
+      .select("id, emotion, emotion_details, reason_category, name, age, job, contact, day_mood, need_type, privacy_agreed, status, gift, character_name, day, time, created_at")
+      .order("created_at", { ascending: false }),
+  ]);
+
   // 통계 데이터 처리
-  const [managerCountResult, reservationCountResult, communityCountResult, contactCountResult, testCountResult] = statsResults;
+  const [activeManagerCountResult, inactiveManagerCountResult, reservationCountResult, communityCountResult, contactCountResult, testCountResult] = statsResults;
+
+  // 매니저 이미지 URL 변환
+  const managersWithImageUrl: ManagerWithImageUrl[] = (managersResult.data ?? []).map(manager => ({
+    ...manager,
+    qualifications: Array.isArray(manager.qualifications) ? manager.qualifications : [],
+    career: Array.isArray(manager.career) ? manager.career : [],
+    imageUrl: manager.image 
+      ? client.storage.from("manager-images").getPublicUrl(manager.image).data.publicUrl
+      : null
+  }));
+
+  // 최근 데이터 가져오기 (최대 5개)
+  const recentReservations = (reservationsResult.data ?? []).slice(0, 5);
+  const recentContacts = (contactsResult.data ?? []).slice(0, 5);
 
   return {
     admin: session.user,
     stats: {
-      managerCount: managerCountResult.count || 0,
+      activeManagerCount: activeManagerCountResult.count || 0,
+      inactiveManagerCount: inactiveManagerCountResult.count || 0,
       reservationCount: reservationCountResult.count || 0,
       communityCount: communityCountResult.count || 0,
       contactCount: contactCountResult.count || 0,
       testCount: testCountResult.count || 0
-    }
+    },
+    recentReservations,
+    recentContacts,
+    // 각 페이지 데이터
+    managers: managersWithImageUrl,
+    reservations: reservationsResult.data ?? [],
+    notices: noticesResult.data ?? [],
+    reviews: reviewsResult.data ?? [],
+    contacts: contactsResult.data ?? [],
+    programs: programsResult.data ?? [],
+    testResponses: testResponsesResult.data ?? [],
   };
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  const form = await request.formData();
+  const { data: { session } } = await client.auth.getSession();
+  if (!session) {
+    return { error: "로그인이 필요합니다." };
+  }
 
-  if (form.get("intent") === "logout") {
+  // 관리자 권한 확인
+  const profileResult = await client
+    .from("profiles")
+    .select("role")
+    .eq("email", session.user.email)
+    .single();
+
+  if (profileResult.error || profileResult.data?.role !== "admin") {
+    return { error: "관리자 권한이 없습니다." };
+  }
+
+  const form = await request.formData();
+  const intent = String(form.get("intent") || "");
+
+  // 로그아웃 처리
+  if (intent === "logout") {
     await client.auth.signOut();
     return new Response(null, {
       status: 302,
@@ -79,12 +155,278 @@ export async function action({ request }: Route.ActionArgs) {
     });
   }
 
+  try {
+    // ==================== 매니저 관리 ====================
+    if (intent === "add") {
+      let imagePath = "";
+      const imageFile = form.get("image") as File | null;
+      if (imageFile && imageFile.size > 0) {
+        const filePath = generateImageFileName(imageFile.name);
+        const uploadResult = await uploadManagerImage(imageFile, filePath);
+        if (uploadResult.error) {
+          return { error: "이미지 업로드에 실패했습니다." };
+        }
+        imagePath = filePath;
+      }
+      const createResult = await createManager({
+        name: String(form.get("name") || ""),
+        image: imagePath || null,
+        introduction: String(form.get("introduction") || ""),
+        graduation: String(form.get("graduation") || ""),
+        qualifications: String(form.get("qualifications") || "").split(",").map((s) => s.trim()).filter(Boolean),
+        career: String(form.get("career") || "").split(",").map((s) => s.trim()).filter(Boolean),
+        specialty: String(form.get("specialty") || ""),
+        description: String(form.get("description") || ""),
+        is_active: true,
+        is_representative: false,
+      });
+      if (createResult.error) {
+        return { error: "매니저 추가에 실패했습니다." };
+      }
+      return { success: true, message: "매니저가 성공적으로 추가되었습니다." };
+    }
+
+    if (intent === "update") {
+      const id = Number(form.get("id"));
+      const existingImageResult = await getManagerImagePath(id);
+      let imagePath = existingImageResult.data?.image || "";
+      const imageFile = form.get("image") as File | null;
+      if (imageFile && imageFile.size > 0) {
+        if (existingImageResult.data?.image) {
+          await deleteManagerImage(existingImageResult.data.image);
+        }
+        const filePath = generateImageFileName(imageFile.name);
+        const uploadResult = await uploadManagerImage(imageFile, filePath);
+        if (uploadResult.error) {
+          return { error: "이미지 업로드에 실패했습니다." };
+        }
+        imagePath = filePath;
+      }
+      const updateResult = await updateManager({
+        id,
+        name: String(form.get("name") || ""),
+        image: imagePath || null,
+        introduction: String(form.get("introduction") || ""),
+        graduation: String(form.get("graduation") || ""),
+        qualifications: String(form.get("qualifications") || "").split(",").map((s) => s.trim()).filter(Boolean),
+        career: String(form.get("career") || "").split(",").map((s) => s.trim()).filter(Boolean),
+        specialty: String(form.get("specialty") || ""),
+        description: String(form.get("description") || ""),
+      });
+      if (updateResult.error) {
+        return { error: "매니저 수정에 실패했습니다." };
+      }
+      return { success: true, message: "매니저가 성공적으로 수정되었습니다." };
+    }
+
+    if (intent === "delete") {
+      const id = Number(form.get("id"));
+      const imageResult = await getManagerImagePath(id);
+      const deleteResult = await deleteManager(id);
+      if (deleteResult.error) {
+        return { error: "매니저 삭제에 실패했습니다." };
+      }
+      if (imageResult.data?.image) {
+        await deleteManagerImage(imageResult.data.image);
+      }
+      return { success: true, message: "매니저가 성공적으로 삭제되었습니다." };
+    }
+
+    if (intent === "toggle-active") {
+      const id = Number(form.get("id"));
+      const is_active = String(form.get("is_active")) === "true";
+      const result = await toggleManagerActive(id, is_active);
+      if (result.error) {
+        return { error: "상태 변경에 실패했습니다." };
+      }
+      return { success: true, message: "상태가 변경되었습니다." };
+    }
+
+    if (intent === "toggle-rep") {
+      const id = Number(form.get("id"));
+      const is_representative = String(form.get("is_representative")) === "true";
+      const result = await toggleManagerRepresentative(id, is_representative);
+      if (result.error) {
+        return { error: "대표 지정 변경에 실패했습니다." };
+      }
+      return { success: true, message: "대표 지정이 변경되었습니다." };
+    }
+
+    // ==================== 예약 관리 ====================
+    if (intent === "reservation-update-status") {
+      const id = String(form.get("id") || "");
+      const status = String(form.get("status") || "") as 'pending' | 'confirmed' | 'completed' | 'cancelled';
+      if (!id || !status) {
+        return { error: "ID와 상태가 필요합니다." };
+      }
+      const result = await updateReservationStatus({ id, status });
+      if (result.error) {
+        return { error: result.error.message || "상태 변경에 실패했습니다." };
+      }
+      return { success: true, message: "상태가 변경되었습니다." };
+    }
+
+    if (intent === "reservation-update-confirm") {
+      const id = String(form.get("id") || "");
+      const dateRaw = form.get("confirmed_date");
+      const timeRaw = form.get("confirmed_time");
+      if (!id) {
+        return { error: "ID가 필요합니다." };
+      }
+      const confirmed_date = dateRaw && String(dateRaw).trim() ? String(dateRaw).trim() : null;
+      const confirmed_time = timeRaw && String(timeRaw).trim() ? String(timeRaw).trim() : null;
+      const result = await updateReservationConfirm({ id, confirmed_date, confirmed_time });
+      if (result.error) {
+        return { error: result.error.message || "확정 일시 저장에 실패했습니다." };
+      }
+      return { success: true, message: "확정 일시가 저장되었습니다." };
+    }
+
+    // ==================== 커뮤니티 관리 ====================
+    if (intent === "create-notice") {
+      const result = await createNotice({
+        title: String(form.get("title") || ""),
+        content: String(form.get("content") || ""),
+        category: String(form.get("category") || "기타"),
+        is_important: String(form.get("is_important")) === "true",
+        author: String(form.get("author") || "관리자"),
+      });
+      if (result.error) {
+        return { error: "공지사항 작성에 실패했습니다." };
+      }
+      return { success: true, message: "공지사항이 성공적으로 작성되었습니다." };
+    }
+
+    if (intent === "update-notice") {
+      const result = await updateNotice({
+        id: String(form.get("id") || ""),
+        title: String(form.get("title") || ""),
+        content: String(form.get("content") || ""),
+        category: String(form.get("category") || "기타"),
+        is_important: String(form.get("is_important")) === "true",
+      });
+      if (result.error) {
+        return { error: "공지사항 수정에 실패했습니다." };
+      }
+      return { success: true, message: "공지사항이 성공적으로 수정되었습니다." };
+    }
+
+    if (intent === "delete-notice") {
+      const result = await deleteNotice(String(form.get("id") || ""));
+      if (result.error) {
+        return { error: "공지사항 삭제에 실패했습니다." };
+      }
+      return { success: true, message: "공지사항이 성공적으로 삭제되었습니다." };
+    }
+
+    if (intent === "delete-review") {
+      const result = await deleteReview(String(form.get("id") || ""));
+      if (result.error) {
+        return { error: "리뷰 삭제에 실패했습니다." };
+      }
+      return { success: true, message: "리뷰가 성공적으로 삭제되었습니다." };
+    }
+
+    // ==================== 문의 관리 ====================
+    if (intent === "contact-update-status") {
+      const id = String(form.get("id") || "");
+      const status = String(form.get("status") || "") as 'pending' | 'in_progress' | 'completed' | 'cancelled';
+      const result = await updateContact({ id, status });
+      if (result.error) {
+        return { error: "문의 상태 변경에 실패했습니다." };
+      }
+      return { success: true, message: "문의 상태가 변경되었습니다." };
+    }
+
+    if (intent === "contact-update-notes") {
+      const id = String(form.get("id") || "");
+      const admin_notes = String(form.get("admin_notes") || "");
+      const result = await updateContact({ id, admin_notes: admin_notes || null });
+      if (result.error) {
+        return { error: "관리자 메모 저장에 실패했습니다." };
+      }
+      return { success: true, message: "관리자 메모가 저장되었습니다." };
+    }
+
+    if (intent === "delete-contact") {
+      const result = await deleteContact(String(form.get("id") || ""));
+      if (result.error) {
+        return { error: "문의 삭제에 실패했습니다." };
+      }
+      return { success: true, message: "문의가 삭제되었습니다." };
+    }
+
+    // ==================== 프로젝트 관리 ====================
+    if (intent === "update" && form.get("id") && !String(form.get("id")).includes("-")) {
+      const id = String(form.get("id") || "");
+      const title = String(form.get("title") || "");
+      if (!title.trim()) {
+        return { error: "제목은 필수입니다." };
+      }
+      const result = await updateProgram({
+        id,
+        title: title.trim(),
+        description: String(form.get("description") || ""),
+        duration: String(form.get("duration") || ""),
+        target_audience: String(form.get("target_audience") || ""),
+        icon: String(form.get("icon") || ""),
+        badge: String(form.get("badge") || ""),
+      });
+      if (result.error) {
+        return { error: "프로그램 수정에 실패했습니다." };
+      }
+      return { success: true, message: "프로그램이 성공적으로 수정되었습니다." };
+    }
+
+    if (intent === "toggle-active" && form.get("id") && !String(form.get("id")).includes("-")) {
+      const id = String(form.get("id") || "");
+      const isActive = String(form.get("is_active")) === "true";
+      const result = await toggleProgramActive(id, isActive);
+      if (result.error) {
+        return { error: "상태 변경에 실패했습니다." };
+      }
+      return { success: true, message: "상태가 변경되었습니다." };
+    }
+
+    // ==================== 테스트 관리 ====================
+    if (intent === "test-update-status") {
+      const id = String(form.get("id") || "");
+      const status = String(form.get("status") || "") as 'pending' | 'confirmed' | 'completed' | 'cancelled';
+      if (!id || !status) {
+        return { error: "ID와 상태가 필요합니다." };
+      }
+      const { error } = await client
+        .from("emotion_test_responses")
+        .update({ status })
+        .eq("id", id);
+      if (error) {
+        return { error: error.message || "상태 변경에 실패했습니다." };
+      }
+      return { success: true, message: "상태가 변경되었습니다." };
+  }
+
   return { ok: true };
+  } catch (error) {
+    console.error("[action] error:", error);
+    return { error: "작업 중 오류가 발생했습니다." };
+  }
 }
 
 export default function AdminPage({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
-  const { admin, stats } = loaderData as { admin: any; stats: { managerCount: number; reservationCount: number; communityCount: number; contactCount: number; testCount: number } };
+  const { admin, stats, managers, reservations, notices, reviews, contacts, programs, testResponses, recentReservations, recentContacts } = loaderData as {
+    admin: any;
+    stats: { activeManagerCount: number; inactiveManagerCount: number; reservationCount: number; communityCount: number; contactCount: number; testCount: number };
+    managers: ManagerWithImageUrl[];
+    reservations: any[];
+    notices: any[];
+    reviews: any[];
+    contacts: any[];
+    programs: any[];
+    testResponses: any[];
+    recentReservations: any[];
+    recentContacts: any[];
+  };
   const [report, setReport] = useState<any>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -107,452 +449,200 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
     }
   };
 
-  return (
-    <div className="min-h-screen w-full bg-[#FDF6F0] relative overflow-hidden" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
-      {/* 배경 장식 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob" style={{ backgroundColor: '#A8C5F8' }}></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000" style={{ backgroundColor: '#F3C3E6' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000" style={{ backgroundColor: '#FFE6C5' }}></div>
-      </div>
+  const actionData = useActionData<{ success?: boolean; error?: string; message?: string }>();
 
-      {/* 헤더 */}
-      <header className="pt-14 sm:pt-16 lg:pt-[4.5rem] shadow-lg relative z-10 border-b border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 py-4 sm:py-6">
-            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-white/30 backdrop-blur-sm flex items-center justify-center shadow-lg flex-shrink-0">
-                <Activity className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+  return (
+    <AdminLayout stats={stats}>
+      {(currentPage) => {
+        // 매니저 관리 페이지
+        if (currentPage === "managers") {
+          return <ManagersContent managers={managers} actionData={actionData} />;
+        }
+
+        // 예약 관리 페이지
+        if (currentPage === "reservations") {
+          return <ReservationsContent reservations={reservations} actionData={actionData} />;
+        }
+
+        // 커뮤니티 관리 페이지
+        if (currentPage === "community") {
+          return <CommunityContent notices={notices} reviews={reviews} actionData={actionData} />;
+        }
+
+        // 문의 관리 페이지
+        if (currentPage === "contact") {
+          return <ContactContent contacts={contacts} actionData={actionData} />;
+        }
+
+        // 프로젝트 관리 페이지
+        if (currentPage === "programs") {
+          return <ProgramsContent programs={programs} actionData={actionData} />;
+        }
+
+        // 테스트 관리 페이지
+        if (currentPage === "test") {
+          return <TestContent responses={testResponses} actionData={actionData} />;
+        }
+
+        // 대시보드 페이지
+        if (currentPage === "dashboard") {
+          return (
+      <div className="h-full bg-transparent relative overflow-auto" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
+        {/* 헤더 */}
+        <header className="mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
+          <div className="px-6 py-5">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm">
+                <Activity className="w-7 h-7 text-white drop-shadow-sm" />
               </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#3B2F2F] drop-shadow-sm truncate">관리자 대시보드</h1>
-                <p className="text-xs sm:text-sm text-[#3B2F2F]/90 mt-1 flex items-center gap-2 font-medium">
-                  <span className="w-2 h-2 rounded-full animate-pulse flex-shrink-0" style={{ backgroundColor: '#2D6A9F' }}></span>
-                  <span className="truncate">코이창작소 관리 시스템</span>
+              <div>
+                <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>대시보드</h1>
+                <p className="text-white/90 flex items-center gap-2 text-sm" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-4 h-4" />
+                  코이창작소 관리 시스템
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 w-full sm:w-auto justify-end">
-              <Badge 
-                className="bg-white/30 text-[#3B2F2F] border-white/40 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] sm:max-w-[250px] md:max-w-[300px]"
-                title={admin.email}
-              >
-                {admin.email}
-              </Badge>
-              <form method="post" className="flex-shrink-0">
-                <input type="hidden" name="intent" value="logout" />
-                <Button 
-                  variant="secondary" 
-                  size="sm" 
-                  type="submit"
-                  className="bg-white/30 hover:bg-white/40 text-[#3B2F2F] border-white/40 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-200 text-xs sm:text-sm whitespace-nowrap"
-                >
-                  <LogOut className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">로그아웃</span>
-                </Button>
-              </form>
-            </div>
+          </div>
+        </header>
+
+        {/* 메인 콘텐츠 */}
+        <div className="space-y-6">
+          {/* 통계 카드 */}
+          <StatsCards stats={stats} />
+
+          {/* 최근 활동 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* 최근 예약 */}
+            <Card className="border border-gray-200 shadow-sm bg-white">
+              <CardHeader className="border-b border-gray-100 bg-gray-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                      <Calendar className="w-5 h-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">최근 예약</CardTitle>
+                  </div>
+                  <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
+                    {recentReservations.length}개
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5">
+                {recentReservations.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <p className="text-[#7A6666] text-sm opacity-80">최근 예약이 없습니다</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {recentReservations.map((reservation) => (
+                      <div key={reservation.id} className="p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all bg-white">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-extrabold tracking-tight text-[#3B2F2F] mb-1 truncate">
+                              {reservation.user_name || "이름 없음"}
+                            </p>
+                            <p className="text-sm text-[#7A6666] opacity-80 truncate">
+                              {reservation.program_id || "-"}
+                            </p>
+                            <p className="text-xs text-[#7A6666] opacity-60 mt-2">
+                              {reservation.created_at ? new Date(reservation.created_at).toLocaleDateString('ko-KR', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              }) : "-"}
+                            </p>
+                          </div>
+                          <Badge className={`flex-shrink-0 ${
+                            reservation.status === 'pending' ? 'bg-yellow-500 text-white' :
+                            reservation.status === 'confirmed' ? 'bg-green-500 text-white' :
+                            reservation.status === 'completed' ? 'bg-blue-500 text-white' :
+                            reservation.status === 'cancelled' ? 'bg-red-500 text-white' :
+                            'bg-gray-400 text-white'
+                          }`}>
+                            {reservation.status === 'pending' ? '대기' :
+                             reservation.status === 'confirmed' ? '확정' :
+                             reservation.status === 'completed' ? '완료' :
+                             reservation.status === 'cancelled' ? '취소' :
+                             reservation.status || '대기'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* 최근 문의 */}
+            <Card className="border border-gray-200 shadow-sm bg-white">
+              <CardHeader className="border-b border-gray-100 bg-gray-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                      <MessageSquare className="w-5 h-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">최근 문의</CardTitle>
+                  </div>
+                  <Badge className="text-white px-3 py-1" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
+                    {recentContacts.length}개
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5">
+                {recentContacts.length === 0 ? (
+                  <div className="text-center py-8">
+                    <MessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <p className="text-[#7A6666] text-sm opacity-80">최근 문의가 없습니다</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {recentContacts.map((contact) => (
+                      <div key={contact.id} className="p-4 rounded-lg border border-gray-200 hover:shadow-md transition-all bg-white">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-extrabold tracking-tight text-[#3B2F2F] mb-1 truncate">
+                              {contact.name || "이름 없음"}
+                            </p>
+                            {contact.subject && (
+                              <p className="text-sm text-[#7A6666] opacity-80 truncate mb-1">
+                                {contact.subject}
+                              </p>
+                            )}
+                            <p className="text-xs text-[#7A6666] opacity-60 mt-2">
+                              {contact.created_at ? new Date(contact.created_at).toLocaleDateString('ko-KR', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              }) : "-"}
+                            </p>
+                          </div>
+                          <Badge className={`flex-shrink-0 ${
+                            contact.status === 'pending' ? 'bg-yellow-500 text-white' :
+                            contact.status === 'in_progress' ? 'bg-blue-500 text-white' :
+                            contact.status === 'completed' ? 'bg-green-500 text-white' :
+                            contact.status === 'cancelled' ? 'bg-red-500 text-white' :
+                            'bg-gray-400 text-white'
+                          }`}>
+                            {contact.status === 'pending' ? '대기중' :
+                             contact.status === 'in_progress' ? '처리중' :
+                             contact.status === 'completed' ? '완료' :
+                             contact.status === 'cancelled' ? '취소' :
+                             contact.status || '대기중'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </header>
-
-      {/* 메인 콘텐츠 */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-        {/* 통계 카드 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative">
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(168,197,248,0.1), rgba(243,195,230,0.1))' }}></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-              <CardTitle className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">활성 매니저</CardTitle>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                <Users className="h-7 w-7 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative z-10">
-              <div className="text-5xl font-extrabold tracking-tight mb-2" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                {stats.managerCount}
-              </div>
-              <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
-                <Activity className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
-                현재 활동 중인 매니저 수
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative">
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(243,195,230,0.1), rgba(255,230,197,0.1))' }}></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-              <CardTitle className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">예약 현황</CardTitle>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
-                <Calendar className="h-7 w-7 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative z-10">
-              <div className="text-5xl font-extrabold tracking-tight mb-2" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                {stats.reservationCount}
-              </div>
-              <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
-                <TrendingUp className="w-3.5 h-3.5" style={{ color: '#F3C3E6' }} />
-                전체 예약 건수
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative">
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(255,230,197,0.1), rgba(251,113,133,0.1))' }}></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-              <CardTitle className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">커뮤니티</CardTitle>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" style={{ background: 'linear-gradient(90deg, #FFE6C5, #FB7185)' }}>
-                <MessageSquare className="h-7 w-7 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative z-10">
-              <div className="text-5xl font-extrabold tracking-tight mb-2" style={{ background: 'linear-gradient(90deg, #FFE6C5, #FB7185)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                {stats.communityCount}
-              </div>
-              <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
-                <MessageSquare className="w-3.5 h-3.5" style={{ color: '#FB7185' }} />
-                커뮤니티 게시글 수
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative">
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(168,197,248,0.1), rgba(251,113,133,0.1))' }}></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-              <CardTitle className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">문의</CardTitle>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" style={{ background: 'linear-gradient(90deg, #A8C5F8, #FB7185)' }}>
-                <Mail className="h-7 w-7 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative z-10">
-              <div className="text-5xl font-extrabold tracking-tight mb-2" style={{ background: 'linear-gradient(90deg, #A8C5F8, #FB7185)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                {stats.contactCount}
-              </div>
-              <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
-                <Mail className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
-                전체 문의 건수
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card 
-            className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group overflow-hidden relative cursor-pointer"
-            onClick={() => navigate("/admin/test")}
-          >
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(135deg, rgba(243,195,230,0.1), rgba(255,230,197,0.1))' }}></div>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-              <CardTitle className="text-sm font-extrabold tracking-tight text-[#3B2F2F]">감정 실험</CardTitle>
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
-                <Heart className="h-7 w-7 text-white" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative z-10">
-              <div className="text-5xl font-extrabold tracking-tight mb-2" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                {stats.testCount}
-              </div>
-              <p className="text-xs text-[#7A6666] opacity-80 flex items-center gap-2 font-medium" style={{ lineHeight: '1.6' }}>
-                <Heart className="w-3.5 h-3.5" style={{ color: '#F3C3E6' }} />
-                전체 응답 수
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="mt-8 border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)]">
-          <CardHeader className="border-b border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-[#3B2F2F] font-extrabold tracking-tight">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-                오늘의 AI 리포트
-              </CardTitle>
-              <Button
-                onClick={generateReport}
-                disabled={isGenerating}
-                className="text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    생성 중...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    리포트 생성
-                  </>
-                )}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            {report ? (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
-                {/* 요약 */}
-                <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
-                  <h3 className="font-extrabold tracking-tight mb-3 text-[#3B2F2F] flex items-center gap-2" style={{ lineHeight: '1.6' }}>
-                    <TrendingUp className="w-5 h-5" style={{ color: '#A8C5F8' }} />
-                    요약
-                  </h3>
-                  <p className="text-[#3B2F2F]/85 leading-relaxed" style={{ lineHeight: '1.6' }}>{report.report.summary}</p>
-                </div>
-
-                {/* 통계 */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
-                    <p className="text-sm text-[#7A6666] opacity-80 mb-2" style={{ lineHeight: '1.6' }}>전체 예약</p>
-                    <p className="text-3xl font-extrabold tracking-tight text-[#3B2F2F]">{report.statistics.total}</p>
-                  </div>
-                  <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)' }}>
-                    <p className="text-sm text-[#7A6666] opacity-80 mb-2" style={{ lineHeight: '1.6' }}>오늘 신청</p>
-                    <p className="text-3xl font-extrabold tracking-tight text-[#3B2F2F]">{report.statistics.today}</p>
-                  </div>
-                  <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #F5EDFF, #FFFFFF)' }}>
-                    <p className="text-sm text-[#7A6666] opacity-80 mb-2" style={{ lineHeight: '1.6' }}>프로그램 종류</p>
-                    <p className="text-3xl font-extrabold tracking-tight text-[#3B2F2F]">
-                      {Object.keys(report.statistics.byProgram || {}).length}
-                    </p>
-                  </div>
-                  <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(180deg, #FFE5E5, #FFFFFF)' }}>
-                    <p className="text-sm text-[#7A6666] opacity-80 mb-2" style={{ lineHeight: '1.6' }}>대기 중</p>
-                    <p className="text-3xl font-extrabold tracking-tight text-[#3B2F2F]">
-                      {report.statistics.byStatus?.pending || 0}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 인사이트 */}
-                <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
-                  <h3 className="font-extrabold tracking-tight mb-4 text-[#3B2F2F] flex items-center gap-2" style={{ lineHeight: '1.6' }}>
-                    <Sparkles className="w-5 h-5" style={{ color: '#F3C3E6' }} />
-                    AI 인사이트
-                  </h3>
-                  <ul className="space-y-3">
-                    {report.report.insights.map((insight: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-[#FADADD]/30">
-                        <span className="font-extrabold text-lg" style={{ color: '#A8C5F8' }}>•</span>
-                        <span className="text-[#3B2F2F]/85 flex-1" style={{ lineHeight: '1.6' }}>{insight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* 추천사항 */}
-                <div className="p-5 rounded-xl border border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #FFF0F5, #FFE5E5)' }}>
-                  <h3 className="font-extrabold tracking-tight mb-4 text-[#3B2F2F] flex items-center gap-2" style={{ lineHeight: '1.6' }}>
-                    <Activity className="w-5 h-5" style={{ color: '#FFE6C5' }} />
-                    추천사항
-                  </h3>
-                  <ul className="space-y-3">
-                    {report.report.recommendations.map((rec: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-[#FADADD]/30">
-                        <span className="font-extrabold text-lg" style={{ color: '#FFE6C5' }}>✓</span>
-                        <span className="text-[#3B2F2F]/85 flex-1" style={{ lineHeight: '1.6' }}>{rec}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center shadow-lg animate-pulse" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
-                  <Sparkles className="w-12 h-12 text-white" />
-                </div>
-                <h3 className="text-xl font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>AI 리포트를 생성해보세요</h3>
-                <p className="text-[#7A6666] opacity-80 text-sm mb-1" style={{ lineHeight: '1.6' }}>AI가 오늘의 예약 현황을 분석하고</p>
-                <p className="text-[#7A6666] opacity-80 text-sm" style={{ lineHeight: '1.6' }}>인사이트와 추천사항을 제공합니다</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* 관리 기능 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {/* 매니저 관리 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
-            <CardHeader style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
-              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                  <Users className="w-5 h-5 text-white" />
-                </div>
-                매니저 관리
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
-                매니저 정보 추가, 수정, 삭제 및 상태 관리
-              </p>
-              <Button 
-                size="sm" 
-                className="w-full text-white shadow-md hover:shadow-lg transition-all" 
-                style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}
-                onClick={() => navigate("/admin/managers")}
-              >
-                <Plus className="w-4 h-4 mr-1" />
-                매니저 관리
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 프로젝트 관리 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
-            <CardHeader style={{ background: 'linear-gradient(90deg, #FFF0F5, #FFE5E5)' }}>
-              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
-                  <FolderOpen className="w-5 h-5 text-white" />
-                </div>
-                프로젝트 관리
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
-                에세이 캠프, 포토 캠프 등 프로그램 관리
-              </p>
-              <Button 
-                size="sm" 
-                className="w-full text-white shadow-md hover:shadow-lg transition-all" 
-                style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}
-                onClick={() => navigate("/admin/programs")}
-              >
-                <Plus className="w-4 h-4 mr-1" />
-                프로젝트 관리
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 예약 조회 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
-            <CardHeader style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
-              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-                  <Calendar className="w-5 h-5 text-white" />
-                </div>
-                예약 조회
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
-                상담 예약 현황 조회 및 관리
-              </p>
-              <Button 
-                size="sm" 
-                className="w-full text-white shadow-md hover:shadow-lg transition-all" 
-                style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}
-                onClick={() => navigate("/admin/reservations")}
-              >
-                <Eye className="w-4 h-4 mr-1" />
-                예약 현황 보기
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 커뮤니티 관리 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
-            <CardHeader style={{ background: 'linear-gradient(90deg, #FFE5E5, #FFF0F5)' }}>
-              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(90deg, #FFE6C5, #FB7185)' }}>
-                  <MessageSquare className="w-5 h-5 text-white" />
-                </div>
-                커뮤니티 관리
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
-                게시글, 댓글, 공지사항 관리
-              </p>
-              <Button 
-                size="sm" 
-                className="w-full text-white shadow-md hover:shadow-lg transition-all" 
-                style={{ background: 'linear-gradient(90deg, #FFE6C5, #FB7185)' }}
-                onClick={() => navigate("/admin/community")}
-              >
-                <Eye className="w-4 h-4 mr-1" />
-                게시글 관리
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 문의 관리 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
-            <CardHeader style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
-              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(90deg, #A8C5F8, #FB7185)' }}>
-                  <Mail className="w-5 h-5 text-white" />
-                </div>
-                문의 관리
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
-                고객 문의 조회 및 답변 관리
-              </p>
-              <Button 
-                size="sm" 
-                className="w-full text-white shadow-md hover:shadow-lg transition-all" 
-                style={{ background: 'linear-gradient(90deg, #A8C5F8, #FB7185)' }}
-                onClick={() => navigate("/admin/contact")}
-              >
-                <Eye className="w-4 h-4 mr-1" />
-                문의 관리
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 감정 실험 관리 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
-            <CardHeader style={{ background: 'linear-gradient(90deg, #FFF0F5, #FFE5E5)' }}>
-              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
-                  <Heart className="w-5 h-5 text-white" />
-                </div>
-                감정 실험 관리
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
-                감정 실험 응답 데이터 조회 및 상태 관리
-              </p>
-              <Button 
-                size="sm" 
-                className="w-full text-white shadow-md hover:shadow-lg transition-all" 
-                style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}
-                onClick={() => navigate("/admin/test")}
-              >
-                <Eye className="w-4 h-4 mr-1" />
-                실험 데이터 관리
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 시스템 설정 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group">
-            <CardHeader style={{ background: 'linear-gradient(90deg, #FDF6F0, #FFF7F5)' }}>
-              <CardTitle className="flex items-center text-[#3B2F2F] font-extrabold tracking-tight">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform" style={{ background: 'linear-gradient(135deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
-                  <Settings className="w-5 h-5 text-white" />
-                </div>
-                시스템 설정
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <p className="text-sm text-[#7A6666] opacity-80" style={{ lineHeight: '1.6' }}>
-                사이트 설정, 관리자 계정 관리
-              </p>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full border-2 border-[#FADADD] text-[#3B2F2F] hover:bg-[#E8F4FB] transition-all"
-              >
-                <Settings className="w-4 h-4 mr-1" />
-                설정 열기
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+      </div>
 
       <style>{`
         @keyframes blob {
@@ -577,5 +667,19 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
         }
       `}</style>
     </div>
+          );
+        }
+
+        // 기타 페이지들은 아직 구현 중
+        return (
+          <div className="h-full bg-[#FDF6F0] flex items-center justify-center" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
+            <div className="text-center">
+              <h2 className="text-2xl font-extrabold text-[#3B2F2F] mb-2">{currentPage} 페이지</h2>
+              <p className="text-[#7A6666] opacity-80">이 페이지는 아직 구현 중입니다.</p>
+            </div>
+          </div>
+        );
+      }}
+    </AdminLayout>
   );
 }

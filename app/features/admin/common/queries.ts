@@ -3,10 +3,12 @@ import client from "../../../lib/supa-client";
 // ==================== 타입 정의 ====================
 
 export interface AdminStats {
-  managerCount: number;
+  activeManagerCount: number;
+  inactiveManagerCount: number;
   reservationCount: number;
   communityCount: number;
   contactCount: number;
+  testCount: number;
 }
 
 // ==================== 통계 관련 쿼리 ====================
@@ -20,6 +22,17 @@ export function getActiveManagerCount() {
     .from("managers")
     .select("*", { count: "exact", head: true })
     .eq("is_active", true);
+}
+
+/**
+ * 비활성 매니저 수 조회
+ * @returns 카운트 결과 Promise
+ */
+export function getInactiveManagerCount() {
+  return client
+    .from("managers")
+    .select("*", { count: "exact", head: true })
+    .eq("is_active", false);
 }
 
 /**
@@ -69,6 +82,7 @@ export function getEmotionTestCount() {
 export function getAdminStats() {
   return Promise.all([
     getActiveManagerCount(),
+    getInactiveManagerCount(),
     getReservationCount(),
     getCommunityPostCount(),
     getContactCount(),

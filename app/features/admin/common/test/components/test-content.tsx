@@ -1,17 +1,8 @@
-import type { MetaFunction } from "react-router";
-import { Form, useActionData } from "react-router";
-import type { Route } from "./+types/admin-test-page";
+import { Form } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/common/components/ui/card";
 import { Button } from "~/common/components/ui/button";
-import { Input } from "~/common/components/ui/input";
 import { Badge } from "~/common/components/ui/badge";
-import { Calendar, Sparkles, User, Phone, Mail, FileText, Heart, CheckCircle2 } from "lucide-react";
-import client from "~/lib/supa-client";
-
-export const meta: MetaFunction = () => [
-  { title: "감정 실험 관리 | 코이창작소" },
-  { name: "description", content: "감정 실험 응답 데이터 조회 및 관리" }
-];
+import { Calendar, Sparkles, User, Phone, Heart, CheckCircle2 } from "lucide-react";
 
 interface EmotionTestResponse {
   id: string;
@@ -33,84 +24,9 @@ interface EmotionTestResponse {
   created_at: string;
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const { data: { session } } = await client.auth.getSession();
-  if (!session) {
-    return new Response(null, {
-      status: 302,
-      headers: { Location: "/admin/login" },
-    });
-  }
-
-  const [profileResult, responsesResult] = await Promise.all([
-    client.from("profiles").select("role").eq("email", session.user.email).single(),
-    client.from("emotion_test_responses")
-      .select("id, emotion, emotion_details, reason_category, name, age, job, contact, day_mood, need_type, privacy_agreed, status, gift, character_name, day, time, created_at")
-      .order("created_at", { ascending: false }),
-  ]);
-
-  if (profileResult.error || profileResult.data?.role !== "admin") {
-    return new Response(null, {
-      status: 302,
-      headers: { Location: "/admin/login" },
-    });
-  }
-
-  if (responsesResult.error) {
-    console.error("[loader] emotion_test_responses error:", responsesResult.error);
-    return { responses: [] };
-  }
-
-  return { responses: (responsesResult.data ?? []) as EmotionTestResponse[] };
-}
-
-export async function action({ request }: Route.ActionArgs) {
-  const { data: { session } } = await client.auth.getSession();
-  if (!session) {
-    return { error: "로그인이 필요합니다." };
-  }
-
-  const profileResult = await client
-    .from("profiles")
-    .select("role")
-    .eq("email", session.user.email)
-    .single();
-
-  if (profileResult.error || profileResult.data?.role !== "admin") {
-    return { error: "관리자 권한이 없습니다." };
-  }
-
-  const form = await request.formData();
-  const intent = String(form.get("intent") || "");
-
-  try {
-    if (intent === "update-status") {
-      const id = String(form.get("id") || "");
-      const status = String(form.get("status") || "") as 'pending' | 'confirmed' | 'completed' | 'cancelled';
-
-      if (!id || !status) {
-        return { error: "ID와 상태가 필요합니다." };
-      }
-
-      const { error } = await client
-        .from("emotion_test_responses")
-        .update({ status })
-        .eq("id", id);
-
-      if (error) {
-        console.error("[action] update-status error:", error);
-        return { error: error.message || "상태 변경에 실패했습니다." };
-      }
-
-      return { success: true, message: "상태가 변경되었습니다." };
-    }
-
-
-    return { ok: true };
-  } catch (error) {
-    console.error("[action] error:", error);
-    return { error: "작업 중 오류가 발생했습니다." };
-  }
+interface TestContentProps {
+  responses: EmotionTestResponse[];
+  actionData?: { success?: boolean; error?: string; message?: string };
 }
 
 const getStatusBadge = (status: string | null) => {
@@ -172,18 +88,9 @@ const giftLabels: { [key: string]: string } = {
   photo: "KOI 컨셉 촬영 체험권",
 };
 
-export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
-  const { responses } = loaderData as { responses: EmotionTestResponse[] };
-  const actionData = useActionData<{ success?: boolean; error?: string; message?: string }>();
-
+export function TestContent({ responses, actionData }: TestContentProps) {
   return (
-    <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
-      {/* 배경 장식 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#A8C5F8' }}></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#F3C3E6' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#FFE6C5' }}></div>
-      </div>
+    <div className="h-full bg-transparent relative overflow-auto" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
         {/* 성공/에러 메시지 */}
@@ -201,26 +108,28 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
         )}
 
         {/* 헤더 */}
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-              <Heart className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>감정 실험 관리</h1>
-              <p className="text-[#3B2F2F]/80 flex items-center gap-2" style={{ lineHeight: '1.6' }}>
-                <Sparkles className="w-4 h-4" style={{ color: '#A8C5F8' }} />
-                감정 실험 응답 데이터를 확인하고 관리하세요
-              </p>
+        <header className="mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
+          <div className="px-6 py-5">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm">
+                <Heart className="w-7 h-7 text-white drop-shadow-sm" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>감정 실험 관리</h1>
+                <p className="text-white/90 flex items-center gap-2 text-sm" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-4 h-4" />
+                  감정 실험 응답 데이터를 확인하고 관리하세요
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </header>
 
         {responses.length === 0 ? (
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)]">
+          <Card className="border border-gray-200 shadow-sm bg-white">
             <CardContent className="p-16 text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #E8F4FB, #FFF0F5)' }}>
-                <Heart className="w-10 h-10" style={{ color: '#A8C5F8' }} />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center bg-gray-100">
+                <Heart className="w-10 h-10 text-gray-400" />
               </div>
               <p className="text-[#3B2F2F] text-lg font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>응답 데이터가 없습니다.</p>
               <p className="text-[#7A6666] text-sm mt-2 opacity-80" style={{ lineHeight: '1.6' }}>새로운 응답이 등록되면 여기에 표시됩니다</p>
@@ -231,8 +140,8 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
             {responses.map((r) => {
               const testType = getTestType(r);
               return (
-              <Card key={r.id} className="overflow-hidden border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
-                <CardHeader className="border-b border-[#FADADD]/30 pb-4" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
+              <Card key={r.id} className="overflow-hidden border border-gray-200 shadow-sm bg-white hover:shadow-md transition-all duration-300">
+                <CardHeader className="border-b border-gray-100 pb-4 bg-gray-50">
                   <div className="flex items-center justify-between flex-wrap gap-4">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
@@ -245,7 +154,7 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
                           {getTestTypeBadge(testType)}
                           {r.emotion && (
-                            <Badge className="bg-[#E8F4FB] text-[#2D6A9F] text-xs border-0">
+                            <Badge className="bg-gray-100 text-gray-700 text-xs border-0">
                               {emotionLabels[r.emotion] || r.emotion}
                             </Badge>
                           )}
@@ -264,14 +173,14 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-5">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* 왼쪽: 사용자 정보 + 경품 정보 */}
                     <div className="flex flex-col gap-4">
                       {/* 기본 정보 */}
-                      <div className="p-5 rounded-xl border border-[#FADADD]/30 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
-                        <div className="flex items-center gap-2 mb-4">
-                          <User className="w-5 h-5" style={{ color: '#A8C5F8' }} />
+                      <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
+                          <User className="w-5 h-5 text-gray-500" />
                           <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">기본 정보</p>
                         </div>
                         <div className="grid grid-cols-2 gap-4 flex-1">
@@ -289,7 +198,7 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                           </div>
                           <div className="col-span-2">
                             <p className="text-xs text-[#7A6666] opacity-80 mb-1.5 flex items-center gap-1">
-                              <Phone className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
+                              <Phone className="w-3.5 h-3.5 text-gray-400" />
                               연락처
                             </p>
                             <p className="text-base font-extrabold tracking-tight text-[#3B2F2F] break-all">{r.contact || "-"}</p>
@@ -299,9 +208,9 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
 
                       {/* 경품 정보 (감정 연구 실험만) */}
                       {testType === "emotion-research" && (
-                        <div className="p-5 rounded-xl border-2 border-[#F3C3E6]/50 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.2)' }}>
-                          <div className="flex items-center gap-2 mb-4">
-                            <Sparkles className="w-5 h-5" style={{ color: '#F3C3E6' }} />
+                        <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                          <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
+                            <Sparkles className="w-5 h-5 text-gray-500" />
                             <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">경품 정보</p>
                           </div>
                           <div className="space-y-3 flex-1 flex flex-col justify-center">
@@ -317,9 +226,9 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
 
                       {/* 세션 예약 정보 (KOI 캐릭터 테스트만) */}
                       {testType === "koi-character" && (
-                        <div className="p-5 rounded-xl border-2 border-[#8B5CF6]/50 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #F3E8FF, #FFFFFF)', boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)' }}>
-                          <div className="flex items-center gap-2 mb-4">
-                            <Calendar className="w-5 h-5" style={{ color: '#8B5CF6' }} />
+                        <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                          <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
+                            <Calendar className="w-5 h-5 text-gray-500" />
                             <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">세션 예약 정보</p>
                           </div>
                           <div className="space-y-3 flex-1 flex flex-col justify-center">
@@ -351,9 +260,9 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                     {/* 오른쪽: 감정 정보 + 상태 관리 */}
                     <div className="flex flex-col gap-4">
                       {/* 감정 정보 */}
-                      <div className="p-5 rounded-xl border-2 border-[#FADADD]/50 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #FFF0F5, #FFFFFF)', boxShadow: '0 4px 12px rgba(243, 195, 230, 0.15)' }}>
-                        <div className="flex items-center gap-2 mb-4">
-                          <Heart className="w-5 h-5" style={{ color: '#F3C3E6' }} />
+                      <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
+                          <Heart className="w-5 h-5 text-gray-500" />
                           <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">감정 정보</p>
                         </div>
                         <div className="space-y-4 flex-1">
@@ -378,7 +287,7 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                               <p className="text-xs text-[#7A6666] opacity-80 mb-2">세부 키워드</p>
                               <div className="flex flex-wrap gap-2">
                                 {r.emotion_details.map((detail, idx) => (
-                                  <Badge key={idx} className="bg-[#E8F4FB] text-[#2D6A9F] text-xs border-0 px-2.5 py-1">
+                                  <Badge key={idx} className="bg-gray-100 text-gray-700 text-xs border-0 px-2.5 py-1">
                                     {detail}
                                   </Badge>
                                 ))}
@@ -387,7 +296,7 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                           )}
                           {/* 감정 연구 실험의 경우 추가 정보 표시 */}
                           {testType === "emotion-research" && (
-                            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-[#FADADD]/30">
+                            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100">
                               {r.reason_category && (
                                 <div>
                                   <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">주요 요인</p>
@@ -416,13 +325,13 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                       </div>
 
                       {/* 상태 관리 */}
-                      <div className="p-5 rounded-xl border border-[#FADADD]/30 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #E8F4FB, #FFFFFF)' }}>
-                        <div className="flex items-center gap-2 mb-4">
-                          <Calendar className="w-5 h-5" style={{ color: '#A8C5F8' }} />
+                      <div className="p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
+                        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
+                          <Calendar className="w-5 h-5 text-gray-500" />
                           <p className="text-sm font-extrabold tracking-tight text-[#3B2F2F] uppercase">상태 관리</p>
                         </div>
                         <Form method="post" className="space-y-4 flex-1 flex flex-col justify-center">
-                          <input type="hidden" name="intent" value="update-status" />
+                          <input type="hidden" name="intent" value="test-update-status" />
                           <input type="hidden" name="id" value={r.id} />
                           <div>
                             <div className="flex items-center gap-2 mb-3">

@@ -1,162 +1,43 @@
-// app/features/admin/pages/admin-community-page.tsx
-import type { MetaFunction } from "react-router";
-import { Form, useActionData } from "react-router";
+import { Form } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../common/components/ui/card";
 import { Button } from "../../../../common/components/ui/button";
 import { Input } from "../../../../common/components/ui/input";
 import { Textarea } from "../../../../common/components/ui/textarea";
-import client from "../../../../lib/supa-client";
 import { Badge } from "../../../../common/components/ui/badge";
 import { Plus, Edit2, Trash2, Star, Heart, Calendar, User, MessageSquare, Sparkles, Bell, CheckCircle2, XCircle } from "lucide-react";
-import {
-  getAllNotices,
-  getAllReviews,
-  createNotice,
-  updateNotice,
-  deleteNotice,
-  deleteReview,
-} from "../queries";
-import type { Route } from "./+types/admin-community-page";
 
-export const meta: MetaFunction = () => [
-  { title: "커뮤니티 관리 | 코이창작소" },
-  { name: "description", content: "공지/리뷰 관리" },
-];
-
-export async function loader({ request }: Route.LoaderArgs) {
-  const { data: { session } } = await client.auth.getSession();
-  if (!session) {
-    return new Response(null, {
-      status: 302,
-      headers: { Location: "/admin/login" },
-    });
-  }
-
-  // Promise.all로 병렬 처리
-  const [profileResult, noticesResult, reviewsResult] = await Promise.all([
-    client.from("profiles").select("role").eq("email", session.user.email).single(),
-    getAllNotices(),
-    getAllReviews(),
-  ]);
-
-  // 에러 처리
-  if (profileResult.error || profileResult.data?.role !== "admin") {
-    return new Response(null, {
-      status: 302,
-      headers: { Location: "/admin/login" },
-    });
-  }
-
-  if (noticesResult.error) {
-    console.error("[loader] notices error:", noticesResult.error);
-  }
-
-  if (reviewsResult.error) {
-    console.error("[loader] reviews error:", reviewsResult.error);
-  }
-
-  return {
-    notices: noticesResult.data ?? [],
-    reviews: reviewsResult.data ?? [],
-  };
+interface Notice {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  is_important: boolean;
+  is_published: boolean;
+  author: string | null;
+  created_at: string;
 }
 
-export async function action({ request }: Route.ActionArgs) {
-  const { data: { session } } = await client.auth.getSession();
-  if (!session) {
-    return { error: "로그인이 필요합니다." };
-  }
-
-  // 관리자 권한 확인
-  const profileResult = await client
-    .from("profiles")
-    .select("role")
-    .eq("email", session.user.email)
-    .single();
-
-  if (profileResult.error || profileResult.data?.role !== "admin") {
-    return { error: "관리자 권한이 없습니다." };
-  }
-
-  const form = await request.formData();
-  const intent = String(form.get("intent") || "");
-
-  try {
-    if (intent === "create-notice") {
-      const result = await createNotice({
-        title: String(form.get("title") || ""),
-        content: String(form.get("content") || ""),
-        category: String(form.get("category") || "기타"),
-        is_important: String(form.get("is_important")) === "true",
-        author: String(form.get("author") || "관리자"),
-      });
-
-      if (result.error) {
-        console.error("[action] create notice error:", result.error);
-        return { error: "공지사항 작성에 실패했습니다." };
-      }
-
-      return { success: true, message: "공지사항이 성공적으로 작성되었습니다." };
-    }
-
-    if (intent === "update-notice") {
-      const result = await updateNotice({
-        id: String(form.get("id") || ""),
-        title: String(form.get("title") || ""),
-        content: String(form.get("content") || ""),
-        category: String(form.get("category") || "기타"),
-        is_important: String(form.get("is_important")) === "true",
-      });
-
-      if (result.error) {
-        console.error("[action] update notice error:", result.error);
-        return { error: "공지사항 수정에 실패했습니다." };
-      }
-
-      return { success: true, message: "공지사항이 성공적으로 수정되었습니다." };
-    }
-
-    if (intent === "delete-notice") {
-      const result = await deleteNotice(String(form.get("id") || ""));
-
-      if (result.error) {
-        console.error("[action] delete notice error:", result.error);
-        return { error: "공지사항 삭제에 실패했습니다." };
-      }
-
-      return { success: true, message: "공지사항이 성공적으로 삭제되었습니다." };
-    }
-
-    if (intent === "delete-review") {
-      const result = await deleteReview(String(form.get("id") || ""));
-
-      if (result.error) {
-        console.error("[action] delete review error:", result.error);
-        return { error: "리뷰 삭제에 실패했습니다." };
-      }
-
-      return { success: true, message: "리뷰가 성공적으로 삭제되었습니다." };
-    }
-
-    return { ok: true };
-  } catch (error) {
-    console.error("[action] error:", error);
-    return { error: "작업 중 오류가 발생했습니다." };
-  }
+interface Review {
+  id: string;
+  title: string;
+  content: string;
+  program_id: string | null;
+  is_verified: boolean;
+  rating: number;
+  user_name: string | null;
+  likes_count: number;
+  created_at: string;
 }
 
-export default function AdminCommunityPage({ loaderData }: Route.ComponentProps) {
-  const { notices, reviews } = loaderData as { notices: any[]; reviews: any[] };
-  const actionData = useActionData<{ success?: boolean; error?: string; message?: string }>();
+interface CommunityContentProps {
+  notices: Notice[];
+  reviews: Review[];
+  actionData?: { success?: boolean; error?: string; message?: string };
+}
 
+export function CommunityContent({ notices, reviews, actionData }: CommunityContentProps) {
   return (
-    <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
-      {/* 배경 장식 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#A8C5F8' }}></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#F3C3E6' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20" style={{ backgroundColor: '#FFE6C5' }}></div>
-      </div>
+    <div className="h-full bg-transparent relative overflow-auto" style={{ fontFamily: 'Pretendard, Inter, sans-serif' }}>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pt-14 sm:pt-16 lg:pt-[4.5rem]">
         {/* 성공/에러 메시지 */}
@@ -174,24 +55,26 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
         )}
 
         {/* 헤더 */}
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
-              <MessageSquare className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>커뮤니티 관리</h1>
-              <p className="text-[#3B2F2F]/80 flex items-center gap-2" style={{ lineHeight: '1.6' }}>
-                <Sparkles className="w-4 h-4" style={{ color: '#A8C5F8' }} />
-                공지사항과 리뷰를 관리하세요
-              </p>
+        <header className="mb-6 rounded-xl overflow-hidden shadow-md" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6, #FFE6C5)' }}>
+          <div className="px-6 py-5">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-white/30 backdrop-blur-sm">
+                <MessageSquare className="w-7 h-7 text-white drop-shadow-sm" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>커뮤니티 관리</h1>
+                <p className="text-white/90 flex items-center gap-2 text-sm" style={{ lineHeight: '1.6' }}>
+                  <Sparkles className="w-4 h-4" />
+                  공지사항과 리뷰를 관리하세요
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </header>
 
         {/* 공지 작성 폼 */}
-        <Card className="mb-8 border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)]">
-          <CardHeader className="border-b border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
+        <Card className="mb-6 border border-gray-200 shadow-sm bg-white">
+          <CardHeader className="border-b border-gray-100 bg-gray-50">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
                 <Bell className="w-5 h-5 text-white" />
@@ -199,7 +82,7 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
               <CardTitle className="text-xl font-extrabold tracking-tight text-[#3B2F2F]">새 공지 작성</CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="p-5">
             <Form method="post" className="space-y-5" replace>
               <input type="hidden" name="intent" value="create-notice" />
               <div>
@@ -276,8 +159,8 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
         {/* 공지사항 및 리뷰 목록 */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* 공지사항 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
-            <CardHeader className="border-b border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #E8F4FB, #FFF0F5)' }}>
+          <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-md transition-all duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gray-50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #A8C5F8, #F3C3E6)' }}>
@@ -290,28 +173,29 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-5">
               <div className="space-y-4">
                 {notices.length === 0 ? (
                   <div className="text-center py-12">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #E8F4FB, #FFF0F5)' }}>
-                      <Bell className="w-8 h-8" style={{ color: '#A8C5F8' }} />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gray-100">
+                      <Bell className="w-8 h-8 text-gray-400" />
                     </div>
                     <p className="text-[#3B2F2F] font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>공지사항이 없습니다.</p>
                     <p className="text-[#7A6666] text-sm mt-1 opacity-80" style={{ lineHeight: '1.6' }}>새 공지를 작성해보세요</p>
                   </div>
                 ) : (
-                  notices.map(n => (
-                    <Card key={n.id} className="overflow-hidden border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
-                      <CardHeader className="border-b border-[#FADADD]/30 pb-3" style={{ background: 'linear-gradient(90deg, #FFF0F5, #FFE5E5)' }}>
+                  notices.map((n, idx) => (
+                    <div key={n.id}>
+                      {idx > 0 && <div className="border-t border-gray-100 my-4" />}
+                      <div className="pb-3">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <CardTitle className="text-lg font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>{n.title}</CardTitle>
+                            <h3 className="text-lg font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>{n.title}</h3>
                             <div className="flex items-center gap-2 flex-wrap">
                               {n.is_important && (
-                                <Badge className="bg-[#FB7185] text-white text-xs border-0">중요</Badge>
+                                <Badge className="bg-red-500 text-white text-xs border-0">중요</Badge>
                               )}
-                              <Badge className="bg-[#E8F4FB] text-[#2D6A9F] text-xs border-0">
+                              <Badge className="bg-gray-100 text-gray-700 text-xs border-0">
                                 {n.category}
                               </Badge>
                               <Badge className={`text-xs border-0 ${n.is_published ? "bg-green-500 text-white" : "bg-gray-400 text-white"}`}>
@@ -320,17 +204,17 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                             </div>
                           </div>
                         </div>
-                      </CardHeader>
-                      <CardContent className="p-5 space-y-4">
+                      </div>
+                      <div className="space-y-4">
                         <p className="text-sm text-[#3B2F2F]/85 whitespace-pre-line line-clamp-3 leading-relaxed" style={{ lineHeight: '1.6' }}>{n.content}</p>
-                        <div className="flex items-center gap-2 text-xs text-[#7A6666] opacity-80 pt-2 border-t border-[#FADADD]/30">
-                          <User className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
+                        <div className="flex items-center gap-2 text-xs text-[#7A6666] opacity-80 pt-2 border-t border-gray-100">
+                          <User className="w-3.5 h-3.5 text-gray-400" />
                           <span>{n.author || "관리자"}</span>
                           <span>•</span>
-                          <Calendar className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
+                          <Calendar className="w-3.5 h-3.5 text-gray-400" />
                           <span>{n.created_at ? new Date(n.created_at).toLocaleDateString("ko-KR") : ""}</span>
                         </div>
-                        <div className="pt-4 border-t space-y-3">
+                        <div className="pt-4 border-t border-gray-100 space-y-3">
                           <Form method="post" className="space-y-3" replace>
                             <input type="hidden" name="intent" value="update-notice" />
                             <input type="hidden" name="id" value={n.id} />
@@ -389,8 +273,8 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                             </Button>
                           </Form>
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   ))
                 )}
               </div>
@@ -398,8 +282,8 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
           </Card>
 
           {/* 리뷰 */}
-          <Card className="border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
-            <CardHeader className="border-b border-[#FADADD]/30" style={{ background: 'linear-gradient(90deg, #FFF0F5, #FFE5E5)' }}>
+          <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-md transition-all duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gray-50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(90deg, #F3C3E6, #FFE6C5)' }}>
@@ -412,25 +296,26 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-5">
               <div className="space-y-4">
                 {reviews.length === 0 ? (
                   <div className="text-center py-12">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FFF0F5, #FFE5E5)' }}>
-                      <Star className="w-8 h-8" style={{ color: '#F3C3E6' }} />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center bg-gray-100">
+                      <Star className="w-8 h-8 text-gray-400" />
                     </div>
                     <p className="text-[#3B2F2F] font-extrabold tracking-tight" style={{ lineHeight: '1.6' }}>리뷰가 없습니다.</p>
                     <p className="text-[#7A6666] text-sm mt-1 opacity-80" style={{ lineHeight: '1.6' }}>사용자 리뷰가 등록되면 여기에 표시됩니다</p>
                   </div>
                 ) : (
-                  reviews.map(r => (
-                    <Card key={r.id} className="overflow-hidden border border-[#FADADD]/30 shadow-[0_4px_24px_rgba(0,0,0,0.05)] bg-[linear-gradient(180deg,#FFFFFF,#FFF7F5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
-                      <CardHeader className="border-b border-[#FADADD]/30 pb-3" style={{ background: 'linear-gradient(90deg, #FFF0F5, #FFE5E5)' }}>
+                  reviews.map((r, idx) => (
+                    <div key={r.id}>
+                      {idx > 0 && <div className="border-t border-gray-100 my-4" />}
+                      <div className="pb-3">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <CardTitle className="text-lg font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>{r.title}</CardTitle>
+                            <h3 className="text-lg font-extrabold tracking-tight text-[#3B2F2F] mb-2" style={{ lineHeight: '1.6' }}>{r.title}</h3>
                             <div className="flex items-center gap-2 flex-wrap mb-2">
-                              <Badge className="bg-[#E8F4FB] text-[#2D6A9F] text-xs border-0">
+                              <Badge className="bg-gray-100 text-gray-700 text-xs border-0">
                                 {r.program_id || "리뷰"}
                               </Badge>
                               {r.is_verified && (
@@ -441,27 +326,27 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`w-4 h-4 ${i < (r.rating || 0) ? "fill-[#FFD1BA] text-[#FFD1BA]" : "text-gray-300"}`}
+                                  className={`w-4 h-4 ${i < (r.rating || 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                                 />
                               ))}
                               <span className="text-xs text-[#7A6666] opacity-80 ml-1">({r.rating || 0}/5)</span>
                             </div>
                           </div>
                         </div>
-                      </CardHeader>
-                      <CardContent className="p-5 space-y-4">
+                      </div>
+                      <div className="space-y-4">
                         <p className="text-sm text-[#3B2F2F]/85 whitespace-pre-line line-clamp-3 leading-relaxed" style={{ lineHeight: '1.6' }}>{r.content}</p>
-                        <div className="flex items-center gap-2 text-xs text-[#7A6666] opacity-80 pt-2 border-t border-[#FADADD]/30">
-                          <User className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
+                        <div className="flex items-center gap-2 text-xs text-[#7A6666] opacity-80 pt-2 border-t border-gray-100">
+                          <User className="w-3.5 h-3.5 text-gray-400" />
                           <span className="font-extrabold tracking-tight">{r.user_name || "익명"}</span>
                           <span>•</span>
-                          <Calendar className="w-3.5 h-3.5" style={{ color: '#A8C5F8' }} />
+                          <Calendar className="w-3.5 h-3.5 text-gray-400" />
                           <span>{r.created_at ? new Date(r.created_at).toLocaleDateString("ko-KR") : ""}</span>
                           <span>•</span>
-                          <Heart className="w-3.5 h-3.5" style={{ color: '#FB7185' }} />
+                          <Heart className="w-3.5 h-3.5 text-red-400" />
                           <span className="font-extrabold tracking-tight">{r.likes_count || 0}</span>
                         </div>
-                        <div className="pt-3 border-t border-[#FADADD]/30">
+                        <div className="pt-3 border-t border-gray-100">
                           <Form method="post" replace>
                             <input type="hidden" name="intent" value="delete-review" />
                             <input type="hidden" name="id" value={r.id} />
@@ -476,8 +361,8 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
                             </Button>
                           </Form>
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   ))
                 )}
               </div>
@@ -485,7 +370,7 @@ export default function AdminCommunityPage({ loaderData }: Route.ComponentProps)
           </Card>
         </div>
       </div>
-
     </div>
   );
 }
+
