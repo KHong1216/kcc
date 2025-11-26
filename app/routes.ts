@@ -36,6 +36,7 @@ export default [
         route("gift", "features/test/pages/gift-page.tsx")
     ]),
     route("join", "features/reservation/pages/qr-page.tsx"),
+    route("event/love-potion", "features/event/pages/love-potion-event-page.tsx"),
     route("/api/chat", "features/reservation/api-chat.tsx"),
     route("/api/admin/report", "features/admin/common/api-admin-report.tsx"),
     route("/easteregg", "features/programs/easteregg/pages/easter-egg-page.tsx"),
