@@ -357,7 +357,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       {currentPage === 1 && (
         <section
           key="page-1"
-          className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#FFF8F5] via-[#FFEFF8] to-[#FDF6F0] px-6 py-16 animate-fade-in"
+          className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#FFF8F5] via-[#FFEFF8] to-[#FDF6F0] px-6 py-8 sm:py-12 animate-fade-in"
         >
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute -top-32 left-8 h-48 w-48 rounded-full bg-[#FDE1EA] blur-3xl opacity-80" />
@@ -411,7 +411,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       {currentPage === 2 && (
         <section
           key="page-2"
-          className="relative min-h-screen bg-gradient-to-b from-[#FFF8F5] via-[#FFEFF8] to-[#FDF6F0] px-4 pt-20 pb-16 sm:px-6 animate-fade-in"
+          className="relative min-h-screen bg-gradient-to-b from-[#FFF8F5] via-[#FFEFF8] to-[#FDF6F0] px-4 pt-8 pb-16 sm:px-6 sm:pt-12 animate-fade-in"
         >
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute -top-24 right-10 h-40 w-40 rounded-full bg-[#E4D2FF] blur-3xl opacity-60" />
@@ -500,7 +500,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       {currentPage === 3 && (
         <div key="page-3" className="min-h-screen bg-gradient-to-b from-white via-[#FDF6F0] to-white animate-fade-in">
           {/* 결과 섹션 (Above the Fold) */}
-          <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-8 sm:pb-12">
+          <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 sm:px-6 pt-8 sm:pt-12 pb-8 sm:pb-12">
             <div className="max-w-4xl mx-auto w-full text-center space-y-6 sm:space-y-8">
               {/* Progress Bar */}
               <div className="flex items-center justify-between mb-6">
