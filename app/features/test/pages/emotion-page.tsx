@@ -377,10 +377,10 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
             <p className="text-sm sm:text-base font-semibold uppercase tracking-[0.3em] text-[#A78BFA]">
               KOI Creative Lab
             </p>
-            <h1 className="mt-4 text-3xl font-extrabold leading-tight text-[#1F1F2B] sm:text-4xl ">
+            <h1 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight text-[#1F1F2B] break-keep">
               30초 테스트: 내 마음 속 진짜 감정 캐릭터 찾기
             </h1>
-            <p className="mt-4 text-base text-[#4A3F55] sm:text-lg leading-relaxed break-keep">
+            <p className="mt-4 text-sm sm:text-base md:text-lg text-[#4A3F55] leading-relaxed break-keep">
               지금 당신이 느끼는 감정은 어떤 모습을 하고 있을까요?
               <br />
               복잡한 내면을 KOI 캐릭터로 가볍게 확인해 보세요.
@@ -394,7 +394,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                 <Button
                   type="button"
                   onClick={handleStart}
-                  className="w-full rounded-full bg-[#8B5CF6] py-4 text-lg font-semibold text-white shadow-[0_15px_40px_rgba(139,92,246,0.35)] transition-transform duration-300 hover:scale-[1.02] hover:bg-[#7C3AED] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B5CF6]"
+                  className="w-full rounded-full bg-[#8B5CF6] py-4 sm:py-4 text-base sm:text-lg font-semibold text-white shadow-[0_15px_40px_rgba(139,92,246,0.35)] transition-transform duration-300 hover:scale-[1.02] hover:bg-[#7C3AED] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B5CF6] min-h-[52px]"
                 >
                   지금 바로 시작하기
                 </Button>
@@ -418,7 +418,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
             <div className="absolute bottom-0 left-1/3 h-52 w-52 rounded-full bg-[#FFE3F1] blur-3xl opacity-70" />
           </div>
 
-          <div className="relative z-10 mx-auto flex max-w-3xl flex-col gap-10">
+          <div className="relative z-10 mx-auto flex max-w-3xl flex-col gap-6 sm:gap-10">
             <div className="text-center space-y-4">
               {/* Progress Bar */}
               <div className="flex items-center justify-between mb-6 max-w-2xl mx-auto">
@@ -433,15 +433,15 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                 value={(EMOTION_SELECTION_STEP / EMOTION_FLOW_STEPS) * 100}
                 className="mb-6 max-w-2xl mx-auto bg-[#E8DCF8] [&>div]:bg-[#A78BFA]"
               />
-              <h2 className="text-2xl font-bold text-[#1F1F2B] sm:text-3xl">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#1F1F2B] leading-relaxed break-keep">
                 지금 이 순간, 당신의 마음에 가장 가까운 감정을 골라주세요.
               </h2>
-              <p className="text-sm text-[#4A3F55] sm:text-base break-keep">
+              <p className="text-sm sm:text-base text-[#4A3F55] leading-relaxed break-keep">
                 9가지 감정 중 하나를 선택하면 곧바로 당신의 감정 패턴을 분석해 드릴게요.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
               {(Object.keys(emotionEmojis) as Emotion[]).map((emotion) => {
                 const isSelected = selectedEmotion === emotion;
                 return (
@@ -452,15 +452,15 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                       onClick={() => handleEmotionSelect(emotion)}
                       onTouchStart={() => showMobileTooltip(emotion)}
                       className={clsx(
-                        "relative flex h-28 w-full flex-col items-center justify-center rounded-2xl border-2 bg-white/80 text-base font-semibold text-[#3A344D] shadow-sm transition-transform duration-300",
+                        "relative flex min-h-[140px] sm:h-28 w-full flex-col items-center justify-center rounded-2xl border-2 bg-white/80 text-sm sm:text-base font-semibold text-[#3A344D] shadow-sm transition-transform duration-300 p-4 sm:p-2",
                         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8B5CF6]",
                         isSelected
                           ? "border-[#8B5CF6] bg-gradient-to-br from-[#EFE2FF] to-white text-[#2E1E44] shadow-lg scale-[1.02]"
                           : "border-transparent hover:border-[#DCCFF8] hover:scale-[1.01]"
                       )}
                     >
-                      <span className="text-3xl drop-shadow-sm">{emotionEmojis[emotion]}</span>
-                      <span className="mt-2">{emotion}</span>
+                      <span className="text-5xl sm:text-3xl drop-shadow-sm">{emotionEmojis[emotion]}</span>
+                      <span className="mt-2 text-sm sm:text-base">{emotion}</span>
                     </button>
                     <div
                       className={clsx(
@@ -482,8 +482,8 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
           </div>
 
           {isAnalyzing && (
-            <div className="absolute inset-0 z-20 grid place-items-center bg-white/70 backdrop-blur-sm">
-              <div className="w-full max-w-sm rounded-3xl bg-white px-6 py-8 text-center shadow-2xl">
+            <div className="fixed inset-0 z-50 grid place-items-center bg-white/70 backdrop-blur-sm">
+              <div className="w-full max-w-sm rounded-3xl bg-white px-6 py-8 text-center shadow-2xl mx-4">
                 <p className="text-sm font-semibold text-[#A78BFA]">[분석 중…]</p>
                 <p className="mt-3 text-base text-[#3A344D] break-keep">
                   당신의 감정 패턴에 가장 가까운 캐릭터를 찾고 있습니다.
@@ -500,8 +500,8 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       {currentPage === 3 && (
         <div key="page-3" className="min-h-screen bg-gradient-to-b from-white via-[#FDF6F0] to-white animate-fade-in">
           {/* 결과 섹션 (Above the Fold) */}
-          <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 sm:px-6 pt-20 pb-12">
-            <div className="max-w-4xl mx-auto w-full text-center space-y-8">
+          <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-8 sm:pb-12">
+            <div className="max-w-4xl mx-auto w-full text-center space-y-6 sm:space-y-8">
               {/* Progress Bar */}
               <div className="flex items-center justify-between mb-6">
                 <p className="text-sm sm:text-base font-semibold uppercase tracking-[0.2em] text-[#A78BFA]">
@@ -528,19 +528,19 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
               </div>
 
               {/* 캐릭터명 & 타이틀 */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1F1F2B] leading-tight break-keep">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#1F1F2B] leading-tight break-keep px-2">
                 당신은 {getCharacterName(selectedEmotion)} 입니다.
               </h1>
 
               {/* 개인화된 해석 (3-5줄) */}
-              <div className="max-w-2xl mx-auto space-y-3">
+              <div className="max-w-2xl mx-auto space-y-3 px-2">
                 {selectedEmotion && emotionDetails[selectedEmotion] && (
-                  <p className="text-lg sm:text-xl text-[#4A3F55] leading-relaxed break-keep">
+                  <p className="text-base sm:text-lg md:text-xl text-[#4A3F55] leading-relaxed break-keep">
                     {emotionDetails[selectedEmotion].slice(0, 3).join(", ")}
                     {emotionDetails[selectedEmotion].length > 3 && "..."}
                   </p>
                 )}
-                <p className="text-base sm:text-lg text-[#5A4A4A] leading-relaxed break-keep">
+                <p className="text-sm sm:text-base md:text-lg text-[#5A4A4A] leading-relaxed break-keep">
                   오늘 선택된 감정을 기반으로 당신의 감정 패턴을 분석한 결과,
                   <br />
                   당신의 감정 캐릭터가 생성되었습니다.
@@ -559,9 +559,10 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                       sessionSection?.scrollIntoView({ behavior: "smooth" });
                     }, 100);
                   }}
-                  className="w-full sm:w-auto px-8 py-6 rounded-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-lg font-semibold shadow-[0_15px_40px_rgba(139,92,246,0.35)] transition-transform duration-300 hover:scale-[1.02]"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 rounded-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-sm sm:text-lg font-semibold shadow-[0_15px_40px_rgba(139,92,246,0.35)] transition-transform duration-300 hover:scale-[1.02] leading-tight break-words"
                 >
-                  {getCharacterName(selectedEmotion)}의 진짜 이야기 듣기 (1:1 체험)
+                  <span className="block sm:inline">{getCharacterName(selectedEmotion)}의 진짜 이야기 듣기</span>
+                  <span className="block sm:inline"> (1:1 체험)</span>
                 </Button>
                 {/* <Button
                   type="button"
@@ -578,16 +579,16 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
           {/* 체험 안내 섹션 (Scroll Down) */}
           {showSessionSection && (
             <section id="session-section" className="relative px-4 sm:px-6 py-16 bg-white animate-fade-in">
-            <div className="max-w-3xl mx-auto space-y-12">
+            <div className="max-w-3xl mx-auto space-y-8 sm:space-y-12">
               {/* 섹션 헤더 */}
               <div className="text-center space-y-4">
-                <h2 className="text-2xl sm:text-3xl font-bold text-[#1F1F2B] break-keep">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#1F1F2B] leading-relaxed break-keep px-2">
                   잠깐! {getCharacterName(selectedEmotion)} 캐릭터의 <span className="text-[#8B5CF6]">숨겨진 뒷면</span>을 확인해 보세요.
                 </h2>
               </div>
 
               {/* 핵심 이점 3가지 */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                 <div className="flex flex-col items-center text-center space-y-3 p-6 rounded-2xl bg-gradient-to-br from-[#F3E8FF] to-white">
                   <div className="text-4xl">⏱️</div>
                   <h3 className="font-semibold text-[#3A556A]">20-40분</h3>
@@ -606,11 +607,11 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
               </div>
 
               {/* 세션 가치 설명 */}
-              <div className="space-y-4 p-8 rounded-3xl bg-gradient-to-br from-[#FFF8F5] to-white border border-[#F3E8FF]">
-                <h3 className="text-xl font-bold text-[#1F1F2B] break-keep">
+              <div className="space-y-3 sm:space-y-4 p-5 sm:p-8 rounded-3xl bg-gradient-to-br from-[#FFF8F5] to-white border border-[#F3E8FF]">
+                <h3 className="text-lg sm:text-xl font-bold text-[#1F1F2B] leading-relaxed break-keep">
                   왜 이 세션이 필요한가요?
                 </h3>
-                <p className="text-base text-[#5A4A4A] leading-relaxed break-keep">
+                <p className="text-sm sm:text-base text-[#5A4A4A] leading-relaxed break-keep">
                   당신의 {getCharacterName(selectedEmotion)}가 억누르고 있는 <strong className="text-[#8B5CF6]">진짜 욕구와 행동 패턴의 근원</strong>을 찾아 드립니다.
                   <br />
                   <br />
@@ -620,8 +621,8 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
               {/* 예약 모듈 */}
               <Card className="max-w-2xl mx-auto">
-                <CardHeader className="text-center space-y-4">
-                  <CardTitle className="text-2xl font-bold text-[#3A556A]">
+                <CardHeader className="text-center space-y-3 sm:space-y-4 px-4 sm:px-6 pt-6 sm:pt-6">
+                  <CardTitle className="text-xl sm:text-2xl font-bold text-[#3A556A]">
                     1:1 세션 예약하기
                   </CardTitle>
                 </CardHeader>
@@ -644,10 +645,10 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                     });
                   }}
                 >
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-5 sm:space-y-6 px-4 sm:px-6">
                   {/* 이름 입력 */}
                   <div className="space-y-2">
-                    <Label htmlFor="booking-name" className="text-base font-semibold text-[#3A556A]">
+                    <Label htmlFor="booking-name" className="text-sm sm:text-base font-semibold text-[#3A556A]">
                       이름
                     </Label>
                     <input
@@ -655,13 +656,13 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                       id="booking-name"
                       name="name"
                       placeholder="이름을 입력해주세요"
-                      className="w-full px-4 py-3 rounded-lg border border-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent"
+                      className="w-full px-4 py-4 sm:py-3 rounded-lg border border-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent text-base min-h-[44px]"
                     />
                   </div>
 
                   {/* 연락처 입력 */}
                   <div className="space-y-2">
-                    <Label htmlFor="booking-contact" className="text-base font-semibold text-[#3A556A]">
+                    <Label htmlFor="booking-contact" className="text-sm sm:text-base font-semibold text-[#3A556A]">
                       연락처
                     </Label>
                     <input
@@ -669,13 +670,13 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                       id="booking-contact"
                       name="contact"
                       placeholder="연락처를 입력해주세요"
-                      className="w-full px-4 py-3 rounded-lg border border-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent"
+                      className="w-full px-4 py-4 sm:py-3 rounded-lg border border-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent text-base min-h-[44px]"
                     />
                   </div>
 
                   {/* 나이 입력 */}
                   <div className="space-y-2">
-                    <Label htmlFor="booking-age" className="text-base font-semibold text-[#3A556A]">
+                    <Label htmlFor="booking-age" className="text-sm sm:text-base font-semibold text-[#3A556A]">
                       나이
                     </Label>
                     <select
@@ -683,7 +684,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                       name="age"
                       value={selectedAge}
                       onChange={(e) => setSelectedAge(e.target.value === "" ? "" : Number(e.target.value))}
-                      className="w-full px-4 py-3 rounded-lg border border-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent"
+                      className="w-full px-4 py-4 sm:py-3 rounded-lg border border-[#D1D5DB] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:border-transparent text-base min-h-[44px]"
                     >
                       <option value="">나이를 선택해주세요</option>
                       {Array.from({ length: 10 }, (_, i) => i + 19).map((age) => (
@@ -696,7 +697,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
                   {/* 직업 선택 */}
                   <div className="space-y-3">
-                    <Label htmlFor="job-select" className="text-base font-semibold text-[#3A556A]">
+                    <Label htmlFor="job-select" className="text-sm sm:text-base font-semibold text-[#3A556A]">
                       직업
                     </Label>
                     <div className="grid grid-cols-2 gap-3">
@@ -706,7 +707,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                           type="button"
                           onClick={() => setSelectedJob(job)}
                           className={clsx(
-                            "px-4 py-3 rounded-lg border-2 text-base font-medium transition-all",
+                            "px-4 py-4 sm:py-3 rounded-lg border-2 text-sm sm:text-base font-medium transition-all min-h-[44px]",
                             selectedJob === job
                               ? "border-[#8B5CF6] bg-[#F3E8FF] text-[#8B5CF6] shadow-md"
                               : "border-[#D1D5DB] bg-white text-[#5A4A5A] hover:border-[#8B5CF6] hover:bg-[#F9FAFB]"
@@ -721,17 +722,17 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
                   {/* 요일 선택 */}
                   <div className="space-y-3">
-                    <Label htmlFor="day-select" className="text-base font-semibold text-[#3A556A]">
+                    <Label htmlFor="day-select" className="text-sm sm:text-base font-semibold text-[#3A556A]">
                       요일 선택
                     </Label>
-                    <div className="grid grid-cols-4 gap-2 sm:grid-cols-7">
+                    <div className="grid grid-cols-7 gap-2">
                       {(["월", "화", "수", "목", "금", "토", "일"] as const).map((day) => (
                         <button
                           key={day}
                           type="button"
                           onClick={() => setSelectedDay(day)}
                           className={clsx(
-                            "px-3 py-2.5 rounded-lg border-2 text-sm font-medium transition-all",
+                            "px-2 py-3 sm:px-3 sm:py-2.5 rounded-lg border-2 text-xs sm:text-sm font-medium transition-all min-h-[44px]",
                             selectedDay === day
                               ? "border-[#8B5CF6] bg-[#F3E8FF] text-[#8B5CF6] shadow-md"
                               : "border-[#D1D5DB] bg-white text-[#5A4A5A] hover:border-[#8B5CF6] hover:bg-[#F9FAFB]"
@@ -746,7 +747,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
                   {/* 시간대 선택 */}
                   <div className="space-y-3">
-                    <Label htmlFor="time-select" className="text-base font-semibold text-[#3A556A]">
+                    <Label htmlFor="time-select" className="text-sm sm:text-base font-semibold text-[#3A556A]">
                       시간대 선택
                     </Label>
                     <div className="grid grid-cols-3 gap-3">
@@ -756,7 +757,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                           type="button"
                           onClick={() => setSelectedTime(time)}
                           className={clsx(
-                            "px-4 py-3 rounded-lg border-2 text-base font-medium transition-all",
+                            "px-4 py-4 sm:py-3 rounded-lg border-2 text-sm sm:text-base font-medium transition-all min-h-[44px]",
                             selectedTime === time
                               ? "border-[#8B5CF6] bg-[#F3E8FF] text-[#8B5CF6] shadow-md"
                               : "border-[#D1D5DB] bg-white text-[#5A4A5A] hover:border-[#8B5CF6] hover:bg-[#F9FAFB]"
@@ -785,7 +786,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                       <Button
                         type="button"
                         onClick={handleReset}
-                        className="w-full rounded-full py-4 text-lg font-semibold shadow-md transition bg-[#8B5CF6] hover:bg-[#7C3AED] text-white"
+                        className="w-full rounded-full py-4 text-base sm:text-lg font-semibold shadow-md transition bg-[#8B5CF6] hover:bg-[#7C3AED] text-white min-h-[52px]"
                       >
                         다시하기
                       </Button>
@@ -795,13 +796,20 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                       type="submit"
                       disabled={!selectedDay || !selectedTime || !selectedAge || !selectedJob || isFormSubmitting}
                       className={clsx(
-                        "w-full rounded-full py-4 text-lg font-semibold shadow-md transition",
+                        "w-full rounded-full py-4 sm:py-4 text-sm sm:text-lg font-semibold shadow-md transition min-h-[52px] leading-tight break-words",
                         selectedDay && selectedTime && selectedAge && selectedJob && !isFormSubmitting
                           ? "bg-[#A78BFA] hover:bg-[#8B5CF6] text-white"
                           : "bg-[#E3ECF9] text-[#9CA3AF] cursor-not-allowed"
                       )}
                     >
-                      {isFormSubmitting ? "제출 중..." : "1:1 세션 예약하고 내 캐릭터 자세히 보기"}
+                      {isFormSubmitting ? (
+                        "제출 중..."
+                      ) : (
+                        <>
+                          <span className="block sm:inline">1:1 세션 예약하고</span>
+                          <span className="block sm:inline"> 내 캐릭터 자세히 보기</span>
+                        </>
+                      )}
                     </Button>
                   )}
                 </CardFooter>
@@ -820,13 +828,20 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                 form="booking-form"
                 disabled={!selectedDay || !selectedTime || !selectedAge || !selectedJob || isFormSubmitting}
                 className={clsx(
-                  "w-full rounded-full py-4 text-lg font-semibold shadow-md transition",
+                  "w-full rounded-full py-4 text-sm sm:text-lg font-semibold shadow-md transition min-h-[52px] leading-tight break-words",
                   selectedDay && selectedTime && selectedAge && selectedJob && !isFormSubmitting
                     ? "bg-[#8B5CF6] hover:bg-[#7C3AED] text-white"
                     : "bg-[#E3ECF9] text-[#9CA3AF] cursor-not-allowed"
                 )}
               >
-                {isFormSubmitting ? "제출 중..." : "1:1 세션 예약하고 내 캐릭터 자세히 보기"}
+                {isFormSubmitting ? (
+                  "제출 중..."
+                ) : (
+                  <>
+                    <span className="block sm:inline">1:1 세션 예약하고</span>
+                    <span className="block sm:inline"> 내 캐릭터 자세히 보기</span>
+                  </>
+                )}
               </Button>
             </div>
           </div>

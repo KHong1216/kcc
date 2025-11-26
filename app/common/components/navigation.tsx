@@ -75,6 +75,7 @@ const menus = [
 export function Navigation() {
     const location = useLocation();
     const isHomePage = location.pathname === "/";
+    const isEmotionPage = location.pathname === "/test/emotion";
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     
     const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -89,6 +90,11 @@ export function Navigation() {
     const closeMobileMenu = () => {
         setMobileMenuOpen(false);
     };
+    
+    // emotion 페이지에서는 네비게이션 숨기기
+    if (isEmotionPage) {
+        return null;
+    }
     
     return (
         <>
