@@ -69,13 +69,38 @@ interface ReservationActionResult {
 }
 
 export function meta({}: Route.MetaArgs) {
-  const url = "https://www.koicreativelab.com/event/love-potion";
+  const url = "https://www.koicreativelab.com/programs/love";
   return [
-    { title: "Love Potion Event - 코이창작소" },
+    { title: "Love Potion 이벤트 - 나만의 사랑 성분을 찾는 특별한 경험 | 코이창작소" },
     {
       name: "description",
       content:
-        "러브 포션 젤리를 고르고 코이창작소에 맞춤 상담을 요청해 보세요. 필요한 사랑 성분과 루틴을 안내해 드립니다.",
+        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 코이창작소의 1:1 상담을 예약해보세요.",
+    },
+    {
+      name: "keywords",
+      content: "러브포션, 사랑성분, 연애상담, 관계상담, 맞춤상담, 코이창작소, Love Potion",
+    },
+    { name: "robots", content: "index, follow" },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: url },
+    { property: "og:title", content: "Love Potion 이벤트 - 나만의 사랑 성분을 찾는 특별한 경험" },
+    {
+      property: "og:description",
+      content:
+        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 코이창작소의 1:1 상담을 예약해보세요.",
+    },
+    { property: "og:image", content: "https://www.koicreativelab.com/og-love.jpg" },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:locale", content: "ko_KR" },
+    { property: "og:site_name", content: "코이창작소" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "Love Potion 이벤트 - 나만의 사랑 성분을 찾는 특별한 경험" },
+    {
+      name: "twitter:description",
+      content:
+        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 코이창작소의 1:1 상담을 예약해보세요.",
     },
     { rel: "canonical", href: url },
   ];
@@ -270,15 +295,45 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
     setClientError(null);
   };
 
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "러브 포션 이벤트",
+    "name": "Love Potion 이벤트",
+    "description":
+      "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 코이창작소의 1:1 상담을 예약해보세요.",
+    "provider": {
+      "@type": "Organization",
+      "name": "코이창작소",
+      "alternateName": "KOI Creative Lab",
+      "url": "https://www.koicreativelab.com",
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "대한민국",
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "KRW",
+      "availability": "https://schema.org/InStock",
+    },
+  };
+
   return (
-    <div className="bg-[#FFF7F5] text-[#3B2F2F]">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <div className="bg-[#FFF7F5] text-[#3B2F2F]">
       <section ref={jellySectionRef} className={SECTION_CLASS}>
         <div className={CARD_CLASS}>
           <div className="space-y-3 text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-[#FFB6C1]">
               Love Potion Bar
             </p>
-            <h2 className={`${TITLE_CLASS} break-keep`}>젤리 선택하기</h2>
+            <h1 className={`${TITLE_CLASS} break-keep`}>Love Potion 이벤트 - 젤리 선택하기</h1>
             <p className={`${SUBTITLE_CLASS} break-keep`}>
               포션바에 놓인 젤리 비커 중 오늘 필요한 사랑의 성분을 담아 보세요.
               <br />
@@ -689,7 +744,8 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
           </button>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }
 
