@@ -25,6 +25,7 @@ export default [
     ...prefix("programs", [
         route("essay", "features/programs/essay/pages/essay-page.tsx"),
         route("love", "features/event/pages/love-potion-event-page.tsx"),
+        route("love1", "features/event/pages/love-potion-event-page2.tsx"),
         route("photo", "features/programs/photo/pages/photo-page.tsx"),
     ]),
     ...prefix("reservation", [

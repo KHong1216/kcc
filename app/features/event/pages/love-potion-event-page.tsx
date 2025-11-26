@@ -166,6 +166,8 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
   const [currentStep, setCurrentStep] = useState<0 | 1>(0);
   const [showPrescription, setShowPrescription] = useState(false);
   const [clientError, setClientError] = useState<string | null>(null);
+  const [showSection2, setShowSection2] = useState(false);
+  const [showSection3, setShowSection3] = useState(false);
   const navigation = useNavigation();
   const actionFeedback = actionData as ReservationActionResult | undefined;
   const isAligned = picks.length === 2 && picks[0] === picks[1];
@@ -219,6 +221,26 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
     target?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // Section 2 show when "다음 단계로 이동하기" is clicked
+  const handleScrollToSection2 = () => {
+    if (picks[0]) {
+      setShowSection2(true);
+      // Scroll to section 2 after it's rendered
+      setTimeout(() => {
+        handleScrollTo(guideSectionRef.current);
+      }, 0);
+    }
+  };
+
+  // Section 3 show when 상담 예약 버튼을 눌렀을 때
+  const handleGoToReservation = () => {
+    setShowSection3(true);
+    // Scroll to section 3 after it's rendered
+    setTimeout(() => {
+      handleScrollTo(reservationSectionRef.current);
+    }, 0);
+  };
+
   const handleNeedPick = (ingredient: (typeof INGREDIENTS)[number]) => {
     setShowPrescription(false);
     setPicks((prev) => {
@@ -257,7 +279,7 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
 
   const handlePrimaryCTA = () => {
     if (showPrescription) {
-      handleScrollTo(reservationSectionRef.current);
+      handleGoToReservation();
       return;
     }
     handleGuideCTA();
@@ -443,17 +465,18 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
                 "bg-[#FF8FB1] text-white shadow-[0_12px_30px_rgba(255,143,177,0.55)] hover:bg-[#ff7aa4]",
             )}
             disabled={!picks[0]}
-            onClick={() => handleScrollTo(guideSectionRef.current)}
+            onClick={handleScrollToSection2}
           >
             <span className="break-keep">{picks[0] ? "다음 단계로 이동하기" : "필요한 사랑 성분을 먼저 골라 주세요"}</span>
           </Button>
         </div>
       </section>
 
-      <section
-        ref={guideSectionRef}
-        className={`${SECTION_CLASS} bg-[#FFE6EB]/60`}
-      >
+      {showSection2 && (
+        <section
+          ref={guideSectionRef}
+          className={`${SECTION_CLASS} bg-[#FFE6EB]/60`}
+        >
         <div className={CARD_CLASS}>
           <div className="space-y-3 text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-[#E98BAF]">
@@ -562,7 +585,7 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
                     <button
                       type="button"
                       className="w-full rounded-full border border-[#FF8FB1] bg-white px-4 py-3 text-sm font-semibold text-[#B85676] transition hover:bg-[#FFE3EC] break-keep"
-                      onClick={() => handleScrollTo(reservationSectionRef.current)}
+                      onClick={handleGoToReservation}
                     >
                       상담 예약하러 가기
                     </button>
@@ -595,8 +618,10 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
           </div>
         </div>
       </section>
+      )}
 
-      <section ref={reservationSectionRef} className={SECTION_CLASS}>
+      {showSection3 && (
+        <section ref={reservationSectionRef} className={SECTION_CLASS}>
         <div className={CARD_CLASS}>
           <p className="text-xs uppercase tracking-[0.3em] text-[#D977A0]">Koi Consultation</p>
           <h2 className={`${TITLE_CLASS} break-keep`}>코이창작소를 통해 알아보기</h2>
@@ -744,6 +769,7 @@ export function LovePotionEventPage({ actionData }: Route.ComponentProps) {
           </button>
         </div>
       </section>
+      )}
       </div>
     </>
   );
