@@ -22,6 +22,7 @@ export interface CreateEmotionTestResponseInput {
   characterName: string;
   day: string;
   time: string;
+  answers?: Record<string, string> | null;
 }
 
 export async function createEmotionTestResponse(
@@ -36,6 +37,7 @@ export async function createEmotionTestResponse(
     character_name: input.characterName,
     day: input.day,
     time: input.time,
+    answers: input.answers || null,
   });
 
   if (error) {

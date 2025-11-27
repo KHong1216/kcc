@@ -43,12 +43,13 @@ const INGREDIENTS = [
     accent: "bg-[#F1E9FF] text-[#6C55B7]",
   },
   {
-    name: "워밍 토치",
+    name: "워밍 터치",
     english: "Warming Touch",
     description: "닿는 온기를 퍼뜨리는 성분",
     accent: "bg-[#FFEEDC] text-[#B65E36]",
   },
 ];
+
 
 const STEP_COPY = [
   {
