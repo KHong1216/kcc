@@ -186,11 +186,21 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
   const [imageError, setImageError] = useState(false);
   const mobileTooltipTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const analysisTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isPageTransitioning, setIsPageTransitioning] = useState(false);
+  const pageTransitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const participantCount = loaderData?.participantCount ?? 0;
   const formattedParticipantCount = new Intl.NumberFormat("ko-KR").format(participantCount || 0);
 
   const handleStart = () => {
+    setIsPageTransitioning(true);
+    setMobileTooltipEmotion(null);
     setCurrentPage(2);
+    if (pageTransitionTimeoutRef.current) {
+      clearTimeout(pageTransitionTimeoutRef.current);
+    }
+    pageTransitionTimeoutRef.current = setTimeout(() => {
+      setIsPageTransitioning(false);
+    }, 350);
   };
 
   const handleNext = () => {
@@ -200,6 +210,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
   };
 
   const handleEmotionSelect = (emotion: Emotion) => {
+    if (isPageTransitioning) return;
     setSelectedEmotion(emotion);
     setImageError(false); // 이미지 에러 상태 리셋
     if (currentPage !== 2) return;
@@ -215,6 +226,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
   };
 
   const showMobileTooltip = (emotion: Emotion) => {
+    if (isPageTransitioning) return;
     if (mobileTooltipTimeoutRef.current) {
       clearTimeout(mobileTooltipTimeoutRef.current);
     }
@@ -231,6 +243,9 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       }
       if (analysisTimeoutRef.current) {
         clearTimeout(analysisTimeoutRef.current);
+      }
+      if (pageTransitionTimeoutRef.current) {
+        clearTimeout(pageTransitionTimeoutRef.current);
       }
     };
   }, []);
@@ -304,6 +319,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
     setSelectedJob("");
     setShowSessionSection(false);
     setImageError(false);
+    setIsPageTransitioning(false);
   };
 
   useEffect(() => {
@@ -441,7 +457,12 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+            <div
+              className={clsx(
+                "grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4",
+                isPageTransitioning && "pointer-events-none"
+              )}
+            >
               {(Object.keys(emotionEmojis) as Emotion[]).map((emotion) => {
                 const isSelected = selectedEmotion === emotion;
                 return (
