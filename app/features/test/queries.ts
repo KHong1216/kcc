@@ -47,3 +47,44 @@ export async function createEmotionTestResponse(
 
   return { success: true };
 }
+
+export async function getProgramVoteCount(programNames?: string[]): Promise<number> {
+  try {
+    let query = client.from("program_votes").select("*", { count: "exact", head: true });
+
+    if (programNames && programNames.length > 0) {
+      query = query.in("program_name", programNames);
+    }
+
+    const { count, error } = await query;
+
+    if (error) {
+      console.error("[queries] failed to count program_votes", error);
+      // 테이블이 없을 경우 0 반환
+      if (error.code === "PGRST116" || error.message?.includes("does not exist")) {
+        return 0;
+      }
+      return 0;
+    }
+
+    return count ?? 0;
+  } catch (error) {
+    console.error("[queries] unexpected error counting program_votes", error);
+    return 0;
+  }
+}
+
+export async function createProgramVote(
+  programName: string
+): Promise<{ success: boolean; error?: string }> {
+  const { error } = await client.from("program_votes").insert({
+    program_name: programName,
+  });
+
+  if (error) {
+    console.error("[queries] failed to create program_vote", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}

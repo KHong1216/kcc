@@ -35,6 +35,7 @@ export default [
         index("features/test/pages/test-page.tsx"),
         route("gift", "features/test/pages/gift-page.tsx"),
         route("emotion", "features/test/pages/emotion-page.tsx"),
+        route("event-result", "features/test/pages/event-result-page.tsx"),
     ]),
     route("join", "features/reservation/pages/qr-page.tsx"),
     route("/api/chat", "features/reservation/api-chat.tsx"),
