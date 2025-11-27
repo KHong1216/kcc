@@ -248,6 +248,8 @@ export function LovePotionEventPage2({ actionData }: Route.ComponentProps) {
   const handlePrimaryCTA = () => {
     if (showPrescription) {
       setCurrentPage(3);
+      // 예약 페이지로 이동할 때 스크롤을 최상단으로 스무스하게 이동
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     handleGuideCTA();
@@ -560,7 +562,11 @@ export function LovePotionEventPage2({ actionData }: Route.ComponentProps) {
                         <button
                           type="button"
                           className="w-full rounded-full border border-[#FF8FB1] bg-white px-4 py-3 text-sm font-semibold text-[#B85676] transition hover:bg-[#FFE3EC] break-keep"
-                          onClick={() => setCurrentPage(3)}
+                          onClick={() => {
+                            setCurrentPage(3);
+                            // 예약 페이지로 이동할 때 스크롤을 최상단으로 스무스하게 이동
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
                         >
                           상담 예약하러 가기
                         </button>
