@@ -604,6 +604,15 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
     setIsPageTransitioning(false);
   };
 
+  // ④ state 초기화 - 질문 변경 시 선택 상태 초기화하여 잔상 방지
+  useEffect(() => {
+    // 질문이 변경되면 선택 상태를 초기화 (answers는 유지하되 시각적 잔상 방지)
+    if (currentPage === 2) {
+      // 질문 변경 시 강제 리렌더링을 위한 상태 업데이트
+      setIsPageTransitioning(false);
+    }
+  }, [currentQuestionIndex, currentPage]);
+
   useEffect(() => {
     if (actionFeedback?.success) {
       // 폼 리셋
@@ -626,9 +635,11 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            /* ① tap highlight 제거 */
             * {
               -webkit-tap-highlight-color: transparent;
             }
+            /* ② active 상태 잔상 제거 */
             button:active, a:active, div:active {
               opacity: 1 !important;
               background-color: inherit !important;
