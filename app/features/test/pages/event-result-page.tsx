@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../../common/components/ui/dialog";
-import { Heart, Camera, MessageSquare, Loader2 } from "lucide-react";
+import { Heart, Camera, MessageSquare, Star, Loader2 } from "lucide-react";
 import clsx from "clsx";
 import type { Route } from "./+types/event-result-page";
 import { getProgramVoteCount, createProgramVote } from "../queries";
@@ -29,14 +29,15 @@ export async function loader({ request }: Route.LoaderArgs) {
   const program1 = url.searchParams.get("program1");
   const program2 = url.searchParams.get("program2");
   const program3 = url.searchParams.get("program3");
+  const program4 = url.searchParams.get("program4");
 
-  const programNames = [program1, program2, program3].filter(
+  const programNames = [program1, program2, program3, program4].filter(
     (name): name is string => name !== null && name.trim() !== ""
   );
 
   let voteCount = 0;
   try {
-    voteCount = await getProgramVoteCount(programNames.length > 0 ? programNames : undefined);
+    voteCount = await getProgramVoteCount();
   } catch (error) {
     console.error("[event-result-page] failed to load vote count", error);
     // 에러가 발생해도 0으로 처리하여 페이지는 정상적으로 표시
@@ -45,7 +46,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   return {
     voteCount,
-    programNames: programNames.length === 3 ? programNames : null,
+    programNames: programNames.length === 4 ? programNames : null,
   };
 }
 
@@ -102,6 +103,12 @@ const PROGRAM_COLORS = [
     bgClass: "bg-[#FFEEDC] hover:bg-[#FFE5C5]",
     borderClass: "border-[#FFE6C5]",
   },
+  {
+    icon: Star,
+    colorClass: "text-[#D4A574]",
+    bgClass: "bg-[#FFF8E7] hover:bg-[#FFF4D6]",
+    borderClass: "border-[#FFD89C]",
+  },
 ];
 
 export default function EventResultPage({ loaderData, actionData }: Route.ComponentProps) {
@@ -114,6 +121,7 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
   const [program1, setProgram1] = useState("");
   const [program2, setProgram2] = useState("");
   const [program3, setProgram3] = useState("");
+  const [program4, setProgram4] = useState("");
   const [inputErrors, setInputErrors] = useState<string[]>([]);
   const [showVotingModal, setShowVotingModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
@@ -125,10 +133,11 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
 
   // Initialize from URL params if available
   useEffect(() => {
-    if (savedProgramNames && savedProgramNames.length === 3) {
+    if (savedProgramNames && savedProgramNames.length === 4) {
       setProgram1(savedProgramNames[0]);
       setProgram2(savedProgramNames[1]);
       setProgram3(savedProgramNames[2]);
+      setProgram4(savedProgramNames[3]);
       setStep("voting");
     }
   }, [savedProgramNames]);
@@ -177,10 +186,12 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
     const trimmed1 = program1.trim();
     const trimmed2 = program2.trim();
     const trimmed3 = program3.trim();
+    const trimmed4 = program4.trim();
 
     if (!trimmed1) errors.push("첫 번째 프로그램 이름을 입력해주세요.");
     if (!trimmed2) errors.push("두 번째 프로그램 이름을 입력해주세요.");
     if (!trimmed3) errors.push("세 번째 프로그램 이름을 입력해주세요.");
+    if (!trimmed4) errors.push("네 번째 프로그램 이름을 입력해주세요.");
 
     if (trimmed1 && trimmed2 && trimmed1 === trimmed2) {
       errors.push("프로그램 이름은 중복될 수 없습니다.");
@@ -188,7 +199,16 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
     if (trimmed1 && trimmed3 && trimmed1 === trimmed3) {
       errors.push("프로그램 이름은 중복될 수 없습니다.");
     }
+    if (trimmed1 && trimmed4 && trimmed1 === trimmed4) {
+      errors.push("프로그램 이름은 중복될 수 없습니다.");
+    }
     if (trimmed2 && trimmed3 && trimmed2 === trimmed3) {
+      errors.push("프로그램 이름은 중복될 수 없습니다.");
+    }
+    if (trimmed2 && trimmed4 && trimmed2 === trimmed4) {
+      errors.push("프로그램 이름은 중복될 수 없습니다.");
+    }
+    if (trimmed3 && trimmed4 && trimmed3 === trimmed4) {
       errors.push("프로그램 이름은 중복될 수 없습니다.");
     }
 
@@ -203,6 +223,7 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
       program1: trimmed1,
       program2: trimmed2,
       program3: trimmed3,
+      program4: trimmed4,
     });
     navigate(`?${params.toString()}`, { replace: true });
     setStep("voting");
@@ -235,7 +256,7 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
                 프로그램 이름 입력
               </CardTitle>
               <p className="text-base text-[#5A4A4A]">
-                투표할 3가지 프로그램의 이름을 입력해주세요.
+                투표할 4가지 프로그램의 이름을 입력해주세요.
               </p>
             </CardHeader>
             <CardContent>
@@ -282,6 +303,20 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
                   />
                 </div>
 
+                <div className="space-y-2">
+                  <Label htmlFor="program4" className="text-sm font-semibold text-[#3B2F2F]">
+                    네 번째 프로그램
+                  </Label>
+                  <Input
+                    id="program4"
+                    type="text"
+                    value={program4}
+                    onChange={(e) => setProgram4(e.target.value)}
+                    placeholder="프로그램 이름을 입력하세요"
+                    className="rounded-2xl border-[#EEC2D0] bg-white/70 text-[#3B2F2F]"
+                  />
+                </div>
+
                 {inputErrors.length > 0 && (
                   <div className="rounded-2xl border border-[#FB7185] bg-[#FFF5F7] px-4 py-3 space-y-1">
                     {inputErrors.map((error, index) => (
@@ -305,7 +340,7 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
       )}
 
       {/* Step 2: Voting */}
-      {step === "voting" && savedProgramNames && savedProgramNames.length === 3 && (
+      {step === "voting" && savedProgramNames && savedProgramNames.length === 4 && (
         <section className="min-h-screen flex flex-col items-center justify-center px-6 py-20 space-y-8">
           {/* Header - Participant Count */}
           <div className="text-center space-y-2">
