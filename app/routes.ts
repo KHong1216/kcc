@@ -38,6 +38,7 @@ export default [
         route("event-result", "features/test/pages/event-result-page.tsx"),
     ]),
     route("join", "features/reservation/pages/qr-page.tsx"),
+    route("event", "features/test/pages/event-page.tsx"),
     route("/api/chat", "features/reservation/api-chat.tsx"),
     route("/api/admin/report", "features/admin/common/api-admin-report.tsx"),
     route("/easteregg", "features/programs/easteregg/pages/easter-egg-page.tsx"),

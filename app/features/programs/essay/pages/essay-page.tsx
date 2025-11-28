@@ -1,4 +1,5 @@
 import type { MetaFunction } from "react-router";
+import type { Route } from "./+types/essay-page";
 
 export const meta: MetaFunction = () => {
   const url = "https://www.koicreativelab.com/programs/essay";
@@ -25,9 +26,17 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function EssayPage() {
+export function loader(_: Route.LoaderArgs) {
+  return {};
+}
+
+export function action(_: Route.ActionArgs) {
+  return {};
+}
+
+export function EssayPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#FFF9F5] via-[#FDF4FE] to-[#EFF5FF] px-4 py-16">
+    <div className="flex min-h-screen items-center justify-center bg-[#fefedf]/10 px-4 py-16">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[#2F2143]">리뉴얼 중입니다</h1>
         <p className="mt-4 text-[#5F4C77]">곧 더 나은 서비스로 찾아뵙겠습니다.</p>
@@ -35,3 +44,5 @@ export default function EssayPage() {
     </div>
   );
 }
+
+export default EssayPage;

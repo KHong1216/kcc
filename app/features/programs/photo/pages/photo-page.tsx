@@ -27,7 +27,7 @@ export const meta: MetaFunction = () => {
 
 export default function PhotoPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#FFF9F4] via-[#FDF4F8] to-[#F2F8FF] px-4 py-16">
+    <div className="flex min-h-screen items-center justify-center bg-[#f8f4ee]/10 px-4 py-16">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-[#2F1A3A]">리뉴얼 중입니다</h1>
         <p className="mt-4 text-[#6B5678]">곧 더 나은 서비스로 찾아뵙겠습니다.</p>
