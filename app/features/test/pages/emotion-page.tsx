@@ -498,7 +498,7 @@ const QUIZ_SECTION_CARD_CLASS =
   "relative z-10 w-full max-w-5xl mx-auto rounded-3xl bg-white/80 backdrop-blur-md shadow-[0_18px_60px_rgba(173,134,255,0.22)] px-5 sm:px-10 py-6 space-y-6 sm:space-y-7";
 const QUIZ_OPTION_LIST_CLASS = "space-y-1.5 sm:space-y-3";
 const QUIZ_OPTION_BUTTON_CLASS =
-  "w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-all bg-white/90 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8B5CF6] will-change-transform";
+  "w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-all bg-white/90 shadow-sm focus-visible:outline-none will-change-transform";
 const QUIZ_OPTION_SELECTED_CLASS =
   "border-[#8B5CF6] bg-gradient-to-br from-[#EFE2FF] to-white text-[#2E1E44] shadow-lg scale-[1.01]";
 const QUIZ_OPTION_IDLE_CLASS = "border-transparent hover:border-[#DCCFF8] hover:scale-[1.005]";
@@ -646,26 +646,12 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
   return (
     <>
-      {/* CSS fixes for quiz ghosting issue */}
+      {/* Prevent tap highlight on mobile */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            /* ① tap highlight 제거 */
             * {
               -webkit-tap-highlight-color: transparent;
-            }
-            /* ② active 상태 잔상 제거 - 모든 요소에 적용 */
-            *:not(button):not(input):not(textarea):not(select):active {
-              opacity: 1 !important;
-              background-color: inherit !important;
-              transform: none !important;
-              box-shadow: none !important;
-            }
-            section:active, div:active, p:active, h1:active, h2:active, h3:active, h4:active, span:active, article:active {
-              opacity: 1 !important;
-              background-color: inherit !important;
-              transform: none !important;
-              box-shadow: none !important;
             }
           `,
         }}
