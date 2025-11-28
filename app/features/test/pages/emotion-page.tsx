@@ -789,7 +789,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
               </div>
             </div>
 
-            <div className={clsx(QUIZ_OPTION_LIST_CLASS, isPageTransitioning && "opacity-0 pointer-events-none")} key={`question-options-${currentQuestion.id}-${currentQuestionIndex}`}>
+            <div className={QUIZ_OPTION_LIST_CLASS} key={`question-options-${currentQuestion.id}-${currentQuestionIndex}`}>
               {currentQuestion.options.map((option) => {
                 const isSelected = selectedOptionForQuestion === option.id;
                 return (
