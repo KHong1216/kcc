@@ -654,7 +654,10 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
               -webkit-tap-highlight-color: transparent;
             }
             button:focus,
-            button:focus-visible {
+            button:focus-visible,
+            button:focus-within,
+            button::-moz-focus-inner,
+            button:focus::-moz-focus-inner {
               outline: none;
               box-shadow: none;
             }
