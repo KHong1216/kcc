@@ -653,13 +653,10 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
             * {
               -webkit-tap-highlight-color: transparent;
             }
-            button:focus {
+            button:focus,
+            button:focus-visible {
               outline: none;
               box-shadow: none;
-            }
-            button:focus-visible {
-              outline: 2px solid #8B5CF6;
-              outline-offset: 2px;
             }
               
           `,
