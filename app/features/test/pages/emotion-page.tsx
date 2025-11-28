@@ -498,7 +498,7 @@ const QUIZ_SECTION_CARD_CLASS =
   "relative z-10 w-full max-w-5xl mx-auto rounded-3xl bg-white/80 backdrop-blur-md shadow-[0_18px_60px_rgba(173,134,255,0.22)] px-5 sm:px-10 py-6 space-y-6 sm:space-y-7";
 const QUIZ_OPTION_LIST_CLASS = "space-y-1.5 sm:space-y-3";
 const QUIZ_OPTION_BUTTON_CLASS =
-  "quiz-option-button w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-all bg-white/90 shadow-sm will-change-transform";
+  "quiz-option-button w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-[transform,box-shadow] bg-white/90 shadow-sm will-change-transform";
 const QUIZ_OPTION_SELECTED_CLASS =
   "border-[#8B5CF6] bg-gradient-to-br from-[#EFE2FF] to-white text-[#2E1E44] shadow-lg scale-[1.01]";
 const QUIZ_OPTION_IDLE_CLASS = "border-transparent hover:border-[#DCCFF8] hover:scale-[1.005]";
