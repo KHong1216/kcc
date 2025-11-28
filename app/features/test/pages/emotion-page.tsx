@@ -505,6 +505,14 @@ const QUIZ_OPTION_IDLE_CLASS = "border-transparent hover:border-[#DCCFF8] hover:
 const QUIZ_SECTION_WRAPPER_CLASS =
   "relative min-h-screen bg-gradient-to-b from-[#FFF8F5] via-[#FFEFF8] to-[#FDF6F0] px-4 sm:px-8 py-4 sm:py-6 lg:py-0 lg:flex lg:items-center animate-fade-in will-change-transform";
 
+function blurActiveElement() {
+  if (typeof document === "undefined") return;
+  const activeElement = document.activeElement as HTMLElement | null;
+  if (activeElement && typeof activeElement.blur === "function") {
+    activeElement.blur();
+  }
+}
+
 interface ActionResult {
   success?: boolean;
   message?: string;
@@ -566,6 +574,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
   const handleSelectOption = (optionId: QuizOptionId) => {
     if (isPageTransitioning) return;
+    blurActiveElement();
     const question = QUESTIONS[currentQuestionIndex];
     const updatedAnswers = { ...answers, [question.id]: optionId };
     setAnswers(updatedAnswers);
@@ -610,6 +619,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
     if (currentPage === 2) {
       // 질문 변경 시 transition 상태 초기화 및 강제 리렌더링
       setIsPageTransitioning(false);
+      blurActiveElement();
       // DOM 업데이트를 위한 작은 딜레이로 완전한 리렌더링 보장
       const timer = setTimeout(() => {
         // 현재 질문에 대한 선택 상태만 표시되도록 보장
@@ -636,30 +646,6 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
   return (
     <>
-      {/* CSS fixes for quiz ghosting issue */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-            /* ① tap highlight 제거 */
-            * {
-              -webkit-tap-highlight-color: transparent;
-            }
-            /* ② active 상태 잔상 제거 - 모든 요소에 적용 */
-            *:not(button):not(input):not(textarea):not(select):active {
-              opacity: 1 !important;
-              background-color: inherit !important;
-              transform: none !important;
-              box-shadow: none !important;
-            }
-            section:active, div:active, p:active, h1:active, h2:active, h3:active, h4:active, span:active, article:active {
-              opacity: 1 !important;
-              background-color: inherit !important;
-              transform: none !important;
-              box-shadow: none !important;
-            }
-          `,
-        }}
-      />
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
