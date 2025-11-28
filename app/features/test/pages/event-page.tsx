@@ -91,7 +91,7 @@ const QUIZ_OPTIONS: QuizOption[] = [
 ];
 
 const JOB_OPTIONS = ["학생", "직장인", "프리랜서", "주부", "기타"];
-const TIME_OPTIONS = ["2시", "2시30분", "3시", "3시30분", "4시", "4시30분", "5시", "5시30분", "6시"];
+const TIME_OPTIONS = ["2시", "2시30분", "3시", "3시30분", "4시", "4시30분", "5시", "5시30분", "6시", "6시30분"];
 
 function formatContactInput(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -113,11 +113,10 @@ function QuizOptionCard({ option, isSelected, onSelect }: QuizOptionCardProps) {
       type="button"
       onClick={() => onSelect(option.id)}
       className={clsx(
-        "w-full rounded-2xl border-2 px-6 py-4 text-left transition-all",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8b5cf6] focus-visible:ring-offset-2",
+        "quiz-option-button w-full rounded-2xl border-2 px-6 py-4 text-left transition-[transform,box-shadow]",
         isSelected
           ? "border-[#8b5cf6] bg-[#f4ecff] text-[#31155f] shadow-lg"
-          : "border-[#e8e1ff] bg-white text-[#322553] hover:border-[#cdb8ff] hover:shadow-md"
+          : "border-[#e8e1ff] bg-white text-[#322553]"
       )}
     >
       <span className="text-lg font-semibold">{option.label}</span>
@@ -164,7 +163,7 @@ function ResultModal({ selectedOption, correctOption, onClose, onTicketApply }: 
         <button
           type="button"
           onClick={onTicketApply}
-          className="mt-6 w-full rounded-full bg-[#8b5cf6] py-3 text-sm font-semibold text-white transition hover:bg-[#7848e3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8b5cf6]"
+          className="modal-button mt-6 w-full rounded-full bg-[#8b5cf6] py-3 text-sm font-semibold text-white transition"
         >
           티켓 신청하기
         </button>
@@ -231,6 +230,74 @@ export function EventPage({ actionData }: Route.ComponentProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f9f7ff] to-[#f2f5ff]">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            * {
+              -webkit-tap-highlight-color: transparent;
+            }
+            .quiz-option-button,
+            .quiz-option-button:focus,
+            .quiz-option-button:active,
+            .quiz-option-button:focus-within,
+            .quiz-option-button::-moz-focus-inner,
+            .quiz-option-button:focus::-moz-focus-inner {
+              outline: none !important;
+              box-shadow: none !important;
+            }
+            .quiz-option-button:focus-visible {
+              outline: 2px solid #8b5cf6 !important;
+              outline-offset: 3px;
+              box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            }
+            @media (hover: hover) and (pointer: fine) {
+              .quiz-option-button:not(:disabled):hover {
+                border-color: #cdb8ff;
+                transform: scale(1.005);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+              }
+            }
+            .modal-button,
+            .modal-button:focus,
+            .modal-button:active,
+            .modal-button:focus-within,
+            .modal-button::-moz-focus-inner,
+            .modal-button:focus::-moz-focus-inner {
+              outline: none !important;
+              box-shadow: none !important;
+            }
+            .modal-button:focus-visible {
+              outline: 2px solid #8b5cf6 !important;
+              outline-offset: 3px;
+              box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            }
+            @media (hover: hover) and (pointer: fine) {
+              .modal-button:not(:disabled):hover {
+                background-color: #7848e3 !important;
+              }
+            }
+            .cta-submit-button,
+            .cta-submit-button:focus,
+            .cta-submit-button:active,
+            .cta-submit-button:focus-within,
+            .cta-submit-button::-moz-focus-inner,
+            .cta-submit-button:focus::-moz-focus-inner {
+              outline: none !important;
+              box-shadow: none !important;
+            }
+            .cta-submit-button:focus-visible {
+              outline: 2px solid #8b5cf6 !important;
+              outline-offset: 3px;
+              box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+            }
+            @media (hover: hover) and (pointer: fine) {
+              .cta-submit-button:not(:disabled):hover {
+                background-color: #7848e3 !important;
+              }
+            }
+          `,
+        }}
+      />
       {/* Page 1: Quiz */}
       {currentPage === 1 && (
         <div key="page-1" className="flex min-h-screen items-center justify-center px-4 py-20">
@@ -360,10 +427,10 @@ export function EventPage({ actionData }: Route.ComponentProps) {
                   type="submit"
                   disabled={isFormSubmitting}
                   className={clsx(
-                    "w-full rounded-full py-3 text-sm font-semibold text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c2ff]",
+                    "cta-submit-button w-full rounded-full py-3 text-sm font-semibold text-white transition",
                     isFormSubmitting
                       ? "bg-[#a29ab6] cursor-wait"
-                      : "bg-[#8b5cf6] hover:bg-[#7848e3]"
+                      : "bg-[#8b5cf6]"
                   )}
                 >
                   {isFormSubmitting ? "전송 중..." : "신청하기"}
