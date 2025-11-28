@@ -501,7 +501,7 @@ const QUIZ_OPTION_BUTTON_CLASS =
   "quiz-option-button w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-[transform,box-shadow] bg-white/90 shadow-sm will-change-transform";
 const QUIZ_OPTION_SELECTED_CLASS =
   "border-[#8B5CF6] bg-gradient-to-br from-[#EFE2FF] to-white text-[#2E1E44] shadow-lg scale-[1.01]";
-const QUIZ_OPTION_IDLE_CLASS = "border-transparent hover:border-[#DCCFF8] hover:scale-[1.005]";
+const QUIZ_OPTION_IDLE_CLASS = "border-transparent";
 const QUIZ_SECTION_WRAPPER_CLASS =
   "relative min-h-screen bg-gradient-to-b from-[#FFF8F5] via-[#FFEFF8] to-[#FDF6F0] px-4 sm:px-8 py-4 sm:py-6 lg:py-0 lg:flex lg:items-center animate-fade-in will-change-transform";
 
@@ -655,18 +655,24 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
             }
             .quiz-option-button,
             .quiz-option-button:focus,
+            .quiz-option-button:active,
             .quiz-option-button:focus-within,
             .quiz-option-button::-moz-focus-inner,
             .quiz-option-button:focus::-moz-focus-inner {
-              outline: none;
-              box-shadow: none;
+              outline: none !important;
+              box-shadow: none !important;
             }
             .quiz-option-button:focus-visible {
-              outline: 2px solid #8B5CF6;
+              outline: 2px solid #8B5CF6 !important;
               outline-offset: 3px;
-              box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+              box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
             }
-              
+            @media (hover: hover) and (pointer: fine) {
+              .quiz-option-button:not(:disabled):hover {
+                border-color: #DCCFF8;
+                transform: scale(1.005);
+              }
+            }
           `,
         }}
       />
@@ -783,7 +789,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
               </div>
             </div>
 
-            <div className={QUIZ_OPTION_LIST_CLASS} key={`question-options-${currentQuestion.id}-${currentQuestionIndex}`}>
+            <div className={clsx(QUIZ_OPTION_LIST_CLASS, isPageTransitioning && "opacity-0 pointer-events-none")} key={`question-options-${currentQuestion.id}-${currentQuestionIndex}`}>
               {currentQuestion.options.map((option) => {
                 const isSelected = selectedOptionForQuestion === option.id;
                 return (
