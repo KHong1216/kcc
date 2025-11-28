@@ -498,12 +498,12 @@ const QUIZ_SECTION_CARD_CLASS =
   "relative z-10 w-full max-w-5xl mx-auto rounded-3xl bg-white/80 backdrop-blur-md shadow-[0_18px_60px_rgba(173,134,255,0.22)] px-5 sm:px-10 py-6 space-y-6 sm:space-y-7";
 const QUIZ_OPTION_LIST_CLASS = "space-y-1.5 sm:space-y-3";
 const QUIZ_OPTION_BUTTON_CLASS =
-  "w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-all bg-white/90 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8B5CF6]";
+  "w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-all bg-white/90 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8B5CF6] will-change-transform";
 const QUIZ_OPTION_SELECTED_CLASS =
   "border-[#8B5CF6] bg-gradient-to-br from-[#EFE2FF] to-white text-[#2E1E44] shadow-lg scale-[1.01]";
 const QUIZ_OPTION_IDLE_CLASS = "border-transparent hover:border-[#DCCFF8] hover:scale-[1.005]";
 const QUIZ_SECTION_WRAPPER_CLASS =
-  "relative min-h-screen bg-gradient-to-b from-[#FFF8F5] via-[#FFEFF8] to-[#FDF6F0] px-4 sm:px-8 py-4 sm:py-6 lg:py-0 lg:flex lg:items-center animate-fade-in";
+  "relative min-h-screen bg-gradient-to-b from-[#FFF8F5] via-[#FFEFF8] to-[#FDF6F0] px-4 sm:px-8 py-4 sm:py-6 lg:py-0 lg:flex lg:items-center animate-fade-in will-change-transform";
 
 interface ActionResult {
   success?: boolean;
@@ -556,14 +556,6 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       .map((token) => token.trim())
       .filter(Boolean) ?? [];
 
-function blurActiveElement() {
-  if (typeof document === "undefined") return;
-  const activeElement = document.activeElement as HTMLElement | null;
-  if (activeElement && typeof activeElement.blur === "function") {
-    activeElement.blur();
-  }
-}
-
   const handleStart = () => {
     setIsPageTransitioning(true);
     setCurrentPage(2);
@@ -574,7 +566,6 @@ function blurActiveElement() {
 
   const handleSelectOption = (optionId: QuizOptionId) => {
     if (isPageTransitioning) return;
-    blurActiveElement();
     const question = QUESTIONS[currentQuestionIndex];
     const updatedAnswers = { ...answers, [question.id]: optionId };
     setAnswers(updatedAnswers);
@@ -591,7 +582,7 @@ function blurActiveElement() {
       } else {
         setCurrentQuestionIndex((prev) => prev + 1);
       }
-    }, 220);
+    }, 180);
   };
 
   const handlePrevQuestion = () => {
@@ -629,12 +620,22 @@ function blurActiveElement() {
     }
   }, [actionFeedback]);
 
-  useEffect(() => {
-    blurActiveElement();
-  }, [currentQuestionIndex]);
-
   return (
     <>
+      {/* CSS fixes for quiz ghosting issue */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            * {
+              -webkit-tap-highlight-color: transparent;
+            }
+            button:active, a:active, div:active {
+              opacity: 1 !important;
+              background-color: inherit !important;
+            }
+          `,
+        }}
+      />
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
