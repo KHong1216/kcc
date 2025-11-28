@@ -646,6 +646,30 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
   return (
     <>
+      {/* CSS fixes for quiz ghosting issue */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            /* ① tap highlight 제거 */
+            * {
+              -webkit-tap-highlight-color: transparent;
+            }
+            /* ② active 상태 잔상 제거 - 모든 요소에 적용 */
+            *:not(button):not(input):not(textarea):not(select):active {
+              opacity: 1 !important;
+              background-color: inherit !important;
+              transform: none !important;
+              box-shadow: none !important;
+            }
+            section:active, div:active, p:active, h1:active, h2:active, h3:active, h4:active, span:active, article:active {
+              opacity: 1 !important;
+              background-color: inherit !important;
+              transform: none !important;
+              box-shadow: none !important;
+            }
+          `,
+        }}
+      />
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
