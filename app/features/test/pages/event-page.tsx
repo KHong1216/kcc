@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Form, redirect, useNavigation } from "react-router";
+import { Form, useNavigation } from "react-router";
 import clsx from "clsx";
 import type { MetaFunction } from "react-router";
 import type { Route } from "./+types/event-page";
@@ -211,6 +211,14 @@ export function EventPage({ actionData }: Route.ComponentProps) {
 
   function handleFormChange(field: keyof FormState, value: string) {
     setFormState((prev) => ({ ...prev, [field]: value }));
+  }
+
+  function handleResetToQuiz() {
+    setCurrentPage(1);
+    setSelectedOptionId(null);
+    setShowModal(false);
+    setFormState({ name: "", age: "", contact: "", job: "", time: "" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -448,10 +456,7 @@ export function EventPage({ actionData }: Route.ComponentProps) {
 
               <button
                 type="button"
-                onClick={() => {
-                  redirect("/event");
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
+                onClick={handleResetToQuiz}
                 className="mt-4 w-full text-sm text-[#8b5cf6] underline underline-offset-4"
               >
                 퀴즈로 돌아가기
