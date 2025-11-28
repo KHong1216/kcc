@@ -740,7 +740,8 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                 const isSelected = selectedOptionForQuestion === option.id;
                 return (
                   <button
-                    key={option.id}
+                    key={`${currentQuestion.id}-${option.id}`}
+                    id={`question-${currentQuestion.id}-option-${option.id}`}
                     type="button"
                     onClick={() => handleSelectOption(option.id)}
                     className={clsx(
