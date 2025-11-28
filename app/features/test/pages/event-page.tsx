@@ -113,7 +113,7 @@ function QuizOptionCard({ option, isSelected, onSelect }: QuizOptionCardProps) {
       type="button"
       onClick={() => onSelect(option.id)}
       className={clsx(
-        "quiz-option-button w-full rounded-2xl border-2 px-6 py-4 text-left transition-[transform,box-shadow]",
+        "quiz-option-button w-full rounded-2xl border-2 px-6 py-4 text-left transition-[transform,opacity,box-shadow]",
         isSelected
           ? "border-[#8b5cf6] bg-[#f4ecff] text-[#31155f] shadow-lg"
           : "border-[#e8e1ff] bg-white text-[#322553]"
@@ -238,12 +238,15 @@ export function EventPage({ actionData }: Route.ComponentProps) {
             }
             .quiz-option-button,
             .quiz-option-button:focus,
-            .quiz-option-button:active,
             .quiz-option-button:focus-within,
             .quiz-option-button::-moz-focus-inner,
             .quiz-option-button:focus::-moz-focus-inner {
               outline: none !important;
               box-shadow: none !important;
+            }
+            .quiz-option-button:active {
+              transform: scale(0.98);
+              opacity: 0.9;
             }
             .quiz-option-button:focus-visible {
               outline: 2px solid #8b5cf6 !important;
@@ -259,12 +262,15 @@ export function EventPage({ actionData }: Route.ComponentProps) {
             }
             .modal-button,
             .modal-button:focus,
-            .modal-button:active,
             .modal-button:focus-within,
             .modal-button::-moz-focus-inner,
             .modal-button:focus::-moz-focus-inner {
               outline: none !important;
               box-shadow: none !important;
+            }
+            .modal-button:active {
+              transform: scale(0.98);
+              opacity: 0.9;
             }
             .modal-button:focus-visible {
               outline: 2px solid #8b5cf6 !important;
@@ -278,12 +284,15 @@ export function EventPage({ actionData }: Route.ComponentProps) {
             }
             .cta-submit-button,
             .cta-submit-button:focus,
-            .cta-submit-button:active,
             .cta-submit-button:focus-within,
             .cta-submit-button::-moz-focus-inner,
             .cta-submit-button:focus::-moz-focus-inner {
               outline: none !important;
               box-shadow: none !important;
+            }
+            .cta-submit-button:active:not(:disabled) {
+              transform: scale(0.98);
+              opacity: 0.9;
             }
             .cta-submit-button:focus-visible {
               outline: 2px solid #8b5cf6 !important;
