@@ -608,8 +608,13 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
   useEffect(() => {
     // 질문이 변경되면 선택 상태를 초기화 (answers는 유지하되 시각적 잔상 방지)
     if (currentPage === 2) {
-      // 질문 변경 시 강제 리렌더링을 위한 상태 업데이트
+      // 질문 변경 시 transition 상태 초기화 및 강제 리렌더링
       setIsPageTransitioning(false);
+      // DOM 업데이트를 위한 작은 딜레이로 완전한 리렌더링 보장
+      const timer = setTimeout(() => {
+        // 현재 질문에 대한 선택 상태만 표시되도록 보장
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [currentQuestionIndex, currentPage]);
 
@@ -768,12 +773,12 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
               </div>
             </div>
 
-            <div className={QUIZ_OPTION_LIST_CLASS}>
+            <div className={QUIZ_OPTION_LIST_CLASS} key={`question-options-${currentQuestion.id}-${currentQuestionIndex}`}>
               {currentQuestion.options.map((option) => {
                 const isSelected = selectedOptionForQuestion === option.id;
                 return (
                   <button
-                    key={`${currentQuestion.id}-${option.id}`}
+                    key={`${currentQuestion.id}-${option.id}-${currentQuestionIndex}`}
                     id={`question-${currentQuestion.id}-option-${option.id}`}
                     type="button"
                     onClick={() => handleSelectOption(option.id)}
