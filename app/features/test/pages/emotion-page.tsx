@@ -498,7 +498,7 @@ const QUIZ_SECTION_CARD_CLASS =
   "relative z-10 w-full max-w-5xl mx-auto rounded-3xl bg-white/80 backdrop-blur-md shadow-[0_18px_60px_rgba(173,134,255,0.22)] px-5 sm:px-10 py-6 space-y-6 sm:space-y-7";
 const QUIZ_OPTION_LIST_CLASS = "space-y-1.5 sm:space-y-3";
 const QUIZ_OPTION_BUTTON_CLASS =
-  "w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-all bg-white/90 shadow-sm focus-visible:outline-none will-change-transform";
+  "quiz-option-button w-full rounded-2xl border-2 px-4 py-3 sm:py-3.5 text-left text-sm sm:text-base font-medium leading-relaxed transition-all bg-white/90 shadow-sm will-change-transform";
 const QUIZ_OPTION_SELECTED_CLASS =
   "border-[#8B5CF6] bg-gradient-to-br from-[#EFE2FF] to-white text-[#2E1E44] shadow-lg scale-[1.01]";
 const QUIZ_OPTION_IDLE_CLASS = "border-transparent hover:border-[#DCCFF8] hover:scale-[1.005]";
@@ -646,20 +646,25 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
   return (
     <>
-      {/* Prevent tap highlight on mobile */}
+      {/* Prevent tap highlight on mobile & manage quiz button focus */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
             * {
               -webkit-tap-highlight-color: transparent;
             }
-            button:focus,
-            button:focus-visible,
-            button:focus-within,
-            button::-moz-focus-inner,
-            button:focus::-moz-focus-inner {
+            .quiz-option-button,
+            .quiz-option-button:focus,
+            .quiz-option-button:focus-within,
+            .quiz-option-button::-moz-focus-inner,
+            .quiz-option-button:focus::-moz-focus-inner {
               outline: none;
               box-shadow: none;
+            }
+            .quiz-option-button:focus-visible {
+              outline: 2px solid #8B5CF6;
+              outline-offset: 3px;
+              box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
             }
               
           `,
