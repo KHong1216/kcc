@@ -556,6 +556,14 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       .map((token) => token.trim())
       .filter(Boolean) ?? [];
 
+function blurActiveElement() {
+  if (typeof document === "undefined") return;
+  const activeElement = document.activeElement as HTMLElement | null;
+  if (activeElement && typeof activeElement.blur === "function") {
+    activeElement.blur();
+  }
+}
+
   const handleStart = () => {
     setIsPageTransitioning(true);
     setCurrentPage(2);
@@ -566,6 +574,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
   const handleSelectOption = (optionId: QuizOptionId) => {
     if (isPageTransitioning) return;
+    blurActiveElement();
     const question = QUESTIONS[currentQuestionIndex];
     const updatedAnswers = { ...answers, [question.id]: optionId };
     setAnswers(updatedAnswers);
@@ -619,6 +628,10 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
       alert(actionFeedback.error);
     }
   }, [actionFeedback]);
+
+  useEffect(() => {
+    blurActiveElement();
+  }, [currentQuestionIndex]);
 
   return (
     <>
