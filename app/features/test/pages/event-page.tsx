@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Form, useNavigation } from "react-router";
+import { Form, redirect, useNavigation } from "react-router";
 import clsx from "clsx";
 import type { MetaFunction } from "react-router";
 import type { Route } from "./+types/event-page";
@@ -449,7 +449,7 @@ export function EventPage({ actionData }: Route.ComponentProps) {
               <button
                 type="button"
                 onClick={() => {
-                  setCurrentPage(1);
+                  redirect("/event");
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 className="mt-4 w-full text-sm text-[#8b5cf6] underline underline-offset-4"
