@@ -81,7 +81,7 @@ interface FormState {
   time: string;
 }
 
-const QUIZ_QUESTION = "문제 · 코이창작소에서 진행하지 않는 프로그램은?";
+const QUIZ_QUESTION = "코이창작소에서 진행하지 않는 프로그램은?";
 
 const QUIZ_OPTIONS: QuizOption[] = [
   { id: "1", label: "1. 클릭무드", isCorrect: false },

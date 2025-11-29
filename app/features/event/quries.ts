@@ -38,6 +38,23 @@ export interface CreateLovePotionReservationInput {
   notes: string;
 }
 
+export interface CreateClickMoodReservationInput {
+  userName: string;
+  userAge: number;
+  userJob: string;
+  userPhone: string;
+  selectedMoodId: string;
+  selectedMoodImage: string;
+}
+
+export interface CreateEssayReservationInput {
+  userName: string;
+  userAge: number;
+  userJob: string;
+  userPhone: string;
+  essayContent: string;
+}
+
 export const jellyList: LovePotionJelly[] = [
   {
     id: "light-speak",
@@ -166,6 +183,67 @@ export async function createLovePotionReservation({
       status: "pending",
     })
     .select("id, user_name, user_age, user_phone, notes, status, created_at")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export async function createClickMoodReservation({
+  userName,
+  userAge,
+  userJob,
+  userPhone,
+  selectedMoodId,
+  selectedMoodImage,
+}: CreateClickMoodReservationInput) {
+  const notes = `선택한 엽서: ${selectedMoodId} (${selectedMoodImage})`;
+  
+  const { data, error } = await client
+    .from("reservations")
+    .insert({
+      user_name: userName,
+      user_age: userAge,
+      user_job: userJob,
+      user_phone: userPhone,
+      program_id: "photo",
+      notes,
+      status: "pending",
+    })
+    .select("id, user_name, user_age, user_job, user_phone, notes, status, created_at")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export async function createEssayReservation({
+  userName,
+  userAge,
+  userJob,
+  userPhone,
+  essayContent,
+}: CreateEssayReservationInput) {
+  const notes = `작성한 아무, 말: ${essayContent}`;
+  
+  const { data, error } = await client
+    .from("reservations")
+    .insert({
+      user_name: userName,
+      user_age: userAge,
+      user_job: userJob,
+      user_phone: userPhone,
+      program_id: "essay",
+      notes,
+      status: "pending",
+    })
+    .select("id, user_name, user_age, user_job, user_phone, notes, status, created_at")
     .single();
 
   if (error) {
