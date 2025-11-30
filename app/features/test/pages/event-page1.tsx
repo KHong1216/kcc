@@ -28,7 +28,7 @@ interface ProgramConfig {
 const PROGRAM_CONFIGS: ProgramConfig[] = [
   {
     id: "photo",
-    label: "클릭무드",
+    label: "무색무취",
     subtitle: "사진으로 담는 감정",
     images: [
       { id: "p1", imageUrl: "/desc/p1.png" },
@@ -44,7 +44,7 @@ const PROGRAM_CONFIGS: ProgramConfig[] = [
   },
   {
     id: "love",
-    label: "러브포션",
+    label: "코이창작소",
     subtitle: "사랑을 탐구하다",
     images: [
       { id: "l1", imageUrl: "/desc/l1.png" },
@@ -58,7 +58,7 @@ const PROGRAM_CONFIGS: ProgramConfig[] = [
   },
   {
     id: "essay",
-    label: "아무,말",
+    label: "에세이",
     subtitle: "글로 표현하는 마음",
     images: [
       { id: "e1", imageUrl: "/desc/e1.png" },
