@@ -47,13 +47,13 @@ const PROGRAM_CONFIGS: ProgramConfig[] = [
     label: "러브포션",
     subtitle: "사랑을 탐구하다",
     images: [
-      { id: "l1", imageUrl: "/desc/l1.jpg" },
-      { id: "l2", imageUrl: "/desc/l2.jpg" },
-      { id: "l3", imageUrl: "/desc/l3.jpg" },
-      { id: "l4", imageUrl: "/desc/l4.jpg" },
-      { id: "l5", imageUrl: "/desc/l5.jpg" },
-      { id: "l6", imageUrl: "/desc/l6.jpg" },
-      { id: "l7", imageUrl: "/desc/l7.jpg" },
+      { id: "l1", imageUrl: "/desc/l1.png" },
+      { id: "l2", imageUrl: "/desc/l2.png" },
+      { id: "l3", imageUrl: "/desc/l3.png" },
+      { id: "l4", imageUrl: "/desc/l4.png" },
+      { id: "l5", imageUrl: "/desc/l5.png" },
+      { id: "l6", imageUrl: "/desc/l6.png" },
+      { id: "l7", imageUrl: "/desc/l7.png" },
     ],
   },
   {
@@ -61,9 +61,9 @@ const PROGRAM_CONFIGS: ProgramConfig[] = [
     label: "아무,말",
     subtitle: "글로 표현하는 마음",
     images: [
-      { id: "e1", imageUrl: "/desc/e1.jpg" },
-      { id: "e2", imageUrl: "/desc/e2.jpg" },
-      { id: "e3", imageUrl: "/desc/e3.jpg" },
+      { id: "e1", imageUrl: "/desc/e1.png" },
+      { id: "e2", imageUrl: "/desc/e2.png" },
+      { id: "e3", imageUrl: "/desc/e3.png" },
     ],
   },
 ];
