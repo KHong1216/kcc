@@ -60,13 +60,16 @@ const menus = [
             },
             {
                 name: "무료테스트",
-                description: "에세이 캠프 프로젝트",
                 to: "/community/free",
             },
             {
                 name: "Contact",
                 description: "문의하기",
                 to: "/community/contact",
+            },
+            {
+                name: "Leaflet",
+                to: "/1-2",
             }
         ]
     },
