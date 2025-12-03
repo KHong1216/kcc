@@ -1,15 +1,15 @@
 import { Heart, BookOpen, Sparkles } from "lucide-react";
 
 /**
- * KOI Creative Lab 메인페이지 Value 섹션
- * KOI가 지향하는 세 가지 핵심 가치를 카드로 표현
+ * Re-Frame 메인페이지 Value 섹션
+ * Re-Frame이 지향하는 세 가지 핵심 가치를 카드로 표현
  */
 export function HomeValueSection() {
   return (
     <section className="py-24 bg-[#FDF6F0]">
       <div className="text-center mb-12">
         <h2 className="text-4xl font-extrabold tracking-tight text-[#3B2F2F] mb-3" style={{ lineHeight: '1.6' }}>
-          KOI의 핵심 가치
+          Re-Frame의 핵심 가치
         </h2>
         <p className="text-lg text-[#3B2F2F]/80" style={{ lineHeight: '1.6' }}>
           따뜻함 속에서 피어나는 세 가지 결

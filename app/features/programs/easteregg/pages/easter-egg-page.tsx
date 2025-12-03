@@ -8,7 +8,7 @@ import { WordGame } from "../components/word-game";
 const TARGET_TIME = 5.55;
 
 export const meta: MetaFunction = () => [
-  { title: `${TARGET_TIME}초 맞추기 - 당신의 감각을 측정해보세요 | 코이창작소` },
+  { title: `${TARGET_TIME}초 맞추기 - 당신의 감각을 측정해보세요 | 리 프레임(Re-Frame)` },
   { name: "description", content: `지금 이 순간, 당신의 감각은 얼마나 섬세할까요? ${TARGET_TIME}초를 눌러서 당신의 감정을 측정해보세요.` },
   { name: "robots", content: "noindex, nofollow" }
 ];

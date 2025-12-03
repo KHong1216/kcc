@@ -10,7 +10,7 @@ import { cn } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "굿즈신청 - 코이창작소" },
+    { title: "굿즈신청 - 리 프레임(Re-Frame)" },
     { name: "description", content: "굿즈신청에 간단히 신청하세요" },
     { name: "robots", content: "noindex, nofollow" }
   ];
@@ -47,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
         return {
           success: true,
           reservationId: crypto.randomUUID(),
-          message: "신청이 완료되었습니다! 코이매니저가 곧 연락드려 상세 일정을 안내해드립니다."
+          message: "신청이 완료되었습니다! 리 프레임 매니저가 곧 연락드려 상세 일정을 안내해드립니다."
         };
       }
       
@@ -60,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return {
       success: true,
       reservationId: result.data?.id,
-      message: "신청이 완료되었습니다! 코이매니저가 곧 연락드려 상세 일정을 안내해드립니다."
+      message: "신청이 완료되었습니다! 리 프레임 매니저가 곧 연락드려 상세 일정을 안내해드립니다."
     };
   } catch (error) {
     console.error("[action] error:", error);
@@ -143,7 +143,7 @@ export default function QRPage({ actionData }: QRPageProps) {
                         간단한 정보만 입력해주시면 됩니다
                     </p>
                     <p className="text-sm text-gray-500">
-                        코이매니저가 연락드려 상세 일정을 안내해드립니다
+                        리 프레임 매니저가 연락드려 상세 일정을 안내해드립니다
                     </p>
                 </div>
             </section>
@@ -263,7 +263,7 @@ export default function QRPage({ actionData }: QRPageProps) {
                             {/* 안내 문구 */}
                             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                                 <p className="text-sm text-gray-700">
-                                    📞 신청 후 코이매니저가 연락드려<br />
+                                    📞 신청 후 리 프레임 매니저가 연락드려<br />
                                     상세 일정과 프로그램 안내를 도와드립니다.
                                 </p>
                             </div>

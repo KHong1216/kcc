@@ -6,7 +6,7 @@ interface FooterProps {
 }
 
 /**
- * KOI Creative Lab Footer 컴포넌트
+ * Re-Frame Footer 컴포넌트
  * 따뜻하고 감성적인 톤앤매너를 표현합니다.
  */
 export function Footer({ className }: FooterProps) {
@@ -21,7 +21,7 @@ export function Footer({ className }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* 브랜드 정보 */}
           <div>
-            <h3 className="text-xl font-bold text-[#3B2F2F] mb-4">KOI Creative Lab</h3>
+            <h3 className="text-xl font-bold text-[#3B2F2F] mb-4">Re-Frame</h3>
             <p className="text-[#5A4A4A] leading-relaxed">
               따뜻한 창작, 연결된 청춘
               <br />
@@ -95,7 +95,7 @@ export function Footer({ className }: FooterProps) {
         {/* 저작권 */}
         <div className="border-t border-[#FADADD] pt-8 text-center">
           <p className="text-[#7B6E6E] text-sm opacity-80">
-            © {new Date().getFullYear()} KOI Creative Lab — 당신의 이야기가 세상을 따뜻하게 합니다.
+            © {new Date().getFullYear()} Re-Frame — 당신의 이야기가 세상을 따뜻하게 합니다.
           </p>
         </div>
       </div>

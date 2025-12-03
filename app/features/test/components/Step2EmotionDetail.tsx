@@ -54,7 +54,7 @@ export default function Step2EmotionDetail({
     <div ref={containerRef} className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-8 px-4 sm:pt-24">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-sm font-medium text-[#3A556A]">KOI 감정 실험</h2>
+          <h2 className="text-sm font-medium text-[#3A556A]">Re-Frame 감정 실험</h2>
           <span className="text-sm text-[#3A556A]">STEP 2 / {totalSteps}</span>
         </div>
         

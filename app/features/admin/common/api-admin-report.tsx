@@ -37,7 +37,7 @@ export async function action({ request }: Route.ActionArgs) {
     };
 
     // AI 리포트 생성
-    const reportPrompt = `다음은 코이창작소의 예약 현황 데이터입니다:
+    const reportPrompt = `다음은 리 프레임의 예약 현황 데이터입니다:
 
 전체 예약: ${statistics.total}건
 오늘 신청: ${statistics.today}건

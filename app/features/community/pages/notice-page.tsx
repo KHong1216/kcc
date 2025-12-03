@@ -9,14 +9,14 @@ import { getNotices } from "../queries";
 export const meta: MetaFunction = () => {
   const url = "https://www.koicreativelab.com/community/notice";
   return [
-    { title: "공지사항 - 코이창작소" },
-    { name: "description", content: "코이창작소 공지사항 및 소식. 프로그램 일정, 이벤트, 중요 안내사항을 확인하세요." },
-    { name: "keywords", content: "공지사항, 코이창작소소식, 프로그램일정, 이벤트" },
+    { title: "공지사항 - 리 프레임(Re-Frame)" },
+    { name: "description", content: "리 프레임 공지사항 및 소식. 프로그램 일정, 이벤트, 중요 안내사항을 확인하세요." },
+    { name: "keywords", content: "공지사항, 리 프레임 소식, Re-Frame 소식, 프로그램일정, 이벤트, 광주 청년" },
     { name: "robots", content: "index, follow" },
     { property: "og:type", content: "website" },
     { property: "og:url", content: url },
-    { property: "og:title", content: "공지사항 - 코이창작소" },
-    { property: "og:description", content: "코이창작소 공지사항 및 소식. 프로그램 일정, 이벤트, 중요 안내사항을 확인하세요." },
+    { property: "og:title", content: "공지사항 - 리 프레임(Re-Frame)" },
+    { property: "og:description", content: "리 프레임 공지사항 및 소식. 프로그램 일정, 이벤트, 중요 안내사항을 확인하세요." },
     { name: "twitter:card", content: "summary" },
     { rel: "canonical", href: url },
   ];
@@ -45,7 +45,7 @@ export default function NoticePage({ loaderData }: Route.ComponentProps) {
                         공지사항
                     </h1>
                     <p className="text-lg text-[#3B2F2F]/85" style={{ lineHeight: '1.6' }}>
-                        코이창작소의 소식과 공지사항을 확인하세요
+                        리 프레임의 소식과 공지사항을 확인하세요
                     </p>
                 </div>
             </section>

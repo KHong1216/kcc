@@ -31,7 +31,7 @@ import {
 } from "../queries";
 import type { Route } from "./+types/admin-managers-page";
 
-export const meta: MetaFunction = () => [{ title: "매니저 설정 | 코이창작소" }];
+export const meta: MetaFunction = () => [{ title: "매니저 설정 | 리 프레임(Re-Frame)" }];
 
 export async function loader({ request }: Route.LoaderArgs) {
   const { data: { session } } = await client.auth.getSession();

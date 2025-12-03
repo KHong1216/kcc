@@ -12,7 +12,7 @@ import Step5Complete from "../components/Step5Complete"
 import type { Route } from "./+types/test-page"
 
 export const meta: MetaFunction = () => [
-  { title: "KOI 감정 실험 - 코이창작소" },
+  { title: "Re-Frame 감정 실험 - 리 프레임(Re-Frame)" },
   { name: "description", content: "20대의 감정 반응 패턴을 이해하기 위한 연구 실험에 참여해주세요." }
 ]
 

@@ -2,7 +2,7 @@ import { Button } from "./ui/button";
 import { useNavigate } from "react-router";
 
 /**
- * KOI Creative Lab 메인페이지 Hero 섹션
+ * Re-Frame 메인페이지 Hero 섹션
  * 감성적이고 따뜻한 톤앤매너로 브랜드 소개
  */
 export function HomeHeroSection() {
@@ -15,7 +15,7 @@ export function HomeHeroSection() {
         {/* 이미지가 있으면 사용, 없으면 그라데이션만 */}
         <img 
           src="/hero-koi.webp" 
-          alt="KOI Creative Lab Illustration" 
+          alt="Re-Frame Illustration" 
           className="absolute inset-0 w-full h-full object-cover opacity-75 mix-blend-multiply"
           width={1920}
           height={1080}

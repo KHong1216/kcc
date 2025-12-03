@@ -38,8 +38,8 @@ import { TestContent } from "../test/components/test-content";
 import { useActionData } from "react-router";
 
 export const meta: MetaFunction = () => [
-  { title: "관리자 대시보드 | 코이창작소" },
-  { name: "description", content: "코이창작소 관리자 대시보드" }
+  { title: "관리자 대시보드 | 리 프레임(Re-Frame)" },
+  { name: "description", content: "리 프레임 관리자 대시보드" }
 ];
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -501,7 +501,7 @@ export default function AdminPage({ loaderData }: Route.ComponentProps) {
                 <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm mb-1" style={{ lineHeight: '1.6' }}>대시보드</h1>
                 <p className="text-white/90 flex items-center gap-2 text-xs sm:text-sm" style={{ lineHeight: '1.6' }}>
                   <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                  <span className="truncate">코이창작소 관리 시스템</span>
+                  <span className="truncate">리 프레임 관리 시스템</span>
                 </p>
               </div>
             </div>

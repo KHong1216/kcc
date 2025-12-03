@@ -17,7 +17,7 @@ import { useEffect } from "react";
 import type { Contact } from "../../../../features/community/queries";
 
 export const meta: MetaFunction = () => [
-  { title: "문의 관리 | 코이창작소" },
+  { title: "문의 관리 | 리 프레임(Re-Frame)" },
   { name: "description", content: "문의 관리" },
 ];
 

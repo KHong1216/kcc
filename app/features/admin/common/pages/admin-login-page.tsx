@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
               관리자 로그인
             </CardTitle>
             <p className="text-center text-[#7A6666] opacity-80 text-sm" style={{ lineHeight: '1.6' }}>
-              코이창작소 관리 시스템에 접속하세요
+              리 프레임 관리 시스템에 접속하세요
             </p>
           </CardHeader>
 
@@ -151,7 +151,7 @@ export default function AdminLoginPage() {
         {/* 하단 브랜딩 */}
         <div className="mt-6 text-center">
           <p className="text-sm text-[#7A6666] opacity-80">
-            <span className="font-extrabold tracking-tight" style={{ color: '#A8C5F8' }}>코이창작소</span> 관리 시스템
+            <span className="font-extrabold tracking-tight" style={{ color: '#A8C5F8' }}>리 프레임</span> 관리 시스템
           </p>
         </div>
       </div>

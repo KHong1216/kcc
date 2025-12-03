@@ -8,20 +8,20 @@ import { getRepresentativeFromManagers } from "../queries";
 export const meta: MetaFunction = () => {
     const url = "https://www.koicreativelab.com/about/representative";
     return [
-      { title: "대표 소개 | 코이창작소" },
-      { name: "description", content: "코이창작소 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
-      { name: "keywords", content: "코이창작소대표, 청년상담사, 대표소개, 코이창작소" },
+      { title: "대표 소개 | 리 프레임(Re-Frame)" },
+      { name: "description", content: "리 프레임 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
+      { name: "keywords", content: "리 프레임 대표, Re-Frame 대표, 청년상담사, 대표소개, 광주 청년상담사, 광주 상담" },
       { name: "robots", content: "index, follow" },
       { property: "og:type", content: "website" },
       { property: "og:url", content: url },
-      { property: "og:title", content: "대표 소개 | 코이창작소" },
-      { property: "og:description", content: "코이창작소 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
+      { property: "og:title", content: "대표 소개 | 리 프레임(Re-Frame)" },
+      { property: "og:description", content: "리 프레임 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
       { property: "og:image", content: "https://www.koicreativelab.com/og-representative.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "대표 소개 | 코이창작소" },
-      { name: "twitter:description", content: "코이창작소 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
+      { name: "twitter:title", content: "대표 소개 | 리 프레임(Re-Frame)" },
+      { name: "twitter:description", content: "리 프레임 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },
       { rel: "canonical", href: url },
     ];
   };
@@ -49,10 +49,10 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
             <section className="pt-14 sm:pt-16 lg:pt-[4.5rem] px-4 sm:px-6 lg:px-8 bg-koi-hero min-h-[300px] flex items-center">
                 <div className="max-w-4xl mx-auto text-center w-full">
                     <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 text-[#3B2F2F]">
-                        안녕하세요, 코이창작소입니다
+                        안녕하세요, 리 프레임입니다
                     </h1>
                     <p className="text-lg text-[#3B2F2F] opacity-80 mb-6">
-                        코이창작소를 시작하게 된 이야기를 들려드릴게요
+                        리 프레임을 시작하게 된 이야기를 들려드릴게요
                     </p>
                 </div>
             </section>
@@ -77,7 +77,7 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
                             {/* 플로팅 배지 */}
                             <div className="absolute -bottom-4 -right-4">
                                 <Badge className="bg-koi-gradient text-white text-sm px-4 py-2 rounded-full shadow-lg">
-                                    코이창작소 대표
+                                    리 프레임 대표
                                 </Badge>
                             </div>
                         </div>
@@ -86,7 +86,7 @@ export default function AboutRepresentativePage({ loaderData }: Route.ComponentP
                         <div className="space-y-6">
                             <div>
                                 <h2 className="text-3xl font-extrabold tracking-tight mb-2 text-[#3B2F2F]">{representative.name}</h2>
-                                <p className="text-lg text-koi-blue font-medium mb-4">코이창작소 대표</p>
+                                <p className="text-lg text-koi-blue font-medium mb-4">리 프레임 대표</p>
                                 <div className="bg-koi-soft rounded-lg p-4">
                                     <p className="text-[#3B2F2F] leading-relaxed">
                                         "{representative.description}"

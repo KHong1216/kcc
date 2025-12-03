@@ -11,7 +11,7 @@ export default function Step0Start({ participantCount, onStart }: Step0StartProp
     <div className="min-h-screen bg-gradient-to-b from-white to-white pt-20 pb-12 px-4 sm:pt-24">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-sm font-medium text-[#3A556A] mb-2">KOI 감정 실험</h1>
+          <h1 className="text-sm font-medium text-[#3A556A] mb-2">Re-Frame 감정 실험</h1>
           {participantCount > 0 && (
             <p className="text-xs text-[#3A556A] opacity-70">현재 {participantCount}명이 참여했습니다</p>
           )}
@@ -19,7 +19,7 @@ export default function Step0Start({ participantCount, onStart }: Step0StartProp
         
         <Card className="max-w-md mx-auto">
           <CardHeader className="text-center space-y-4">
-            <CardTitle className="text-2xl">KOI 감정·행동 패턴 연구 실험 참여 안내</CardTitle>
+            <CardTitle className="text-2xl">Re-Frame 감정·행동 패턴 연구 실험 참여 안내</CardTitle>
             <CardDescription className="text-base leading-relaxed">
               이 실험은 20대의 감정 반응 패턴을 이해하기 위한 연구 목적으로 진행됩니다.
               <br /><br />

@@ -12,14 +12,14 @@ import type { Route } from "./+types/contact-page";
 export const meta: MetaFunction = () => {
   const url = "https://www.koicreativelab.com/community/contact";
   return [
-    { title: "문의하기 - 코이창작소" },
-    { name: "description", content: "코이창작소에 문의사항을 남겨주세요. 빠르게 답변드리겠습니다." },
-    { name: "keywords", content: "문의하기, 상담문의, 코이창작소, 연락처" },
+    { title: "문의하기 - 리 프레임(Re-Frame)" },
+    { name: "description", content: "리 프레임에 문의사항을 남겨주세요. 빠르게 답변드리겠습니다." },
+    { name: "keywords", content: "문의하기, 상담문의, 리 프레임, Re-Frame, 연락처, 광주 상담문의, 광주 청년" },
     { name: "robots", content: "index, follow" },
     { property: "og:type", content: "website" },
     { property: "og:url", content: url },
-    { property: "og:title", content: "문의하기 - 코이창작소" },
-    { property: "og:description", content: "코이창작소에 문의사항을 남겨주세요. 빠르게 답변드리겠습니다." },
+    { property: "og:title", content: "문의하기 - 리 프레임(Re-Frame)" },
+    { property: "og:description", content: "리 프레임에 문의사항을 남겨주세요. 빠르게 답변드리겠습니다." },
     { name: "twitter:card", content: "summary" },
     { rel: "canonical", href: url },
   ];
@@ -62,7 +62,7 @@ export async function action({ request }: Route.ActionArgs) {
 
     return {
       success: true,
-      message: "문의가 성공적으로 등록되었습니다. 코이매니저가 빠른 시일 내에 검토하여 답변드리겠습니다.",
+      message: "문의가 성공적으로 등록되었습니다. 리 프레임 매니저가 빠른 시일 내에 검토하여 답변드리겠습니다.",
     };
   } catch (error) {
     console.error("[action] error:", error);
