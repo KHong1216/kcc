@@ -19,6 +19,8 @@ export const meta: MetaFunction = () => {
       { property: "og:image", content: "https://www.koicreativelab.com/og-representative.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
+      { property: "og:locale", content: "ko_KR" },
+      { property: "og:site_name", content: "리 프레임(Re-Frame)" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "대표 소개 | 리 프레임(Re-Frame)" },
       { name: "twitter:description", content: "리 프레임 대표 소개. 청년들의 성장을 돕는 상담사와 함께 나만의 이야기를 찾아보세요." },

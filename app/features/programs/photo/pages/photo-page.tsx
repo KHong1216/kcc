@@ -29,6 +29,8 @@ export const meta: MetaFunction = () => {
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
     { property: "og:image:alt", content: "클릭무드 - 오늘, 당신의 무드를 기록해보세요" },
+    { property: "og:locale", content: "ko_KR" },
+    { property: "og:site_name", content: "리 프레임(Re-Frame)" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:image:alt", content: "클릭무드 - 오늘, 당신의 무드를 기록해보세요" },
     { rel: "canonical", href: url },

@@ -9,9 +9,19 @@ import type { Route } from "../+types/reservation-page";
 import { cn } from "../../../lib/utils";
 
 export const meta: MetaFunction = () => {
+    const url = "https://www.koicreativelab.com/reservation";
     return [
         { title: "예약하기 - 리 프레임(Re-Frame)" },
-        { name: "description", content: "연애, 사진, 에세이 프로그램 예약하기" }
+        { name: "description", content: "연애, 사진, 에세이 프로그램 예약하기" },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { property: "og:title", content: "예약하기 - 리 프레임(Re-Frame)" },
+        { property: "og:description", content: "연애, 사진, 에세이 프로그램 예약하기" },
+        { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+        { property: "og:locale", content: "ko_KR" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "예약하기 - 리 프레임(Re-Frame)" },
+        { name: "twitter:description", content: "연애, 사진, 에세이 프로그램 예약하기" },
     ];
 };
 

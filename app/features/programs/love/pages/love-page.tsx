@@ -18,6 +18,8 @@ export const meta: MetaFunction = () => {
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:alt", content: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
+      { property: "og:locale", content: "ko_KR" },
+      { property: "og:site_name", content: "리 프레임(Re-Frame)" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image:alt", content: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
       { rel: "canonical", href: url },

@@ -15,6 +15,8 @@ export const meta: MetaFunction = () => {
     { property: "og:url", content: url },
     { property: "og:title", content: "무료 심리테스트 - 리 프레임(Re-Frame)" },
     { property: "og:description", content: "MBTI 무료 심리테스트로 나를 더 깊이 알아보세요" },
+    { property: "og:locale", content: "ko_KR" },
+    { property: "og:site_name", content: "리 프레임(Re-Frame)" },
     { name: "twitter:card", content: "summary" },
     { rel: "canonical", href: url },
   ];

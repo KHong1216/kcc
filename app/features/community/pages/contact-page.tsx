@@ -20,6 +20,8 @@ export const meta: MetaFunction = () => {
     { property: "og:url", content: url },
     { property: "og:title", content: "문의하기 - 리 프레임(Re-Frame)" },
     { property: "og:description", content: "리 프레임에 문의사항을 남겨주세요. 빠르게 답변드리겠습니다." },
+    { property: "og:locale", content: "ko_KR" },
+    { property: "og:site_name", content: "리 프레임(Re-Frame)" },
     { name: "twitter:card", content: "summary" },
     { rel: "canonical", href: url },
   ];

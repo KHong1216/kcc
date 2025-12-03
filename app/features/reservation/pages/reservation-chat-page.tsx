@@ -10,10 +10,22 @@ import { createReservation } from "../queries";
 import { validateAndNormalizePhone } from "../../../lib/validation";
 import type { Route } from "./+types/reservation-chat-page";
 
-export const meta: MetaFunction = () => [
-    { title: "예약 상담 - 리 프레임(Re-Frame)" },
-    { name: "description", content: "AI 챗봇과 함께 예약을 진행하세요" }
-];
+export const meta: MetaFunction = () => {
+    const url = "https://www.koicreativelab.com/reservation";
+    return [
+        { title: "예약 상담 - 리 프레임(Re-Frame)" },
+        { name: "description", content: "AI 챗봇과 함께 예약을 진행하세요" },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { property: "og:title", content: "예약 상담 - 리 프레임(Re-Frame)" },
+        { property: "og:description", content: "AI 챗봇과 함께 예약을 진행하세요" },
+        { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+        { property: "og:locale", content: "ko_KR" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "예약 상담 - 리 프레임(Re-Frame)" },
+        { name: "twitter:description", content: "AI 챗봇과 함께 예약을 진행하세요" },
+    ];
+};
 
 export async function loader() {
     const result = await getPrograms();

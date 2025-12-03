@@ -21,6 +21,8 @@ export const meta: MetaFunction = () => {
         { property: "og:image", content: "https://www.koicreativelab.com/og-counselors.jpg" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
+        { property: "og:locale", content: "ko_KR" },
+        { property: "og:site_name", content: "리 프레임(Re-Frame)" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: "리 프레임 매니저 소개 | 리 프레임(Re-Frame)" },
         { rel: "canonical", href: url },
