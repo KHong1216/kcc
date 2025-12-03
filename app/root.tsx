@@ -53,16 +53,46 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   Settings.defaultLocale = "ko";
   Settings.defaultZone = "Asia/Seoul";
+  const url = "https://www.koicreativelab.com";
+  
   return (
-    <html lang="ko">
+    <html lang="ko" itemScope itemType="https://schema.org/WebSite">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#FDF6F0" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="리 프레임" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <Meta />
         <Links />
+        {/* WebSite Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "리 프레임(Re-Frame)",
+              "alternateName": "Re-Frame",
+              "url": url,
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": `${url}/search?q={search_term_string}`
+                },
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
       </head>
-      <body>
+      <body itemScope itemType="https://schema.org/WebPage">
         <main>{children}</main>
         <ScrollRestoration />
         <Scripts />

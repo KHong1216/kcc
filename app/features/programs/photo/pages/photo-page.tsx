@@ -17,7 +17,7 @@ export const meta: MetaFunction = () => {
       content: "클릭무드로 오늘의 감정과 무드를 기록하고, 사진으로 마음을 표현해보세요.",
     },
     { name: "keywords", content: "클릭무드, 무드 기록, 감정 일기, 사진 일기, 리 프레임, Re-Frame, 광주 포토캠프, 광주 청년, 광주 상담" },
-    { name: "robots", content: "index, follow" },
+    { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
     { property: "og:type", content: "website" },
     { property: "og:url", content: url },
     { property: "og:title", content: "클릭무드 - 오늘, 당신의 무드를 기록해보세요" },
@@ -28,7 +28,9 @@ export const meta: MetaFunction = () => {
     { property: "og:image", content: "https://www.koicreativelab.com/og-click-mood.jpg" },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
+    { property: "og:image:alt", content: "클릭무드 - 오늘, 당신의 무드를 기록해보세요" },
     { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:image:alt", content: "클릭무드 - 오늘, 당신의 무드를 기록해보세요" },
     { rel: "canonical", href: url },
   ];
 };
@@ -587,8 +589,58 @@ export default function PhotoPage({ actionData }: Route.ComponentProps) {
   );
   const [showApplication, setShowApplication] = useState(false);
 
+  const url = "https://www.koicreativelab.com/programs/photo";
+  
+  // HowTo Schema (AEO/GEO 최적화)
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "리 프레임 클릭무드 포토 캠프 참여 방법",
+    "description": "리 프레임 클릭무드 포토 캠프에 참여하는 방법을 안내합니다.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "프로그램 선택",
+        "text": "리 프레임 웹사이트에서 클릭무드(포토 캠프) 프로그램을 선택합니다.",
+        "url": `${url}`
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "예약 신청",
+        "text": "예약 페이지에서 이름, 나이, 직업, 연락처, 선택한 무드 이미지를 입력하여 신청합니다.",
+        "url": "https://www.koicreativelab.com/reservation"
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "매니저 연락 대기",
+        "text": "신청 완료 후 리 프레임 매니저가 연락하여 상세 일정을 안내합니다."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 4,
+        "name": "프로그램 참여",
+        "text": "안내받은 일정에 맞춰 클릭무드 포토 캠프에 참여합니다."
+      }
+    ],
+    "totalTime": "PT1H",
+    "tool": [
+      {
+        "@type": "HowToTool",
+        "name": "인터넷 연결"
+      }
+    ]
+  };
+
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#2C2C2C" }}>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#2C2C2C" }}>
       {/* 상단 섹션 - Header */}
       <ClickMoodHeader />
 
@@ -610,6 +662,7 @@ export default function PhotoPage({ actionData }: Route.ComponentProps) {
           actionData={actionData as { success?: boolean; message?: string; error?: string } | undefined}
         />
       )}
-    </div>
+      </div>
+    </>
   );
 }

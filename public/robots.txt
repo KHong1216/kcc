@@ -1,6 +1,20 @@
+# 모든 크롤러에 대한 기본 설정
 User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
 
+# Google 크롤러 설정
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# Bing 크롤러 설정
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# 사이트맵
 Sitemap: https://www.koicreativelab.com/sitemap.xml

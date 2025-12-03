@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
       { title: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다 | 리 프레임(Re-Frame)" },
       { name: "description", content: "연애에서 가장 자주 벌어지는 갈등은 '소통 문제'에서 비롯됩니다. Re-Frame 연애 캠프는 나의 감정 패턴, 말하기 습관, 상처의 근원, 표현 방식을 객관적으로 이해할 수 있는 기회를 제공합니다." },
       { name: "keywords", content: "연애상담, 관계상담, 소통문제, 연애패턴, 연애캠프, 리 프레임, Re-Frame, 광주 연애상담, 광주 청년, 광주 상담" },
-      { name: "robots", content: "index, follow" },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
       { property: "og:type", content: "website" },
       { property: "og:url", content: url },
       { property: "og:title", content: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
@@ -17,16 +17,67 @@ export const meta: MetaFunction = () => {
       { property: "og:image", content: "https://www.koicreativelab.com/og-love.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image:alt", content: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
       { rel: "canonical", href: url },
     ];
   };
 
 export default function LovePage() {
     const navigate = useNavigate();
+    const url = "https://www.koicreativelab.com/programs/love";
+    
+    // HowTo Schema (AEO/GEO 최적화)
+    const howToSchema = {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "리 프레임 Re-Frame 연애 캠프 참여 방법",
+        "description": "리 프레임 Re-Frame 연애 캠프에 참여하는 방법을 안내합니다.",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "프로그램 선택",
+                "text": "리 프레임 웹사이트에서 Re-Frame 연애 캠프 프로그램을 선택합니다.",
+                "url": `${url}`
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "예약 신청",
+                "text": "예약 페이지에서 이름, 나이, 직업, 연락처, 가능한 시간을 입력하여 신청합니다.",
+                "url": "https://www.koicreativelab.com/reservation"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "매니저 연락 대기",
+                "text": "신청 완료 후 리 프레임 매니저가 연락하여 상세 일정을 안내합니다."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "프로그램 참여",
+                "text": "안내받은 일정에 맞춰 Re-Frame 연애 캠프에 참여합니다."
+            }
+        ],
+        "totalTime": "PT1H",
+        "tool": [
+            {
+                "@type": "HowToTool",
+                "name": "인터넷 연결"
+            }
+        ]
+    };
     
     return (
-        <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif', lineHeight: '1.6' }}>
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+            />
+            <div className="min-h-screen w-full bg-[#FDF6F0] text-[#3B2F2F]" style={{ fontFamily: 'Pretendard, Inter, sans-serif', lineHeight: '1.6' }}>
             {/* 헤더 섹션 */}
             <section className="py-24 px-4 sm:px-6 lg:px-8 min-h-[80vh] flex items-center" style={{ background: 'linear-gradient(180deg, #FFF6F5, #FFF0F0)' }}>
                 <div className="max-w-5xl mx-auto text-center">
@@ -368,6 +419,7 @@ export default function LovePage() {
                     </div>
                 </div>
             </section>
-        </div>
+            </div>
+        </>
     )
 }
