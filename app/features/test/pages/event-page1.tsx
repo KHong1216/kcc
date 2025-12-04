@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
+import { Form, useActionData, useNavigation } from "react-router";
 import type { MetaFunction } from "react-router";
 import type { Route } from "./+types/event-page1";
+import { Input } from "~/common/components/ui/input";
+import { Button } from "~/common/components/ui/button";
 
 // ============================================================================
 // Types
@@ -72,20 +75,50 @@ const PROGRAM_CONFIGS: ProgramConfig[] = [
 // Route Exports
 // ============================================================================
 
+const PASSWORD = "100412"; // 비밀번호 (환경변수로 관리하는 것을 권장)
+
 export const meta: MetaFunction = () => [
   { title: "프로그램 소개 | 코이창작소" },
   {
     name: "description",
-    content: "코이창작소의 프로그램을 둘러보세요. 클릭무드, 러브포션, 아무,말",
+    content: "",
   },
 ];
 
-export function loader(_: Route.LoaderArgs) {
-  return {};
+export async function loader({ request }: Route.LoaderArgs) {
+  const cookieHeader = request.headers.get("Cookie");
+  const isAuthenticated = cookieHeader?.includes("event-page1-auth=true") ?? false;
+  
+  return {
+    isAuthenticated,
+  };
 }
 
-export async function action(_: Route.ActionArgs) {
-  return {};
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const password = String(formData.get("password") ?? "").trim();
+
+  if (password !== PASSWORD) {
+    return {
+      error: "비밀번호가 올바르지 않습니다.",
+      isAuthenticated: false,
+    };
+  }
+
+  // 인증 성공 시 쿠키 설정 (30일 유효)
+  const headers = new Headers();
+  headers.append(
+    "Set-Cookie",
+    "event-page1-auth=true; Path=/; Max-Age=2592000; HttpOnly; SameSite=Lax"
+  );
+
+  return new Response(null, {
+    status: 302,
+    headers: {
+      ...Object.fromEntries(headers.entries()),
+      Location: new URL(request.url).pathname,
+    },
+  });
 }
 
 // ============================================================================
@@ -400,12 +433,82 @@ function OrbitCarousel({ images, activeIndex, onIndexChange }: OrbitCarouselProp
 }
 
 // ============================================================================
+// Password Form Component
+// ============================================================================
+
+interface PasswordFormProps {
+  actionData?: { error?: string };
+}
+
+function PasswordForm({ actionData }: PasswordFormProps) {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
+
+  return (
+    <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-b from-[#f9f7ff] to-[#f2f5ff] px-4">
+      <div className="w-full max-w-md space-y-6 rounded-2xl bg-white/80 p-8 shadow-xl backdrop-blur-sm">
+        <div className="text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#a28cdc]">
+            코이창작소
+          </p>
+          <h1 className="mt-2 text-2xl font-semibold text-[#20163a]">
+            프로그램 소개
+          </h1>
+          <p className="mt-2 text-sm text-[#61567e]">
+            이 페이지는 비밀번호로 보호되어 있습니다
+          </p>
+        </div>
+
+        <Form method="post" className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-sm font-medium text-[#61567e]">
+              비밀번호
+            </label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              required
+              autoFocus
+              className="rounded-xl border-[#d4c2ff] bg-white/90 text-[#20163a] placeholder:text-[#a28cdc] focus:border-[#8b5cf6] focus:ring-[#8b5cf6]"
+            />
+          </div>
+
+          {actionData?.error && (
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+              {actionData.error}
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full rounded-xl bg-[#8b5cf6] text-white shadow-lg shadow-[#8b5cf6]/30 hover:bg-[#7c3aed] disabled:opacity-50"
+          >
+            {isSubmitting ? "확인 중..." : "확인"}
+          </Button>
+        </Form>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // Main Page Component
 // ============================================================================
 
-export function EventPage1(_: Route.ComponentProps) {
+export function EventPage1({ loaderData, actionData }: Route.ComponentProps) {
   const [activeProgram, setActiveProgram] = useState<ProgramId>("photo");
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 인증되지 않은 경우 비밀번호 입력 폼 표시
+  const isAuthenticated = (loaderData as { isAuthenticated?: boolean })?.isAuthenticated ?? false;
+  const actionDataTyped = actionData as { error?: string } | undefined;
+
+  if (!isAuthenticated) {
+    return <PasswordForm actionData={actionDataTyped} />;
+  }
 
   const currentConfig = PROGRAM_CONFIGS.find((p) => p.id === activeProgram) ?? PROGRAM_CONFIGS[0];
 
