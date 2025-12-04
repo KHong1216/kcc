@@ -19,7 +19,7 @@ import {
 import type { Route } from "./+types/admin-community-page";
 
 export const meta: MetaFunction = () => [
-  { title: "커뮤니티 관리 | 리 프레임(Re-Frame)" },
+  { title: "커뮤니티 관리 | 코이창작소" },
   { name: "description", content: "공지/리뷰 관리" },
 ];
 

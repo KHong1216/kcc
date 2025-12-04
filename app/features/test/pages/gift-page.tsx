@@ -8,8 +8,8 @@ import type { Route } from "./+types/gift-page"
 import { Check } from "lucide-react"
 
 export const meta: MetaFunction = () => [
-  { title: "경품 선택 - Re-Frame 감정 실험" },
-  { name: "description", content: "Re-Frame 감정 연구 실험 경품 혜택을 선택해주세요." }
+  { title: "경품 선택 - 코이창작소 감정 실험" },
+  { name: "description", content: "코이창작소 감정 연구 실험 경품 혜택을 선택해주세요." }
 ]
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -75,14 +75,14 @@ export async function action({ request }: Route.ActionArgs) {
 
   return {
     success: true,
-    message: "신청이 완료되었습니다!\n담당 리 프레임 매니저가 곧 연락드릴게요 :)"
+    message: "신청이 완료되었습니다!\n담당 코이창작소 매니저가 곧 연락드릴게요 :)"
   }
 }
 
 const giftOptions = [
   {
     id: "essay",
-    title: "Re-Frame 에세이 체험권"
+    title: "에세이 체험권"
   },
   {
     id: "love-test",
@@ -106,7 +106,7 @@ export default function GiftPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-base leading-relaxed text-center text-[#3A556A] whitespace-pre-line">
-                {actionData && "message" in actionData ? actionData.message : "신청이 완료되었습니다!\n담당 리 프레임 매니저가 곧 연락드릴게요 :)"}
+                {actionData && "message" in actionData ? actionData.message : "신청이 완료되었습니다!\n담당 코이창작소 매니저가 곧 연락드릴게요 :)"}
               </p>
             </CardContent>
             <CardFooter className="flex justify-center pt-6">
@@ -132,7 +132,7 @@ export default function GiftPage() {
       <div className="max-w-lg mx-auto flex flex-col space-y-6">
         <Card>
           <CardHeader className="text-center space-y-4">
-            <CardTitle className="text-2xl font-bold">🎁 Re-Frame 감정 연구 실험 경품 혜택</CardTitle>
+            <CardTitle className="text-2xl font-bold">🎁 코이창작소 감정 연구 실험 경품 혜택</CardTitle>
             <CardDescription className="text-base leading-relaxed">
               아래에서 원하시는 체험을 선택해주세요.
             </CardDescription>

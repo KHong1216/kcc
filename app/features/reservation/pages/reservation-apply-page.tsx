@@ -11,7 +11,7 @@ import type { Route } from "./+types/reservation-apply-page";
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "예약 신청 - 리 프레임(Re-Frame)" },
+        { title: "예약 신청 - 코이창작소" },
         { name: "description", content: "선택한 프로그램으로 예약 신청을 완료하세요" }
     ];
 };

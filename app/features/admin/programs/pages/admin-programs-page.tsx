@@ -16,7 +16,7 @@ import {
 import type { Route } from "../../programs/pages/+types/admin-programs-page";
 
 export const meta: MetaFunction = () => [
-  { title: "프로젝트 관리 | 리 프레임(Re-Frame)" },
+  { title: "프로젝트 관리 | 코이창작소" },
   { name: "description", content: "프로젝트 콘텐츠 및 공개 상태 관리" }
 ];
 

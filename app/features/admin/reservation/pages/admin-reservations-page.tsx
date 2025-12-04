@@ -14,7 +14,7 @@ import {
 } from "../queries";
 
 export const meta: MetaFunction = () => [
-  { title: "예약 관리 | 리 프레임(Re-Frame)" },
+  { title: "예약 관리 | 코이창작소" },
   { name: "description", content: "예약 현황 및 상태 관리" }
 ];
 

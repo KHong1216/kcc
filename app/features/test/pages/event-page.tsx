@@ -320,7 +320,7 @@ export function EventPage({ actionData }: Route.ComponentProps) {
         <div key="page-1" className="flex min-h-screen items-center justify-center px-4 py-20">
           <div className="w-full max-w-2xl space-y-8">
             <div className="text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#a28cdc]">RE-FRAME EVENT QUIZ</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#a28cdc]">KOI EVENT QUIZ</p>
               <h1 className="mt-3 text-3xl font-semibold text-[#20163a]">{QUIZ_QUESTION}</h1>
               <p className="mt-2 text-sm text-[#61567e]">정답을 맞히면 숨겨둔 선물을 바로 안내해 드려요.</p>
             </div>
@@ -344,7 +344,7 @@ export function EventPage({ actionData }: Route.ComponentProps) {
         <div key="page-2" className="flex min-h-screen items-start justify-center px-4 py-20">
           <div className="w-full max-w-2xl space-y-6">
             <div className="text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#a28cdc]">RE-FRAME EVENT</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#a28cdc]">KOI EVENT</p>
               <h2 className="mt-3 text-3xl font-semibold text-[#20163a]">티켓 신청하기</h2>
               <p className="mt-2 text-sm text-[#61567e]">정보를 입력해 주시면 코이창작소가 연락드릴게요.</p>
             </div>

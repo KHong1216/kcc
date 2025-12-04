@@ -461,7 +461,7 @@ export function EventPage1(_: Route.ComponentProps) {
         </div>
         <div className="mx-auto max-w-[520px]">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#a28cdc]">
-            RE-FRAME
+            코이창작소
           </p>
           <h1 className="mt-2 text-2xl font-semibold text-[#20163a]">
             프로그램 소개

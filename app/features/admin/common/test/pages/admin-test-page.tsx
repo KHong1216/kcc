@@ -9,7 +9,7 @@ import { Calendar, Sparkles, User, Phone, Mail, FileText, Heart, CheckCircle2 } 
 import client from "~/lib/supa-client";
 
 export const meta: MetaFunction = () => [
-  { title: "감정 실험 관리 | 리 프레임(Re-Frame)" },
+  { title: "감정 실험 관리 | 코이창작소" },
   { name: "description", content: "감정 실험 응답 데이터 조회 및 관리" }
 ];
 
@@ -130,7 +130,7 @@ const getTestType = (response: EmotionTestResponse): "koi-character" | "emotion-
 
 const getTestTypeBadge = (testType: "koi-character" | "emotion-research") => {
   const variants = {
-    "koi-character": { className: "bg-[#8B5CF6] text-white", label: "Re-Frame 캐릭터 테스트" },
+    "koi-character": { className: "bg-[#8B5CF6] text-white", label: "캐릭터 테스트" },
     "emotion-research": { className: "bg-[#4A90E2] text-white", label: "감정 연구 실험" },
   };
   const config = variants[testType];
@@ -167,9 +167,9 @@ const needTypeLabels: { [key: string]: string } = {
 };
 
 const giftLabels: { [key: string]: string } = {
-  essay: "Re-Frame 에세이 체험권",
+  essay: "에세이 체험권",
   "love-test": "연애 경향성 테스트",
-  photo: "Re-Frame 컨셉 촬영 체험권",
+  photo: "컨셉 촬영 체험권",
 };
 
 export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
@@ -315,7 +315,7 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                         </div>
                       )}
 
-                      {/* 세션 예약 정보 (Re-Frame 캐릭터 테스트만) */}
+                      {/* 세션 예약 정보 (캐릭터 테스트만) */}
                       {testType === "koi-character" && (
                         <div className="p-5 rounded-xl border-2 border-[#8B5CF6]/50 flex flex-col h-full" style={{ background: 'linear-gradient(180deg, #F3E8FF, #FFFFFF)', boxShadow: '0 4px 12px rgba(139, 92, 246, 0.2)' }}>
                           <div className="flex items-center gap-2 mb-4">
@@ -363,7 +363,7 @@ export default function AdminTestPage({ loaderData }: Route.ComponentProps) {
                               {r.emotion ? (emotionLabels[r.emotion] || r.emotion) : "-"}
                             </p>
                           </div>
-                          {/* Re-Frame 캐릭터 테스트의 경우 캐릭터 이름 표시 */}
+                          {/* 캐릭터 테스트의 경우 캐릭터 이름 표시 */}
                           {testType === "koi-character" && r.character_name && (
                             <div>
                               <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">캐릭터</p>
