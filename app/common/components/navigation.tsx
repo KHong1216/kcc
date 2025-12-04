@@ -26,17 +26,17 @@ const menus = [
         to: "/programs/essay",
         items: [
             {
-                name: "아무, 말",
+                name: "준비중",
                 description: "",
                 to: "/programs/essay",
             },
             {
-                name: "연애의 발견",
+                name: "준비중",
                 description: "",
                 to: "/programs/love",
             },
             {
-                name: "클릭무드",
+                name: "준비중",
                 description: "",
                 to: "/programs/photo",
             },
