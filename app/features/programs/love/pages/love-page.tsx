@@ -6,22 +6,22 @@ import { Button } from "../../../../common/components/ui/button";
 export const meta: MetaFunction = () => {
     const url = "https://www.koicreativelab.com/programs/love";
     return [
-      { title: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다 | 리 프레임(Re-Frame)" },
-      { name: "description", content: "연애에서 가장 자주 벌어지는 갈등은 '소통 문제'에서 비롯됩니다. Re-Frame 연애 캠프는 나의 감정 패턴, 말하기 습관, 상처의 근원, 표현 방식을 객관적으로 이해할 수 있는 기회를 제공합니다." },
-      { name: "keywords", content: "연애상담, 관계상담, 소통문제, 연애패턴, 연애캠프, 리 프레임, Re-Frame, 광주 연애상담, 광주 청년, 광주 상담" },
+      { title: "연애 캠프 - 내가 바뀌면 관계 전체가 달라진다 | 코이창작소" },
+      { name: "description", content: "연애에서 가장 자주 벌어지는 갈등은 '소통 문제'에서 비롯됩니다. 코이창작소 연애 캠프는 나의 감정 패턴, 말하기 습관, 상처의 근원, 표현 방식을 객관적으로 이해할 수 있는 기회를 제공합니다." },
+      { name: "keywords", content: "연애상담, 관계상담, 소통문제, 연애패턴, 연애캠프, 코이창작소, 광주 연애상담, 광주 청년, 광주 상담" },
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
       { property: "og:type", content: "website" },
       { property: "og:url", content: url },
-      { property: "og:title", content: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
+      { property: "og:title", content: "연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
       { property: "og:description", content: "연애에서 가장 자주 벌어지는 갈등은 '소통 문제'에서 비롯됩니다. 나의 감정 패턴, 말하기 습관, 상처의 근원, 표현 방식을 객관적으로 이해할 수 있는 기회를 제공합니다." },
       { property: "og:image", content: "https://www.koicreativelab.com/og-love.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
+      { property: "og:image:alt", content: "연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
       { property: "og:locale", content: "ko_KR" },
-      { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+      { property: "og:site_name", content: "코이창작소" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image:alt", content: "Re-Frame 연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
+      { name: "twitter:image:alt", content: "연애 캠프 - 내가 바뀌면 관계 전체가 달라진다" },
       { rel: "canonical", href: url },
     ];
   };
@@ -34,14 +34,14 @@ export default function LovePage() {
     const howToSchema = {
         "@context": "https://schema.org",
         "@type": "HowTo",
-        "name": "리 프레임 Re-Frame 연애 캠프 참여 방법",
-        "description": "리 프레임 Re-Frame 연애 캠프에 참여하는 방법을 안내합니다.",
+        "name": "코이창작소 연애 캠프 참여 방법",
+        "description": "코이창작소 연애 캠프에 참여하는 방법을 안내합니다.",
         "step": [
             {
                 "@type": "HowToStep",
                 "position": 1,
                 "name": "프로그램 선택",
-                "text": "리 프레임 웹사이트에서 Re-Frame 연애 캠프 프로그램을 선택합니다.",
+                "text": "코이창작소 웹사이트에서 연애 캠프 프로그램을 선택합니다.",
                 "url": `${url}`
             },
             {
@@ -55,13 +55,13 @@ export default function LovePage() {
                 "@type": "HowToStep",
                 "position": 3,
                 "name": "매니저 연락 대기",
-                "text": "신청 완료 후 리 프레임 매니저가 연락하여 상세 일정을 안내합니다."
+                "text": "신청 완료 후 코이창작소 매니저가 연락하여 상세 일정을 안내합니다."
             },
             {
                 "@type": "HowToStep",
                 "position": 4,
                 "name": "프로그램 참여",
-                "text": "안내받은 일정에 맞춰 Re-Frame 연애 캠프에 참여합니다."
+                "text": "안내받은 일정에 맞춰 연애 캠프에 참여합니다."
             }
         ],
         "totalTime": "PT1H",
@@ -84,7 +84,7 @@ export default function LovePage() {
             <section className="py-24 px-4 sm:px-6 lg:px-8 min-h-[80vh] flex items-center" style={{ background: 'linear-gradient(180deg, #FFF6F5, #FFF0F0)' }}>
                 <div className="max-w-5xl mx-auto text-center">
                     <Badge className="mb-6 text-base px-4 py-2 font-semibold" style={{ backgroundColor: '#FFD1BA', color: '#C2410C' }}>
-                        Re-Frame 연애 캠프
+                        연애 캠프
                     </Badge>
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-10 text-[#3B2F2F] leading-tight" style={{ lineHeight: '1.6' }}>
                         "내가 바뀌면<br />관계 전체가 달라진다"
@@ -100,7 +100,7 @@ export default function LovePage() {
                                 그러나 관계의 변화는 한 사람의 변화에서 시작됩니다.
                             </p>
                             <p className="text-xl md:text-2xl font-bold" style={{ color: '#FB7185' }}>
-                                이것이 Re-Frame의 기본 철학입니다.
+                                이것이 코이창작소의 기본 철학입니다.
                             </p>
                         </div>
                     </div>
@@ -115,7 +115,7 @@ export default function LovePage() {
                 </div>
             </section>
 
-            {/* Re-Frame 연애 캠프는 '나의 변화'에서 출발합니다 */}
+            {/* 연애 캠프는 '나의 변화'에서 출발합니다 */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#FFF6F5]">
                 <div className="max-w-5xl mx-auto">
                     <div className="text-center mb-12">
@@ -123,7 +123,7 @@ export default function LovePage() {
                             <span className="text-2xl font-bold" style={{ color: '#FB7185' }}>01</span>
                         </div>
                         <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#3B2F2F]" style={{ lineHeight: '1.6' }}>
-                            Re-Frame 연애 캠프는<br />'나의 변화'에서 출발합니다
+                            연애 캠프는<br />'나의 변화'에서 출발합니다
                         </h2>
                     </div>
                     
@@ -234,7 +234,7 @@ export default function LovePage() {
                     <div className="space-y-8">
                         <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.05)]">
                             <p className="text-lg md:text-xl text-[#3B2F2F]/90 leading-relaxed text-center" style={{ lineHeight: '1.8' }}>
-                                Re-Frame 연애 캠프는 단순한 연애 상담이 아닙니다.<br />
+                                연애 캠프는 단순한 연애 상담이 아닙니다.<br />
                                 대화를 통해 자신의 감정 패턴과 소통 방식을 이해하고,<br />
                                 그 이해를 바탕으로 관계의 변화를 만들어가는 과정을 제공합니다.
                             </p>
@@ -297,7 +297,7 @@ export default function LovePage() {
 
                     <div className="text-center p-8 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)]" style={{ backgroundColor: '#FFE5E5' }}>
                         <p className="text-lg font-semibold text-[#3B2F2F] mb-2">
-                            Re-Frame 연애 캠프는 자신을 이해하고 성장할 수 있는
+                            연애 캠프는 자신을 이해하고 성장할 수 있는
                         </p>
                         <p className="text-xl md:text-2xl font-bold" style={{ color: '#FB7185' }}>
                             깊이 있는 과정을 제공합니다.
@@ -339,9 +339,9 @@ export default function LovePage() {
                                     2
                                 </div>
                                 <div className="flex-1">
-                                    <h3 className="text-2xl font-bold mb-4 text-[#3B2F2F]">리 프레임 매니저 연락</h3>
+                                    <h3 className="text-2xl font-bold mb-4 text-[#3B2F2F]">코이창작소 매니저 연락</h3>
                                     <p className="text-lg text-[#3B2F2F]/85 leading-relaxed" style={{ lineHeight: '1.8' }}>
-                                        접수가 완료되면 리 프레임 매니저가 직접 연락드립니다.<br />
+                                        접수가 완료되면 코이창작소 매니저가 직접 연락드립니다.<br />
                                         대화 가능한 시간대를 조율하고, 어떤 주제로 이야기할지 간단히 안내해드립니다.
                                     </p>
                                 </div>
@@ -392,7 +392,7 @@ export default function LovePage() {
                     
                     <div className="space-y-6 text-lg md:text-xl leading-relaxed" style={{ lineHeight: '1.6' }}>
                         <p>
-                            Re-Frame 연애 캠프는 단순한 연애 상담이 아닙니다.<br />
+                            연애 캠프는 단순한 연애 상담이 아닙니다.<br />
                             <span className="font-bold">대화를 기반으로 한 자기 탐색과 이해를 통해</span><br />
                             나의 감정 패턴, 말하기 습관, 상처의 근원, 표현 방식을 객관적으로 이해하고,<br />
                             건강한 관계로 변화시킬 수 있는 경험을 제공합니다.

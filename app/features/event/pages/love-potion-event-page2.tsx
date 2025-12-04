@@ -71,15 +71,15 @@ interface ReservationActionResult {
 export function meta({}: Route.MetaArgs) {
   const url = "https://www.koicreativelab.com/programs/love1";
   return [
-    { title: "Love Potion 이벤트 - 나만의 사랑 성분을 찾는 특별한 경험 | 리 프레임(Re-Frame)" },
+    { title: "Love Potion 이벤트 - 나만의 사랑 성분을 찾는 특별한 경험 | 코이창작소" },
     {
       name: "description",
       content:
-        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 리 프레임의 1:1 상담을 예약해보세요.",
+        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 코이창작소의 1:1 상담을 예약해보세요.",
     },
     {
       name: "keywords",
-      content: "러브포션, 사랑성분, 연애상담, 관계상담, 맞춤상담, 리 프레임, Re-Frame, Love Potion, 광주 연애상담, 광주 청년",
+      content: "러브포션, 사랑성분, 연애상담, 관계상담, 맞춤상담, 코이창작소, Love Potion, 광주 연애상담, 광주 청년",
     },
     { name: "robots", content: "index, follow" },
     { property: "og:type", content: "website" },
@@ -88,19 +88,19 @@ export function meta({}: Route.MetaArgs) {
     {
       property: "og:description",
       content:
-        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 리 프레임의 1:1 상담을 예약해보세요.",
+        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 코이창작소의 1:1 상담을 예약해보세요.",
     },
     { property: "og:image", content: "https://www.koicreativelab.com/og-love.jpg" },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
     { property: "og:locale", content: "ko_KR" },
-    { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+    { property: "og:site_name", content: "코이창작소" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: "Love Potion 이벤트 - 나만의 사랑 성분을 찾는 특별한 경험" },
     {
       name: "twitter:description",
       content:
-        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 리 프레임의 1:1 상담을 예약해보세요.",
+        "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 코이창작소의 1:1 상담을 예약해보세요.",
     },
     { rel: "canonical", href: url },
   ];
@@ -146,7 +146,7 @@ export async function action({ request }: Route.ActionArgs) {
 
     return {
       success: true,
-      message: "상담 요청이 등록되었습니다. 리 프레임이 연락드릴게요.",
+      message: "상담 요청이 등록되었습니다. 코이창작소가 연락드릴게요.",
     };
   } catch (error) {
     console.error("[love-potion] inquiry action error", error);
@@ -294,11 +294,11 @@ export function LovePotionEventPage2({ actionData }: Route.ComponentProps) {
     "serviceType": "러브 포션 이벤트",
     "name": "Love Potion 이벤트",
     "description":
-      "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 리 프레임의 1:1 상담을 예약해보세요.",
+      "러브 포션 젤리를 선택하고 나만의 사랑 레시피를 완성하세요. 필요한 사랑 성분과 현재 사용 중인 성분을 조합해 맞춤 복용 지도서를 받고, 코이창작소의 1:1 상담을 예약해보세요.",
     "provider": {
       "@type": "Organization",
-      "name": "리 프레임(Re-Frame)",
-      "alternateName": "Re-Frame",
+      "name": "코이창작소",
+      "alternateName": "코이",
       "url": "https://www.koicreativelab.com",
     },
     "areaServed": {
@@ -559,7 +559,7 @@ export function LovePotionEventPage2({ actionData }: Route.ComponentProps) {
                         </div>
                       )}
                       <div className="space-y-3 rounded-2xl bg-[#FFF4F7] p-4 text-center text-sm text-[#B85676]">
-                        <p className="break-keep">더 깊은 처방이 필요하면 리 프레임에서 알아보세요.</p>
+                        <p className="break-keep">더 깊은 처방이 필요하면 코이창작소에서 알아보세요.</p>
                         <button
                           type="button"
                           className="w-full rounded-full border border-[#FF8FB1] bg-white px-4 py-3 text-sm font-semibold text-[#B85676] transition hover:bg-[#FFE3EC] break-keep"
@@ -602,7 +602,7 @@ export function LovePotionEventPage2({ actionData }: Route.ComponentProps) {
           </div>
         )}
 
-        {/* Page 3: 리 프레임을 통해 알아보기 */}
+        {/* Page 3: 코이창작소를 통해 알아보기 */}
         {currentPage === 3 && (
           <div
             key="page-3"
@@ -610,9 +610,9 @@ export function LovePotionEventPage2({ actionData }: Route.ComponentProps) {
           >
             <div className={CARD_CLASS}>
               <p className="text-xs uppercase tracking-[0.3em] text-[#D977A0]">Koi Consultation</p>
-              <h2 className={`${TITLE_CLASS} break-keep`}>리 프레임을 통해 알아보기</h2>
+              <h2 className={`${TITLE_CLASS} break-keep`}>코이창작소를 통해 알아보기</h2>
               <p className={`${SUBTITLE_CLASS} break-keep`}>
-                완성한 러브 포션 레시피를 리 프레임 큐레이터에게 공유하면, 이름·나이·연락처만으로
+                완성한 러브 포션 레시피를 코이창작소 큐레이터에게 공유하면, 이름·나이·연락처만으로
                 1:1 맞춤 상담을 준비해 드립니다. 필요 시 추가 질문을 드릴 수 있어요.
               </p>
 
@@ -743,7 +743,7 @@ export function LovePotionEventPage2({ actionData }: Route.ComponentProps) {
                   </Button>
                 </Form>
                 <p className="text-xs text-[#B85676] break-keep">
-                  제출 후 24시간 이내에 리 프레임 매니저가 문자 또는 전화로 맞춤 상담을 안내드립니다.
+                  제출 후 24시간 이내에 코이창작소 매니저가 문자 또는 전화로 맞춤 상담을 안내드립니다.
                 </p>
               </div>
 

@@ -46,7 +46,7 @@ const getTestType = (response: EmotionTestResponse): "koi-character" | "emotion-
 
 const getTestTypeBadge = (testType: "koi-character" | "emotion-research") => {
   const variants = {
-    "koi-character": { className: "bg-[#8B5CF6] text-white", label: "Re-Frame 캐릭터 테스트" },
+    "koi-character": { className: "bg-[#8B5CF6] text-white", label: "캐릭터 테스트" },
     "emotion-research": { className: "bg-[#4A90E2] text-white", label: "감정 연구 실험" },
   };
   const config = variants[testType];
@@ -83,9 +83,9 @@ const needTypeLabels: { [key: string]: string } = {
 };
 
 const giftLabels: { [key: string]: string } = {
-  essay: "Re-Frame 에세이 체험권",
+  essay: "에세이 체험권",
   "love-test": "연애 경향성 테스트",
-  photo: "Re-Frame 컨셉 촬영 체험권",
+  photo: "컨셉 촬영 체험권",
 };
 
 export function TestContent({ responses, actionData }: TestContentProps) {
@@ -224,7 +224,7 @@ export function TestContent({ responses, actionData }: TestContentProps) {
                         </div>
                       )}
 
-                      {/* 세션 예약 정보 (Re-Frame 캐릭터 테스트만) */}
+                      {/* 세션 예약 정보 (캐릭터 테스트만) */}
                       {testType === "koi-character" && (
                         <div className="p-3 sm:p-4 rounded-lg border border-gray-200 flex flex-col h-full bg-white">
                           <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
@@ -272,7 +272,7 @@ export function TestContent({ responses, actionData }: TestContentProps) {
                               {r.emotion ? (emotionLabels[r.emotion] || r.emotion) : "-"}
                             </p>
                           </div>
-                          {/* Re-Frame 캐릭터 테스트의 경우 캐릭터 이름 표시 */}
+                          {/* 캐릭터 테스트의 경우 캐릭터 이름 표시 */}
                           {testType === "koi-character" && r.character_name && (
                             <div>
                               <p className="text-xs text-[#7A6666] opacity-80 mb-1.5">캐릭터</p>

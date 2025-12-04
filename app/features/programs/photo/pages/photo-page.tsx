@@ -11,12 +11,12 @@ import { createClickMoodReservation } from "../../../event/quries";
 export const meta: MetaFunction = () => {
   const url = "https://www.koicreativelab.com/programs/photo";
   return [
-    { title: "클릭무드 - 오늘, 당신의 무드를 기록해보세요 | 리 프레임(Re-Frame)" },
+    { title: "클릭무드 - 오늘, 당신의 무드를 기록해보세요 | 코이창작소" },
     {
       name: "description",
       content: "클릭무드로 오늘의 감정과 무드를 기록하고, 사진으로 마음을 표현해보세요.",
     },
-    { name: "keywords", content: "클릭무드, 무드 기록, 감정 일기, 사진 일기, 리 프레임, Re-Frame, 광주 포토캠프, 광주 청년, 광주 상담" },
+    { name: "keywords", content: "클릭무드, 무드 기록, 감정 일기, 사진 일기, 코이창작소, 광주 포토캠프, 광주 청년, 광주 상담" },
     { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
     { property: "og:type", content: "website" },
     { property: "og:url", content: url },
@@ -30,7 +30,7 @@ export const meta: MetaFunction = () => {
     { property: "og:image:height", content: "630" },
     { property: "og:image:alt", content: "클릭무드 - 오늘, 당신의 무드를 기록해보세요" },
     { property: "og:locale", content: "ko_KR" },
-    { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+    { property: "og:site_name", content: "코이창작소" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:image:alt", content: "클릭무드 - 오늘, 당신의 무드를 기록해보세요" },
     { rel: "canonical", href: url },
@@ -354,7 +354,7 @@ export async function action({ request }: Route.ActionArgs) {
 
     return {
       success: true,
-      message: "신청이 완료되었습니다. 리 프레임이 연락드릴게요.",
+      message: "신청이 완료되었습니다. 코이창작소가 연락드릴게요.",
     };
   } catch (error) {
     console.error("[click-mood] action error", error);
@@ -460,7 +460,7 @@ function ClickMoodApplication({ selectedPostcardId, actionData }: ClickMoodAppli
             </h2>
             <p className="text-base text-[#5A4A4A]">
               선택하신 엽서로 당신의 마음을 들여다보고,<br />
-              리 프레임과 함께 감정을 탐색해보세요.
+              코이창작소와 함께 감정을 탐색해보세요.
             </p>
           </div>
 
@@ -576,7 +576,7 @@ function ClickMoodApplication({ selectedPostcardId, actionData }: ClickMoodAppli
             </Form>
 
             <p className="text-xs text-[#B8860B]">
-              제출 후 24시간 이내에 리 프레임 매니저가 연락드립니다.
+              제출 후 24시간 이내에 코이창작소 매니저가 연락드립니다.
             </p>
           </div>
         </div>
@@ -597,14 +597,14 @@ export default function PhotoPage({ actionData }: Route.ComponentProps) {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "name": "리 프레임 클릭무드 포토 캠프 참여 방법",
-    "description": "리 프레임 클릭무드 포토 캠프에 참여하는 방법을 안내합니다.",
+    "name": "코이창작소 클릭무드 포토 캠프 참여 방법",
+    "description": "코이창작소 클릭무드 포토 캠프에 참여하는 방법을 안내합니다.",
     "step": [
       {
         "@type": "HowToStep",
         "position": 1,
         "name": "프로그램 선택",
-        "text": "리 프레임 웹사이트에서 클릭무드(포토 캠프) 프로그램을 선택합니다.",
+        "text": "코이창작소 웹사이트에서 클릭무드(포토 캠프) 프로그램을 선택합니다.",
         "url": `${url}`
       },
       {
@@ -618,7 +618,7 @@ export default function PhotoPage({ actionData }: Route.ComponentProps) {
         "@type": "HowToStep",
         "position": 3,
         "name": "매니저 연락 대기",
-        "text": "신청 완료 후 리 프레임 매니저가 연락하여 상세 일정을 안내합니다."
+        "text": "신청 완료 후 코이창작소 매니저가 연락하여 상세 일정을 안내합니다."
       },
       {
         "@type": "HowToStep",

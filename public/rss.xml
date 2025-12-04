@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>리 프레임(Re-Frame)</title>
+    <title>코이창작소</title>
     <link>https://www.koicreativelab.com</link>
     <description>청년을 위한 창작 공간</description>
     <language>ko</language>
@@ -32,14 +32,14 @@
     <item>
       <title>대표 소개</title>
       <link>https://www.koicreativelab.com/about/representative</link>
-      <description>리 프레임 대표 소개</description>
+      <description>코이창작소 대표 소개</description>
       <pubDate>2025-12-04T00:21:40+00:00</pubDate>
     </item>
     
     <item>
-      <title>리 프레임 매니저 소개</title>
+      <title>코이창작소 매니저 소개</title>
       <link>https://www.koicreativelab.com/about/counselors</link>
-      <description>리 프레임의 전문 매니저들을 소개합니다</description>
+      <description>코이창작소의 전문 매니저들을 소개합니다</description>
       <pubDate>2025-12-04T00:21:40+00:00</pubDate>
     </item>
     
@@ -47,7 +47,7 @@
     <item>
       <title>상담 예약</title>
       <link>https://www.koicreativelab.com/reservation</link>
-      <description>리 프레임 상담 예약하기</description>
+      <description>코이창작소 상담 예약하기</description>
       <pubDate>2025-12-04T00:21:40+00:00</pubDate>
     </item>
   </channel>

@@ -140,10 +140,10 @@ export function Navigation() {
                             "md:flex-shrink-0",
                             "mx-auto md:mx-0"
                         )}
-                        aria-label="리 프레임 홈으로 이동"
+                        aria-label="코이창작소 홈으로 이동"
                     >
                         <span className="bg-clip-text text-transparent bg-[linear-gradient(90deg,#A8C5F8,#F3C3E6,#FFE6C5)]">
-                            Re-Frame
+                            코이창작소
                         </span>
                     </Link>
                     <Separator 

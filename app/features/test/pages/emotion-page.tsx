@@ -364,37 +364,37 @@ const getQuizResult = (responses: Record<number, QuizOptionId>) => {
 export const meta: MetaFunction = () => {
   const url = "https://www.koicreativelab.com/emotion";
   return [
-    { title: "Re-Frame 캐릭터 테스트 - 30초만에 내 마음 속 진짜 감정 캐릭터 찾기 | 리 프레임(Re-Frame)" },
+    { title: "캐릭터 테스트 - 30초만에 내 마음 속 진짜 감정 캐릭터 찾기 | 코이창작소" },
     {
       name: "description",
       content:
-        "10개의 질문으로 지금의 감정 패턴을 정밀 분석해 드립니다. 빠르게 나만의 Re-Frame 감정 캐릭터를 확인하고, 1:1 세션으로 더 깊이 있는 이해를 시작해보세요.",
+        "10개의 질문으로 지금의 감정 패턴을 정밀 분석해 드립니다. 빠르게 나만의 감정 캐릭터를 확인하고, 1:1 세션으로 더 깊이 있는 이해를 시작해보세요.",
     },
     {
       name: "keywords",
       content:
-        "Re-Frame 캐릭터 테스트, 감정 테스트, 감정 분석, 감정 캐릭터, 마음 탐구, 자기이해, 감정 진단, 리 프레임, Re-Frame, 감정 패턴, 1:1 상담, 광주 청년, 광주 상담",
+        "캐릭터 테스트, 감정 테스트, 감정 분석, 감정 캐릭터, 마음 탐구, 자기이해, 감정 진단, 코이창작소, 감정 패턴, 1:1 상담, 광주 청년, 광주 상담",
     },
     { name: "robots", content: "index, follow" },
     { property: "og:type", content: "website" },
     { property: "og:url", content: url },
-    { property: "og:title", content: "Re-Frame 캐릭터 테스트 - 30초만에 내 마음 속 진짜 감정 캐릭터 찾기" },
+    { property: "og:title", content: "캐릭터 테스트 - 30초만에 내 마음 속 진짜 감정 캐릭터 찾기" },
     {
       property: "og:description",
       content:
-        "10개의 문항으로 지금의 감정 패턴을 측정하고, 나만의 Re-Frame 감정 캐릭터를 확인해 보세요. 1:1 세션으로 더 깊이 있는 이해를 이어갈 수 있습니다.",
+        "10개의 문항으로 지금의 감정 패턴을 측정하고, 나만의 감정 캐릭터를 확인해 보세요. 1:1 세션으로 더 깊이 있는 이해를 이어갈 수 있습니다.",
     },
     { property: "og:image", content: "https://www.koicreativelab.com/og-emotion.jpg" },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
     { property: "og:locale", content: "ko_KR" },
-    { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+    { property: "og:site_name", content: "코이창작소" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "Re-Frame 캐릭터 테스트 - 30초만에 내 마음 속 진짜 감정 캐릭터 찾기" },
+    { name: "twitter:title", content: "캐릭터 테스트 - 30초만에 내 마음 속 진짜 감정 캐릭터 찾기" },
     {
       name: "twitter:description",
       content:
-        "10개의 질문으로 내 감정 캐릭터를 찾고, 리 프레임 매니저와 1:1 세션까지 연결되는 경험을 시작해보세요.",
+        "10개의 질문으로 내 감정 캐릭터를 찾고, 코이창작소 매니저와 1:1 세션까지 연결되는 경험을 시작해보세요.",
     },
     { name: "twitter:image", content: "https://www.koicreativelab.com/og-emotion.jpg" },
     { name: "twitter:site", content: "@koicreativelab" },
@@ -683,12 +683,12 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Service",
-            name: "Re-Frame 캐릭터 테스트",
+            name: "캐릭터 테스트",
             description:
-              "10개의 질문으로 당신의 감정 패턴을 빠르게 분석합니다. Re-Frame 감정 캐릭터를 확인하고, 1:1 세션으로 더 깊이 있는 이해를 이어가 보세요.",
+              "10개의 질문으로 당신의 감정 패턴을 빠르게 분석합니다. 감정 캐릭터를 확인하고, 1:1 세션으로 더 깊이 있는 이해를 이어가 보세요.",
             provider: {
               "@type": "Organization",
-              name: "리 프레임(Re-Frame)",
+              name: "코이창작소",
               url: "https://www.koicreativelab.com",
             },
             areaServed: {
@@ -727,7 +727,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
 
           <div className="relative z-10 mx-auto flex min-h-[calc(100vh-8rem)] max-w-3xl flex-col items-center justify-center text-center">
             <p className="text-sm sm:text-base font-semibold uppercase tracking-[0.3em] text-[#A78BFA]">
-              Re-Frame
+              코이창작소
             </p>
             <h1 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight text-[#1F1F2B] break-keep">
               30초 테스트: 나를 발견하는 감정 캐릭터 테스트
@@ -735,7 +735,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
             <p className="mt-4 text-sm sm:text-base md:text-lg text-[#4A3F55] leading-relaxed break-keep">
               지금 당신은 어떤 마음으로 하루를 시작하고 있을까요?
               <br />
-              복잡한 내면을 Re-Frame 캐릭터로 솔직하게 확인해 보세요.
+              복잡한 내면을 감정 캐릭터로 솔직하게 확인해 보세요.
             </p>
 
             <div className="mt-10 w-full max-w-md rounded-3xl bg-white/70 p-6 shadow-xl backdrop-blur">
@@ -770,7 +770,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
           <div className={QUIZ_SECTION_CARD_CLASS}>
             <div className="text-center space-y-4">
               <p className="text-sm sm:text-base font-semibold uppercase tracking-[0.2em] text-[#A78BFA]">
-                Re-Frame 캐릭터 테스트
+                캐릭터 테스트
               </p>
               <Progress
                 value={(QUIZ_STEP_INDEX / QUIZ_TOTAL_STEPS) * 100}
@@ -1016,7 +1016,7 @@ export default function EmotionIntroPage({ loaderData, actionData }: Route.Compo
                     {resultDetail.title} 조합을 실전에서 120% 활용하고 싶다면?
                   </h2>
                   <p className="text-sm sm:text-base text-[#5A4A4A] leading-relaxed break-keep">
-                    리 프레임 전략 파트너가 메인·서브 감정가의 결을 분석해, 불안을 확신으로 바꾸는 실행 전략을 함께 설계합니다.
+                    코이창작소 전략 파트너가 메인·서브 감정가의 결을 분석해, 불안을 확신으로 바꾸는 실행 전략을 함께 설계합니다.
                   </p>
                 </div>
 

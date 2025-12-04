@@ -65,7 +65,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="리 프레임" />
+        <meta name="apple-mobile-web-app-title" content="코이창작소" />
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <Meta />
@@ -77,8 +77,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "리 프레임(Re-Frame)",
-              "alternateName": "Re-Frame",
+              "name": "코이창작소",
+              "alternateName": "코이",
               "url": url,
               "potentialAction": {
                 "@type": "SearchAction",

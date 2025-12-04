@@ -19,7 +19,7 @@ import { getProgramVoteCount, createProgramVote } from "../queries";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "프로그램 선호도 조사 - 리 프레임(Re-Frame)" },
+    { title: "프로그램 선호도 조사 - 코이창작소" },
     { name: "description", content: "가장 내 취향이었던 프로그램에 투표해 주세요!" },
   ];
 };
@@ -415,10 +415,10 @@ export default function EventResultPage({ loaderData, actionData }: Route.Compon
             </Dialog>
           </div>
 
-          {/* Footer - Re-Frame Logo */}
+          {/* Footer - 코이창작소 Logo */}
           <div className="mt-12 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#A78BFA]">
-              Re-Frame
+              코이창작소
             </p>
           </div>
         </section>

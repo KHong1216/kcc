@@ -11,16 +11,16 @@ import { cn } from "../../../lib/utils";
 export const meta: MetaFunction = () => {
     const url = "https://www.koicreativelab.com/reservation";
     return [
-        { title: "예약하기 - 리 프레임(Re-Frame)" },
+        { title: "예약하기 - 코이창작소" },
         { name: "description", content: "연애, 사진, 에세이 프로그램 예약하기" },
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
-        { property: "og:title", content: "예약하기 - 리 프레임(Re-Frame)" },
+        { property: "og:title", content: "예약하기 - 코이창작소" },
         { property: "og:description", content: "연애, 사진, 에세이 프로그램 예약하기" },
-        { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+        { property: "og:site_name", content: "코이창작소" },
         { property: "og:locale", content: "ko_KR" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "예약하기 - 리 프레임(Re-Frame)" },
+        { name: "twitter:title", content: "예약하기 - 코이창작소" },
         { name: "twitter:description", content: "연애, 사진, 에세이 프로그램 예약하기" },
     ];
 };
@@ -158,7 +158,7 @@ export default function ReservationPage({ loaderData }: Route.ComponentProps) {
                     <div className="text-base md:text-lg text-gray-700 space-y-3 max-w-3xl mx-auto">
                         <p>당신이 편한 시간에 우리가 맞춰가려고 해요.</p>
                         <p>이번 주 안에서 가능한 날짜와 시간대를 전부 선택해 주세요.</p>
-                        <p className="text-gray-600">예약서를 보내주시면 리 프레임 매니저가 가장 편한 일정으로 연락드립니다.</p>
+                        <p className="text-gray-600">예약서를 보내주시면 코이창작소 매니저가 가장 편한 일정으로 연락드립니다.</p>
                         <p className="text-sm md:text-base text-gray-500 italic pt-2">
                             (약 30분~1시간 정도, 부담 없는 작은 만남이에요.)
                         </p>

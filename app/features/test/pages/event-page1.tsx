@@ -44,7 +44,7 @@ const PROGRAM_CONFIGS: ProgramConfig[] = [
   },
   {
     id: "love",
-    label: "리 프레임",
+    label: "코이창작소",
     subtitle: "사랑을 탐구하다",
     images: [
       { id: "l1", imageUrl: "/desc/l1.png" },
@@ -73,10 +73,10 @@ const PROGRAM_CONFIGS: ProgramConfig[] = [
 // ============================================================================
 
 export const meta: MetaFunction = () => [
-  { title: "프로그램 소개 | Re-Frame" },
+  { title: "프로그램 소개 | 코이창작소" },
   {
     name: "description",
-    content: "리 프레임의 프로그램을 둘러보세요. 클릭무드, 러브포션, 아무,말",
+    content: "코이창작소의 프로그램을 둘러보세요. 클릭무드, 러브포션, 아무,말",
   },
 ];
 
@@ -467,7 +467,7 @@ export function EventPage1(_: Route.ComponentProps) {
             프로그램 소개
           </h1>
           <p className="mt-1 text-sm text-[#61567e]">
-            리 프레임의 다양한 프로그램을 둘러보세요
+            코이창작소의 다양한 프로그램을 둘러보세요
           </p>
         </div>
       </div>

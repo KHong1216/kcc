@@ -12,16 +12,16 @@ import type { Route } from "./+types/review-page";
 export const meta: MetaFunction = () => {
     const url = "https://www.koicreativelab.com/community/review";
     return [
-        { title: "리뷰 - 리 프레임(Re-Frame)" },
-        { name: "description", content: "리 프레임 프로그램 참여자들의 생생한 후기. 에세이 캠프, 연애 캠프, 사진 프로젝트 참여자들의 솔직한 리뷰를 확인하세요." },
-        { name: "keywords", content: "리 프레임 리뷰, Re-Frame 리뷰, 프로그램후기, 참여자후기, 에세이캠프후기, 광주 프로그램후기, 광주 청년" },
+        { title: "리뷰 - 코이창작소" },
+        { name: "description", content: "코이창작소 프로그램 참여자들의 생생한 후기. 에세이 캠프, 연애 캠프, 사진 프로젝트 참여자들의 솔직한 리뷰를 확인하세요." },
+        { name: "keywords", content: "코이창작소 리뷰, 프로그램후기, 참여자후기, 에세이캠프후기, 광주 프로그램후기, 광주 청년" },
         { name: "robots", content: "index, follow" },
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
-        { property: "og:title", content: "리뷰 - 리 프레임(Re-Frame)" },
-        { property: "og:description", content: "리 프레임 프로그램 참여자들의 생생한 후기" },
+        { property: "og:title", content: "리뷰 - 코이창작소" },
+        { property: "og:description", content: "코이창작소 프로그램 참여자들의 생생한 후기" },
         { property: "og:locale", content: "ko_KR" },
-        { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+        { property: "og:site_name", content: "코이창작소" },
         { name: "twitter:card", content: "summary" },
         { rel: "canonical", href: url },
     ];
@@ -91,7 +91,7 @@ export default function ReviewPage({ loaderData }: Route.ComponentProps) {
         },
         "itemReviewed": {
             "@type": "Service",
-            "name": `리 프레임 ${review.program_id} 프로그램`
+            "name": `코이창작소 ${review.program_id} 프로그램`
         },
         "reviewBody": review.content,
         "reviewRating": {
@@ -119,7 +119,7 @@ export default function ReviewPage({ loaderData }: Route.ComponentProps) {
                         참여자 리뷰
                     </h1>
                     <p className="text-lg text-[#3B2F2F]/85 mb-6" style={{ lineHeight: '1.6' }}>
-                        리 프레임 프로그램 참여자들의 생생한 후기를 확인하세요
+                        코이창작소 프로그램 참여자들의 생생한 후기를 확인하세요
                     </p>
                     <div className="mt-6">
                         <Dialog>

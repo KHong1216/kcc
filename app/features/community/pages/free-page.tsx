@@ -7,16 +7,16 @@ import { Brain, Clock, ArrowRight } from "lucide-react";
 export const meta: MetaFunction = () => {
   const url = "https://www.koicreativelab.com/community/free";
   return [
-    { title: "무료 심리테스트 - 리 프레임(Re-Frame)" },
-    { name: "description", content: "MBTI 무료 심리테스트로 나를 더 깊이 알아보세요. 리 프레임에서 제공하는 다양한 무료 심리테스트를 경험해보세요." },
-    { name: "keywords", content: "무료심리테스트, MBTI, 성격유형검사, 리 프레임, Re-Frame, 광주 심리테스트, 광주 청년" },
+    { title: "무료 심리테스트 - 코이창작소" },
+    { name: "description", content: "MBTI 무료 심리테스트로 나를 더 깊이 알아보세요. 코이창작소에서 제공하는 다양한 무료 심리테스트를 경험해보세요." },
+    { name: "keywords", content: "무료심리테스트, MBTI, 성격유형검사, 코이창작소, 광주 심리테스트, 광주 청년" },
     { name: "robots", content: "index, follow" },
     { property: "og:type", content: "website" },
     { property: "og:url", content: url },
-    { property: "og:title", content: "무료 심리테스트 - 리 프레임(Re-Frame)" },
+    { property: "og:title", content: "무료 심리테스트 - 코이창작소" },
     { property: "og:description", content: "MBTI 무료 심리테스트로 나를 더 깊이 알아보세요" },
     { property: "og:locale", content: "ko_KR" },
-    { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+    { property: "og:site_name", content: "코이창작소" },
     { name: "twitter:card", content: "summary" },
     { rel: "canonical", href: url },
   ];
@@ -126,7 +126,7 @@ export default function FreePage() {
               더 많은 프로그램이 궁금하신가요?
             </h3>
             <p className="text-[#7A6666] opacity-80 mb-4" style={{ lineHeight: '1.6' }}>
-              리 프레임의 다양한 프로그램을 통해 나를 더 깊이 발견해보세요
+              코이창작소의 다양한 프로그램을 통해 나를 더 깊이 발견해보세요
             </p>
             <Button variant="outline" className="border-[#FADADD] text-[#3B2F2F] hover:bg-[#E8F4FB] bg-white"
             onClick={() => navigate("/camps/essay")}>

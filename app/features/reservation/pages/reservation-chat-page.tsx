@@ -13,16 +13,16 @@ import type { Route } from "./+types/reservation-chat-page";
 export const meta: MetaFunction = () => {
     const url = "https://www.koicreativelab.com/reservation";
     return [
-        { title: "예약 상담 - 리 프레임(Re-Frame)" },
+        { title: "예약 상담 - 코이창작소" },
         { name: "description", content: "AI 챗봇과 함께 예약을 진행하세요" },
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
-        { property: "og:title", content: "예약 상담 - 리 프레임(Re-Frame)" },
+        { property: "og:title", content: "예약 상담 - 코이창작소" },
         { property: "og:description", content: "AI 챗봇과 함께 예약을 진행하세요" },
-        { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+        { property: "og:site_name", content: "코이창작소" },
         { property: "og:locale", content: "ko_KR" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "예약 상담 - 리 프레임(Re-Frame)" },
+        { name: "twitter:title", content: "예약 상담 - 코이창작소" },
         { name: "twitter:description", content: "AI 챗봇과 함께 예약을 진행하세요" },
     ];
 };
@@ -181,7 +181,7 @@ export default function ReservationChatPage({ loaderData, actionData }: Route.Co
 
             const initialMessage: Message = {
                 role: "assistant",
-                content: `안녕하세요! 리 프레임 상담 예약을 도와드리겠습니다. 😊\n\n저희 프로그램은 다음과 같습니다:\n\n${programList}\n\n어떤 프로그램에 관심이 있으신가요? (번호나 프로그램 이름으로 선택해주세요)`,
+                content: `안녕하세요! 코이창작소 상담 예약을 도와드리겠습니다. 😊\n\n저희 프로그램은 다음과 같습니다:\n\n${programList}\n\n어떤 프로그램에 관심이 있으신가요? (번호나 프로그램 이름으로 선택해주세요)`,
                 timestamp: new Date()
             };
             setMessages([initialMessage]);
@@ -194,7 +194,7 @@ export default function ReservationChatPage({ loaderData, actionData }: Route.Co
         if (successData?.success) {
             setMessages(prev => [...prev, {
                 role: "assistant",
-                content: "✅ 예약이 완료되었습니다! 리 프레임 매니저가 곧 연락드리겠습니다. 감사합니다! 😊",
+                content: "✅ 예약이 완료되었습니다! 코이창작소 매니저가 곧 연락드리겠습니다. 감사합니다! 😊",
                 timestamp: new Date()
             }]);
             // 3초 후 홈으로 이동
@@ -901,7 +901,7 @@ function getSystemPrompt(programs: any[]) {
         };
     });
 
-    return `당신은 리 프레임의 친절한 예약 상담 챗봇입니다.
+    return `당신은 코이창작소의 친절한 예약 상담 챗봇입니다.
   
   역할:
   - 사용자에게 프로그램을 안내하고 예약을 도와드립니다

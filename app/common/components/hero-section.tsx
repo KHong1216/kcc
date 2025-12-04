@@ -8,16 +8,16 @@ const heroImages = [
   {
     id: 1,
     src: "/1.webp",
-    alt: "리 프레임 메인 이미지 1",
+    alt: "코이창작소 메인 이미지 1",
     title: "작은 물결이 큰 도약이 되는 창작소",
-    subtitle: "리 프레임",
+    subtitle: "코이창작소",
     description: "탈광주 청년을 막기 위한 청년문화 공간",
     link: "/about/representative"
   },
   {
     id: 2,
     src: "/2.webp",
-    alt: "리 프레임 메인 이미지 2",
+    alt: "코이창작소 메인 이미지 2",
     title: "청년들의 성장을 돕는 창작 공간",
     subtitle: "상담을 통한 '나'를 찾는 과정",
     description: "다양한 청년들의 의견을 듣고 모집해서 청년 이해 관계 센터 설립",
@@ -26,7 +26,7 @@ const heroImages = [
   {
     id: 3,
     src: "/3.webp",
-    alt: "리 프레임 메인 이미지 3",
+    alt: "코이창작소 메인 이미지 3",
     title: "코이 = 사랑",
     subtitle: "환경에 따라 성장하는 코이 물고기",
     description: "청년들이 각자의 가능성을 발견하고 성장해 나가는 과정",

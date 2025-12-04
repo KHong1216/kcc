@@ -4,16 +4,16 @@ import type { Route } from "./+types/essay-page";
 export const meta: MetaFunction = () => {
   const url = "https://www.koicreativelab.com/programs/essay";
   return [
-    { title: "아무, 말 - 리뉴얼 중 | 리 프레임(Re-Frame)" },
+    { title: "아무, 말 - 리뉴얼 중 | 코이창작소" },
     {
       name: "description",
       content: "아무, 말 프로그램이 더 나은 모습으로 돌아오기 위해 리뉴얼 중입니다. 곧 만나요!",
     },
-    { name: "keywords", content: "리 프레임, Re-Frame, 아무말, 에세이, 광주 청년, 광주 창작공간" },
+    { name: "keywords", content: "코이창작소, 아무말, 에세이, 광주 청년, 광주 창작공간" },
     { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
     { property: "og:type", content: "website" },
     { property: "og:url", content: url },
-    { property: "og:title", content: "아무, 말 - 리뉴얼 중 | 리 프레임(Re-Frame)" },
+    { property: "og:title", content: "아무, 말 - 리뉴얼 중 | 코이창작소" },
     {
       property: "og:description",
       content: "아무, 말 프로그램이 더 나은 모습으로 돌아오기 위해 리뉴얼 중입니다. 곧 만나요!",
@@ -21,14 +21,14 @@ export const meta: MetaFunction = () => {
     { property: "og:image", content: "https://www.koicreativelab.com/og-home.jpg" },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: "리 프레임(Re-Frame) - 리뉴얼 중" },
+    { property: "og:image:alt", content: "코이창작소 - 리뉴얼 중" },
     { property: "og:locale", content: "ko_KR" },
-    { property: "og:site_name", content: "리 프레임(Re-Frame)" },
+    { property: "og:site_name", content: "코이창작소" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "아무, 말 - 리뉴얼 중 | 리 프레임(Re-Frame)" },
+    { name: "twitter:title", content: "아무, 말 - 리뉴얼 중 | 코이창작소" },
     { name: "twitter:description", content: "아무, 말 프로그램이 더 나은 모습으로 돌아오기 위해 리뉴얼 중입니다. 곧 만나요!" },
     { name: "twitter:image", content: "https://www.koicreativelab.com/og-home.jpg" },
-    { name: "twitter:image:alt", content: "리 프레임(Re-Frame) - 리뉴얼 중" },
+    { name: "twitter:image:alt", content: "코이창작소 - 리뉴얼 중" },
     { rel: "canonical", href: url },
   ];
 };
