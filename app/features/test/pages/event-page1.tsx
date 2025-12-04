@@ -499,31 +499,35 @@ function PasswordForm({ actionData }: PasswordFormProps) {
 // ============================================================================
 
 export function EventPage1({ loaderData, actionData }: Route.ComponentProps) {
-  const [activeProgram, setActiveProgram] = useState<ProgramId>("photo");
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // 인증되지 않은 경우 비밀번호 입력 폼 표시
+  // 인증 상태 확인
   const isAuthenticated = (loaderData as { isAuthenticated?: boolean })?.isAuthenticated ?? false;
   const actionDataTyped = actionData as { error?: string } | undefined;
 
-  if (!isAuthenticated) {
-    return <PasswordForm actionData={actionDataTyped} />;
-  }
+  // 모든 hooks는 조건부 반환 전에 호출해야 함 (React Hooks 규칙)
+  const [activeProgram, setActiveProgram] = useState<ProgramId>("photo");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const currentConfig = PROGRAM_CONFIGS.find((p) => p.id === activeProgram) ?? PROGRAM_CONFIGS[0];
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     setCurrentIndex(0);
-  }, [activeProgram]);
+  }, [activeProgram, isAuthenticated]);
 
   // 이미지 preload
   useEffect(() => {
+    if (!isAuthenticated) return;
     const preloadImages = currentConfig.images.map((img) => {
       const image = new Image();
       image.src = img.imageUrl;
       return image;
     });
-  }, [currentConfig]);
+  }, [currentConfig, isAuthenticated]);
+
+  // 인증되지 않은 경우 비밀번호 입력 폼 표시
+  if (!isAuthenticated) {
+    return <PasswordForm actionData={actionDataTyped} />;
+  }
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-gradient-to-b from-[#f9f7ff] to-[#f2f5ff]">
