@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
     return [
         { title: "리 프레임(Re-Frame) - 작은 물결이 큰 도약이 되는 창작소" },
         { name: "description", content: "광주에 위치한 리 프레임(Re-Frame). 따뜻한 이야기가 모여, 함께 성장하는 공간. 리 프레임은 청년들이 자신의 이야기를 발견하고 함께 나누며 성장하는 따뜻한 공간입니다." },
-        { name: "keywords", content: "리 프레임, Re-Frame, 광주 리프레임, 광주 리 프레임, 청년창작공간, 에세이캠프, 포토캠프, 청년상담, 창작공간, 자기개발, 광주청년, 광주, 광주 청년, 광주 상담, 광주 창작공간, 광주 청년상담, 광주 문화공간, 광주 청년문화공간" },
+        { name: "keywords", content: "리 프레임, Re-Frame, 광주 리프레임, 광주 리 프레임, 청년창작공간, 포토캠프, 청년상담, 창작공간, 자기개발, 광주청년, 광주, 광주 청년, 광주 상담, 광주 창작공간, 광주 청년상담, 광주 문화공간, 광주 청년문화공간" },
         { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
         { name: "googlebot", content: "index, follow" },
         { name: "author", content: "리 프레임(Re-Frame)" },
@@ -84,7 +84,7 @@ export default function HomePage() {
         "url": url,
         "logo": `${url}/logo.png`,
         "image": `${url}/og-home.jpg`,
-        "description": "광주에 위치한 청년 창작 공간. 에세이 캠프, 포토 캠프, 연애 캠프 등 다양한 청년 프로그램을 제공합니다.",
+        "description": "광주에 위치한 청년 창작 공간. 포토 캠프, 연애 캠프 등 다양한 청년 프로그램을 제공합니다.",
         "address": {
             "@type": "PostalAddress",
             // TODO: 실제 주소 정보 추가 필요
@@ -120,7 +120,7 @@ export default function HomePage() {
                 "name": "리 프레임(Re-Frame)은 무엇인가요?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "리 프레임(Re-Frame)은 광주광역시에 위치한 청년 창작 공간입니다. 청년들이 자신의 이야기를 발견하고 함께 나누며 성장하는 따뜻한 공간으로, 에세이 캠프(아무,말), 포토 캠프(클릭무드), 연애 캠프, 감정 캐릭터 테스트 등 다양한 청년 프로그램을 제공합니다."
+                    "text": "리 프레임(Re-Frame)은 광주광역시에 위치한 청년 창작 공간입니다. 청년들이 자신의 이야기를 발견하고 함께 나누며 성장하는 따뜻한 공간으로, 포토 캠프(클릭무드), 연애 캠프, 감정 캐릭터 테스트 등 다양한 청년 프로그램을 제공합니다. 에세이 캠프는 현재 준비 중입니다."
                 }
             },
             {
@@ -136,7 +136,7 @@ export default function HomePage() {
                 "name": "리 프레임에서 제공하는 프로그램은 무엇인가요?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "리 프레임은 아무,말(에세이 캠프), 클릭무드(포토 캠프), Re-Frame 연애 캠프, Re-Frame 캐릭터 테스트(감정 분석) 등 다양한 청년 프로그램을 제공합니다."
+                    "text": "리 프레임은 클릭무드(포토 캠프), Re-Frame 연애 캠프, Re-Frame 캐릭터 테스트(감정 분석) 등 다양한 청년 프로그램을 제공합니다. 에세이 캠프는 현재 준비 중입니다."
                 }
             },
             {
