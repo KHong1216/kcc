@@ -4,31 +4,31 @@ import type { Route } from "./+types/love-page";
 export const meta: MetaFunction = () => {
   const url = "https://www.koicreativelab.com/programs/love";
   return [
-    { title: "연애 캠프 - 준비중 | 코이창작소" },
+    { title: "러브포션 - 리뉴얼중 | 코이창작소" },
     {
       name: "description",
-      content: "연애 캠프 프로그램이 더 나은 모습으로 돌아오기 위해 준비 중입니다. 곧 만나요!",
+      content: "러브포션 프로그램이 2026년을 위해 리뉴얼 중입니다.",
     },
-    { name: "keywords", content: "코이창작소, 연애캠프, 연애상담, 관계상담, 광주 청년, 광주 창작공간" },
+    { name: "keywords", content: "코이창작소, 러브포션, 연애상담, 관계상담, 광주 청년, 광주 창작공간" },
     { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
     { property: "og:type", content: "website" },
     { property: "og:url", content: url },
-    { property: "og:title", content: "연애 캠프 - 준비중 | 코이창작소" },
+    { property: "og:title", content: "러브포션 - 리뉴얼중 | 코이창작소" },
     {
       property: "og:description",
-      content: "연애 캠프 프로그램이 더 나은 모습으로 돌아오기 위해 준비 중입니다. 곧 만나요!",
+      content: "러브포션 프로그램이 2026년을 위해 리뉴얼 중입니다.",
     },
     { property: "og:image", content: "https://www.koicreativelab.com/og-home.jpg" },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
-    { property: "og:image:alt", content: "코이창작소 - 준비중" },
+    { property: "og:image:alt", content: "코이창작소 - 리뉴얼중" },
     { property: "og:locale", content: "ko_KR" },
     { property: "og:site_name", content: "코이창작소" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "연애 캠프 - 준비중 | 코이창작소" },
-    { name: "twitter:description", content: "연애 캠프 프로그램이 더 나은 모습으로 돌아오기 위해 준비 중입니다. 곧 만나요!" },
+    { name: "twitter:title", content: "러브포션 - 리뉴얼중 | 코이창작소" },
+    { name: "twitter:description", content: "러브포션 프로그램이 2026년을 위해 리뉴얼 중입니다." },
     { name: "twitter:image", content: "https://www.koicreativelab.com/og-home.jpg" },
-    { name: "twitter:image:alt", content: "코이창작소 - 준비중" },
+    { name: "twitter:image:alt", content: "코이창작소 - 리뉴얼중" },
     { rel: "canonical", href: url },
   ];
 };
@@ -40,7 +40,7 @@ export function loader(_: Route.LoaderArgs) {
 export async function action(_: Route.ActionArgs) {
   return {
     success: false,
-    error: "현재 준비 중입니다. 곧 다시 만나요!",
+      error: "현재 2026년을 위해 리뉴얼 중입니다.",
   };
 }
 
@@ -58,14 +58,14 @@ export function LovePage() {
           className="text-4xl md:text-5xl font-bold text-[#3B2F2F] mb-4"
           style={{ lineHeight: '1.6' }}
         >
-          연애 캠프
+          러브포션
         </h1>
         <div className="space-y-4">
           <p 
             className="text-xl md:text-2xl text-[#3B2F2F]/90 font-semibold"
             style={{ lineHeight: '1.6' }}
           >
-            준비중입니다
+            2026년을 위해 리뉴얼중입니다
           </p>
           <p 
             className="text-lg text-[#3B2F2F]/80"
